@@ -21,8 +21,8 @@ services:
       - VPN_TYPE=openvpn
 
       # Your Windscribe credentials (set via Umbrel's env editor or exports.sh if you want)
-      - OPENVPN_USER=meelmartin
-      - OPENVPN_PASSWORD=deKbet-momciw-8qoxbe
+      - OPENVPN_USER=
+      - OPENVPN_PASSWORD=
 
       # Optional Windscribe location filters:
       # - SERVER_REGIONS=Netherlands
