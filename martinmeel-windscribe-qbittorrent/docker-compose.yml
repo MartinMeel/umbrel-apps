@@ -8,31 +8,31 @@ services:
       APP_HOST: martinmeel-windscribe-qbittorrent_martinmeel-windscribe-qbittorrent_1
       APP_PORT: 9091
 
-#  gluetun:
-#    image: qmcgaw/gluetun:latest
-#    restart: unless-stopped
-#    cap_add:
-#      - NET_ADMIN
-#    devices:
-#      - /dev/net/tun:/dev/net/tun
-#    environment:
-#      # ===== WINDCRIBE VPN SETTINGS =====
-#      - VPN_SERVICE_PROVIDER=windscribe
-#      - VPN_TYPE=openvpn
-#
-#      # Your Windscribe credentials (set via Umbrel's env editor or exports.sh if you want)
-#      - OPENVPN_USER=
-#      - OPENVPN_PASSWORD=
-#
-#      # Optional Windscribe location filters:
-#      - SERVER_REGIONS=Netherlands
-#      - SERVER_CITIES=Amsterdam
-#
-#      # Timezone
-#      - TZ=Europe/Amsterdam
-#
-#    volumes:
-#      - ${APP_DATA_DIR}/data:/gluetun
+  gluetun:
+    image: qmcgaw/gluetun:latest
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    environment:
+      # ===== WINDCRIBE VPN SETTINGS =====
+      - VPN_SERVICE_PROVIDER=windscribe
+      - VPN_TYPE=openvpn
+
+      # Your Windscribe credentials (set via Umbrel's env editor or exports.sh if you want)
+      - OPENVPN_USER=
+      - OPENVPN_PASSWORD=
+
+      # Optional Windscribe location filters:
+      - SERVER_REGIONS=Netherlands
+      - SERVER_CITIES=Amsterdam
+
+      # Timezone
+      - TZ=Europe/Amsterdam
+
+    volumes:
+      - ${APP_DATA_DIR}/data:/gluetun
 
   transmission:
     image: lscr.io/linuxserver/transmission:latest
@@ -40,8 +40,8 @@ services:
 
     # Key trick: share Gluetun's network namespace
     network_mode: "service:gluetun"
-    #depends_on:
-    #  - gluetun
+    depends_on:
+      - gluetun
 
     environment:
     #  - PUID=1000
