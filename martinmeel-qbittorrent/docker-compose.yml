@@ -1,0 +1,27 @@
+version: "3.7"
+
+services:
+  # This is Umbrel's built-in reverse proxy sidecar.
+  app_proxy:
+    environment:
+      # Container name pattern: <app-id>_<service-name>_1
+      APP_HOST: martinmeel-qbittorrent_1
+      APP_PORT: 9091
+
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+      - WEBUI_PORT=8080
+      - TORRENTING_PORT=6881
+    volumes:
+      - ${APP_DATA_DIR}/config:/config
+      - ${APP_DATA_DIR}/downloads:/downloads
+    ports:
+      - 8080:8080
+      - 6881:6881
+      - 6881:6881/udp
+    restart: unless-stopped   
+
