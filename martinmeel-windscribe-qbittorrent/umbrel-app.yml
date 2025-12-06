@@ -1,0 +1,30 @@
+manifestVersion: 1
+
+id: martinmeel-windscribe-qbittorrent          # must match folder name
+icon: https://svgur.com/i/mvA.svg
+category: Download
+name: Transmission (VPN)
+version: "1.0.0"
+tagline: Torrent client routed through Windscribe VPN
+description: >-
+  Transmission BitTorrent client running behind a Gluetun VPN container
+  using Windscribe. If the VPN is down, Transmission has no internet
+  connectivity, avoiding IP leaks.
+
+developer: You
+website: https://windscribe.com
+repo: https://github.com/<your-username>/<your-community-store-repo>
+support: https://github.com/<your-username>/<your-community-store-repo>/issues
+
+port: 9091                     # same as Transmission web UI port
+
+gallery:
+  - icon.svg
+path: ""
+defaultUsername: umbrel
+defaultPassword: ""            # we’ll use APP_PASSWORD instead
+
+submitter: You
+submission: ""
+releaseNotes: ""
+dependencies: []               # no Umbrel app dependencies
