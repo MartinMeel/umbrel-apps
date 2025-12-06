@@ -6,7 +6,7 @@ services:
     environment:
       # Container name pattern: <app-id>_<service-name>_1
       APP_HOST: martinmeel-windscribe-qbittorrent_1
-      APP_PORT: 9091
+      APP_PORT: "9091"
 
   gluetun:
     image: qmcgaw/gluetun:latest
