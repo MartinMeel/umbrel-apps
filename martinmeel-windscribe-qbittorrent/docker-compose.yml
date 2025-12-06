@@ -40,8 +40,8 @@ services:
 
     # Key trick: share Gluetun's network namespace
     network_mode: "service:gluetun"
-    depends_on:
-      - gluetun
+    #depends_on:
+    #  - gluetun
 
     environment:
     #  - PUID=1000
