@@ -19,9 +19,10 @@ services:
     volumes:
       - ${APP_DATA_DIR}/config:/config
       - ${APP_DATA_DIR}/downloads:/downloads
-    ports:
-      - 8080:8080
-      - 6881:6881
-      - 6881:6881/udp
+    #ports:
+    #  - 8080:8080
+    #  - 6881:6881
+    #  - 6881:6881/udp
+    network_mode: "container:martinmeel-gluetun_web_1"
     restart: unless-stopped   
 
