@@ -9,6 +9,8 @@
 export WINDSCRIBE_USER="????"
 export WINDSCRIBE_PASSWORD="????"
 
+# Choose: "openvpn" or "wireguard"
+#export VPN_PROTOCOL="wireguard"
 
 ###############################################################################
 # OPTIONAL: REGION / CITY SELECTION
