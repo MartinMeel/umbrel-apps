@@ -1,4 +1,4 @@
-version: "3.7"
+ER_)COUNTRversion: "3.7"
 
 services:
   app_proxy:
@@ -40,8 +40,8 @@ services:
       #1- WIREGUARD_PRESHARED_KEY=<your-PresharedKey>
 
       # Optional: you can usually leave these empty and let Gluetun auto-pick
-      - SERVER_COUNTRIES=
-      - SERVER_REGIONS=
+      - SERVER_COUNTRIES=${SERVER_COUNTRIES}
+      - SERVER_REGIONS=${SERVER_REGIONS}
       #- SERVER_CITIES=
 
       # ---- HTTP proxy exposed via Umbrel app_proxy on port 8888 ----
