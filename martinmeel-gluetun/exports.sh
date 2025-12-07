@@ -28,7 +28,7 @@ export WINDSCRIBE_PASSWORD="????"
 # This forces all connections to use *any* server within the selected region.
 # Available examples: Netherlands, Germany, Switzerland, France, UK, etc.
 #
-# export SERVER_REGIONS="Netherlands"
+export SERVER_REGIONS="Netherlands"
 
 
 # -------------------------
@@ -38,7 +38,7 @@ export WINDSCRIBE_PASSWORD="????"
 # You can provide multiple cities comma-separated.
 # Examples: Amsterdam, Frankfurt, Zurich, London, Paris
 #
-# export SERVER_CITIES="Amsterdam"
+export SERVER_CITIES="Amsterdam"
 
 
 # -------------------------
