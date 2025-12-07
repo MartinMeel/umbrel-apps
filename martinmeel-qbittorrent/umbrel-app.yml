@@ -14,7 +14,7 @@ website: https://windscribe.com
 repo: https://github.com/<your-username>/<your-community-store-repo>
 support: https://github.com/<your-username>/<your-community-store-repo>/issues
 
-port: 9091                     # same as Transmission web UI port
+port: 8080                     # same as Transmission web UI port
 
 gallery:
   - icon.svg
