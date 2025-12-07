@@ -1,0 +1,30 @@
+manifestVersion: 1
+
+id: martinmeel-windscribe-qbittorrent-vpn
+category: media
+name: qbittorrent-vpn
+version: "1.0.0"
+tagline: qBittorrent routed securely through Windscribe VPN
+description: >-
+  A privacy-focused qBittorrent client routed entirely through a Gluetun VPN
+  container using Windscribe. qBittorrent only has network access via the VPN
+  tunnel, preventing IP leaks if the VPN drops.
+
+developer: Martin Meel
+website: https://windscribe.com
+repo: https://github.com/YOUR-USERNAME/YOUR-STORE-REPO
+support: https://github.com/YOUR-USERNAME/YOUR-STORE-REPO/issues
+
+port: 8080
+
+gallery:
+  - icon.svg
+
+path: ""
+defaultUsername: admin
+defaultPassword: ""
+
+submitter: Martin Meel
+submission: ""
+releaseNotes: ""
+dependencies: []

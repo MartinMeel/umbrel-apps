@@ -1,0 +1,54 @@
+version: "3.7"
+
+services:
+  # Umbrel reverse proxy
+  app_proxy:
+    environment:
+      APP_HOST: martinmeel-windscribe-qbittorrent-vpn_gluetun_1
+      APP_PORT: 8080
+
+  gluetun:
+    image: qmcgaw/gluetun:latest
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun
+
+    environment:
+      # ---------- Windscribe VPN ----------
+      - VPN_SERVICE_PROVIDER=windscribe
+      - VPN_TYPE=openvpn
+
+      # These come from exports.sh (WINDSCRIBE_USER / WINDSCRIBE_PASSWORD)
+      - OPENVPN_USER=${WINDSCRIBE_USER}
+      - OPENVPN_PASSWORD=${WINDSCRIBE_PASSWORD}
+
+      # Optional: pick specific locations
+      # - SERVER_REGIONS=Netherlands
+      # - SERVER_CITIES=Amsterdam
+
+      - TZ=Europe/Amsterdam
+
+    volumes:
+      - ${APP_DATA_DIR}/gluetun:/gluetun
+
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    restart: unless-stopped
+
+    # Share Gluetun's network stack
+    network_mode: "service:gluetun"
+    depends_on:
+      - gluetun
+
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Amsterdam
+      - WEBUI_PORT=8080
+      # You’ll see the temporary admin password in logs on first run
+
+    volumes:
+      - ${APP_DATA_DIR}/config:/config
+      - ${APP_DATA_DIR}/downloads:/downloads
