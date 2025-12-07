@@ -3,6 +3,7 @@ version: "3.7"
 services:
   app_proxy:
     environment:
+      PROXY_AUTH_ADD: "false"
       APP_HOST: martinmeel-gluetun_1
       APP_PORT: 8888
 
@@ -25,7 +26,7 @@ services:
 
       # ---- VPN: Windscribe over WireGuard ----
       - VPN_SERVICE_PROVIDER=windscribe
-      - VPN_TYPE=wireguard
+      - VPN_TYPE=openvpn #wireguard
 
       # From your Windscribe WireGuard config (download from Windscribe site):
       # [Interface]
@@ -34,14 +35,14 @@ services:
       # [Peer]
       # PresharedKey = <...>
       # (PublicKey / Endpoint are handled by Gluetun from its server list)
-      - WIREGUARD_PRIVATE_KEY=<your-PrivateKey>
-      - WIREGUARD_ADDRESSES=<your-Address>     # e.g. 100.119.95.165/32
-      - WIREGUARD_PRESHARED_KEY=<your-PresharedKey>
+      #1- WIREGUARD_PRIVATE_KEY=<your-PrivateKey>
+      #1- WIREGUARD_ADDRESSES=<your-Address>     # e.g. 100.119.95.165/32
+      #1- WIREGUARD_PRESHARED_KEY=<your-PresharedKey>
 
       # Optional: you can usually leave these empty and let Gluetun auto-pick
       - SERVER_COUNTRIES=
       - SERVER_REGIONS=
-      - SERVER_CITIES=
+      #- SERVER_CITIES=
 
       # ---- HTTP proxy exposed via Umbrel app_proxy on port 8888 ----
       - HTTPPROXY=on
