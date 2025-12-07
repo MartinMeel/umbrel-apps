@@ -35,7 +35,7 @@ services:
     # If you also want LAN access to UIs, you can expose ports here.
     # Umbrel users normally go via app_proxy so this is optional:
     # ports:
-    #   - "8989:8989"   # Sonarr
+    #   - "8989:8989"   # Sonarr-
     #   - "7878:7878"   # Radarr
     #   - "9696:9696"   # Prowlarr
     #   - "8080:8080"   # SABnzbd
