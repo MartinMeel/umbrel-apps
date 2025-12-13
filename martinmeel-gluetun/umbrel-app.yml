@@ -1,28 +1,47 @@
 manifestVersion: 1
-
-id: martinmeel-gluetun          # must match folder name
-icon: https://svgur.com/i/mvA.svg
-category: Download
-name: Gluetun (VPN)
-version: "1.0.0"
-tagline: VPN client
+id: martinmeel-gluetun
+category: networking
+name: Gluetun VPN
+version: "3.38.0"
+tagline: Lightweight VPN client with support for multiple providers
 description: >-
-  VPN client
-
-developer: You
-website: https://windscribe.com
-repo: https://github.com/<your-username>/<your-community-store-repo>
-support: https://github.com/<your-username>/<your-community-store-repo>/issues
-
-port: 9091                     # same as Transmission web UI port
-
-gallery:
-  - icon.svg
+  Gluetun is a lightweight VPN client written in Go that supports multiple VPN providers
+  including Windscribe. It acts as a VPN gateway for other Docker containers, allowing
+  them to route their traffic through the VPN connection.
+  
+  
+  This setup is pre-configured for Windscribe but supports many other providers. Other
+  containers can route their traffic through Gluetun by using its network stack.
+  
+  
+  Key features:
+  
+  - Support for multiple VPN providers (Windscribe, NordVPN, ExpressVPN, etc.)
+  
+  - Built-in firewall with kill switch
+  
+  - DNS over TLS (DoT) support
+  
+  - HTTP proxy server
+  
+  - Health monitoring and automatic reconnection
+  
+  - Port forwarding support (provider dependent)
+  
+  
+  Before installing, make sure you have your Windscribe credentials ready. You'll need
+  to configure WINDSCRIBE_USERNAME and WINDSCRIBE_PASSWORD in the app settings.
+releaseNotes: >-
+  Initial release with Windscribe support. Configured to allow other containers
+  to route through the VPN connection.
+developer: qdm12
+website: https://github.com/qdm12/gluetun
+dependencies: []
+repo: https://github.com/qdm12/gluetun
+support: https://github.com/qdm12/gluetun/issues
+port: 8000
+gallery: []
 path: ""
-defaultUsername: umbrel
-defaultPassword: ""            # we’ll use APP_PASSWORD instead
-
-submitter: You
-submission: ""
-releaseNotes: ""
-dependencies: []               # no Umbrel app dependencies
+defaultUsername: ""
+defaultPassword: ""
+torOnly: false

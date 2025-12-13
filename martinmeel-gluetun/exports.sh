@@ -1,55 +1,14 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
-###############################################################################
-# Windscribe VPN credentials
-# These variables are used by Gluetun inside docker-compose.yml
-###############################################################################
+# Export Gluetun container name for other apps to reference
+export APP_GLUETUN_CONTAINER_NAME="gluetun_server_1"
 
-# Your Windscribe login (NOT the OpenVPN config credentials)
-export WINDSCRIBE_USER="????"
-export WINDSCRIBE_PASSWORD="????"
+# Export VPN status endpoint
+export APP_GLUETUN_API_URL="http://gluetun_server_1:8000"
 
-# Choose: "openvpn" or "wireguard"
-#export VPN_PROTOCOL="wireguard"
+# Network mode for other containers to use
+export APP_GLUETUN_NETWORK_MODE="container:gluetun_server_1"
 
-###############################################################################
-# OPTIONAL: REGION / CITY SELECTION
-#
-# You can restrict which Windscribe VPN locations Gluetun connects to.
-# If you leave all of these commented out, Gluetun will select the best
-# available region on its own.
-#
-# IMPORTANT:
-# - Use only ONE of these at a time (Region OR City).
-# - Names must match Gluetun's internal location database.
-###############################################################################
-
-# -------------------------
-# ▶ Example: Pick a REGION
-# -------------------------
-# This forces all connections to use *any* server within the selected region.
-# Available examples: Netherlands, Germany, Switzerland, France, UK, etc.
-#
-export SERVER_REGIONS="Netherlands"
-
-
-# -------------------------
-# ▶ Example: Pick a CITY
-# -------------------------
-# Forces Gluetun to connect only to servers in a specific city.
-# You can provide multiple cities comma-separated.
-# Examples: Amsterdam, Frankfurt, Zurich, London, Paris
-#
-export SERVER_CITIES="Amsterdam"
-
-
-# -------------------------
-# ▶ Multiple Cities (Example)
-# -------------------------
-# Connect to Amsterdam OR Rotterdam OR Frankfurt:
-#
-# export SERVER_CITIES="Amsterdam,Rotterdam,Frankfurt"
-#
-###############################################################################
-
-# End of exports.sh
+export WINDSCRIBE_USERNAME="efdqk1p2-97zvbkq"
+export WINDSCRIBE_PASSWORD="d2fw9tengj"
+export  WINDSCRIBE_REGION="Netherlands"

@@ -1,52 +1,62 @@
+version: "3.7"
+
 services:
   app_proxy:
     environment:
-      PROXY_AUTH_ADD: "false"
-      APP_HOST: martinmeel-gluetun_1
-      APP_PORT: 8888
+      APP_HOST: martinmeel-gluetun_server_1
+      APP_PORT: 8000
 
-  web:
-    image: qmcgaw/gluetun:v3
-    restart: on-failure
-    stop_grace_period: 1m
-
+  server:
+    image: qmcgaw/gluetun:latest
+    container_name: martinmeel-gluetun
     cap_add:
       - NET_ADMIN
     devices:
       - /dev/net/tun:/dev/net/tun
-
+    ports:
+      # Gluetun control server
+      - 8000:8000
+      # Expose ports for other containers to use
+      # Sonarr
+      - 8989:8989
+      # Prowlarr
+      - 9696:9696
+      # SABnzbd
+      - 8080:8080
+      # qBittorrent
+      - 8090:8090
+      # Radarr
+      - 7878:7878
     volumes:
-      - ${APP_DATA_DIR}/config:/gluetun
-
+      - ${APP_DATA_DIR}/data:/gluetun
     environment:
-      # ---- basics ----
-      - TZ=Etc/UTC
-
-      # ---- VPN: Windscribe over WireGuard ----
-      - VPN_SERVICE_PROVIDER=windscribe
-      - VPN_TYPE=openvpn #wireguard
-
-      # From your Windscribe WireGuard config (download from Windscribe site):
-      # [Interface]
-      # PrivateKey = <...>
-      # Address    = 100.xxx.xxx.xxx/32
-      # [Peer]
-      # PresharedKey = <...>
-      # (PublicKey / Endpoint are handled by Gluetun from its server list)
-      #1- WIREGUARD_PRIVATE_KEY=<your-PrivateKey>
-      #1- WIREGUARD_ADDRESSES=<your-Address>     # e.g. 100.119.95.165/32
-      #1- WIREGUARD_PRESHARED_KEY=<your-PresharedKey>
-
-      # Optional: you can usually leave these empty and let Gluetun auto-pick
-      - SERVER_COUNTRIES=${SERVER_COUNTRIES:-Netherlands}
-      - SERVER_REGIONS=${SERVER_REGIONS:-Amsterdam}
-      #- SERVER_CITIES=
-
-      # ---- HTTP proxy exposed via Umbrel app_proxy on port 8888 ----
-      - HTTPPROXY=on
-
-      # Optional extras you can tweak later:
-      # - SHADOWSOCKS=on
-      # - FIREWALL=on
-      # - DNS_ADDRESS=1.1.1.1
-      # - UPDATER_PERIOD=24h
+      # Windscribe VPN Configuration
+      VPN_SERVICE_PROVIDER: windscribe
+      VPN_TYPE: openvpn
+      OPENVPN_USER: ${WINDSCRIBE_USERNAME}
+      OPENVPN_PASSWORD: ${WINDSCRIBE_PASSWORD}
+      SERVER_REGIONS: ${WINDSCRIBE_REGION:-NL}
+      
+      # Firewall settings
+      FIREWALL_OUTBOUND_SUBNETS: ${NETWORK_SUBNET:-10.21.0.0/16}
+      
+      # DNS settings
+      DOT: "on"
+      
+      # Control server
+      HTTPPROXY: "on"
+      SHADOWSOCKS: "off"
+      
+      # Timezone
+      TZ: ${TZ:-UTC}
+      
+      # Health check URL
+      HEALTH_VPN_DURATION_INITIAL: 60s
+    restart: unless-stopped
+    stop_grace_period: 30s
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
