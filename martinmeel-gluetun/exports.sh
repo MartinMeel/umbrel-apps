@@ -4,7 +4,7 @@
 export APP_GLUETUN_CONTAINER_NAME="gluetun_server_1"
 
 # Export VPN status endpoint
-export APP_GLUETUN_API_URL="http://gluetun_server_1:8000"
+export APP_GLUETUN_API_URL="http://gluetun_server_1:8888"
 
 # Network mode for other containers to use
 export APP_GLUETUN_NETWORK_MODE="container:gluetun_server_1"

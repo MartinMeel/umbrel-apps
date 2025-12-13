@@ -39,7 +39,7 @@ website: https://github.com/qdm12/gluetun
 dependencies: []
 repo: https://github.com/qdm12/gluetun
 support: https://github.com/qdm12/gluetun/issues
-port: 8000
+port: 8888
 gallery: []
 path: ""
 defaultUsername: ""
