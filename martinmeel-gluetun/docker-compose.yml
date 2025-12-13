@@ -48,15 +48,15 @@ services:
       # SHADOWSOCKS: "off"
       
       # Timezone
-      TZ: ${TZ:-UTC}
+      TZ: ${TZ:-Europe/Amsterdam}
       
       # Health check URL
-      HEALTH_VPN_DURATION_INITIAL: 60s
-    restart: unless-stopped
-    stop_grace_period: 30s
-    healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8688/v1/openvpn/status"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 60s
+      #HEALTH_VPN_DURATION_INITIAL: 60s
+    #restart: unless-stopped
+    #stop_grace_period: 30s
+    #healthcheck:
+    #  test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8688/v1/openvpn/status"]
+    #  interval: 30s
+    #  timeout: 10s
+    #  retries: 3
+    #  start_period: 60s
