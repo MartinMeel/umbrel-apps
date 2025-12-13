@@ -31,6 +31,18 @@ description: >-
   
   Before installing, make sure you have your Windscribe credentials ready. You'll need
   to configure WINDSCRIBE_USERNAME and WINDSCRIBE_PASSWORD in the app settings.
+
+  IMPORTANT: You must edit the docker-compose.yml file before installing to add your
+  Windscribe username and password. Gluetun provides an HTTP API (not a web UI) for
+  monitoring at port 8888. Use curl or other tools to interact with the API.
+  
+  
+  API Examples:
+  
+  - Check VPN status: curl http://umbrel.local:8888/v1/openvpn/status
+  
+  - Get public IP: curl http://umbrel.local:8888/v1/publicip/ip
+
 releaseNotes: >-
   Initial release with Windscribe support. Configured to allow other containers
   to route through the VPN connection.
@@ -39,7 +51,6 @@ website: https://github.com/qdm12/gluetun
 dependencies: []
 repo: https://github.com/qdm12/gluetun
 support: https://github.com/qdm12/gluetun/issues
-port: 8888
 gallery: []
 path: ""
 defaultUsername: ""
