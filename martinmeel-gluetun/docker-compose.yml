@@ -37,15 +37,15 @@ services:
       SERVER_REGIONS: ${WINDSCRIBE_REGION:-Netherlands}
       
       # Firewall settings
-      FIREWALL_OUTBOUND_SUBNETS: ${NETWORK_SUBNET:-10.21.0.0/16}
+      # FIREWALL_OUTBOUND_SUBNETS: ${NETWORK_SUBNET:-10.21.0.0/16}
       
       # DNS settings
-      DOT: "on"
+      # DOT: "on"
       
       # Control server
-      HTTPPROXY: "on"
-      HTTPPROXY_LISTENING_ADDRESS: ":8688"
-      SHADOWSOCKS: "off"
+      # HTTPPROXY: "on"
+      # HTTPPROXY_LISTENING_ADDRESS: ":8688"
+      # SHADOWSOCKS: "off"
       
       # Timezone
       TZ: ${TZ:-UTC}

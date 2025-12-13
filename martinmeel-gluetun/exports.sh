@@ -11,4 +11,4 @@ export APP_GLUETUN_NETWORK_MODE="container:gluetun_server_1"
 
 export WINDSCRIBE_USERNAME="efdqk1p2-97zvbkq"
 export WINDSCRIBE_PASSWORD="d2fw9tengj"
-export  WINDSCRIBE_REGION="Netherlands"
+export WINDSCRIBE_REGION="Netherlands"
