@@ -39,9 +39,9 @@ description: >-
   
   API Examples:
   
-  - Check VPN status: curl http://umbrel.local:8688/v1/openvpn/status
+  - Check VPN status: curl http://umbrel.local:8888/v1/openvpn/status
   
-  - Get public IP: curl http://umbrel.local:8688/v1/publicip/ip
+  - Get public IP: curl http://umbrel.local:8888/v1/publicip/ip
 
 releaseNotes: >-
   Initial release with Windscribe support. Configured to allow other containers
