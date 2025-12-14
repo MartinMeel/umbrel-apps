@@ -35,7 +35,7 @@ services:
       - VPN_SERVICE_PROVIDER=protonvpn
       - VPN_TYPE=wireguard
       - WIREGUARD_PRIVATE_KEY=${PROTONVPN_PRIVATE_KEY}
-      - SERVER_REGIONS=Netherlands         
+      - SERVER_COUNTRIES=Netherlands         
       # Control server
       - HTTPPROXY=on
       - HTTPPROXY_LISTENING_ADDRESS=:8888
