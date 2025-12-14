@@ -45,7 +45,7 @@ services:
       
       # Control server
       - HTTPPROXY: "on"
-      - HTTPPROXY_LISTENING_ADDRESS: "8888"
+      - HTTPPROXY_LISTENING_ADDRESS: ":8888"
       # SHADOWSOCKS: "off"
       
       # Timezone
