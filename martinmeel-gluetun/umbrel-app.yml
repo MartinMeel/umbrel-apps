@@ -26,6 +26,9 @@ description: >-
   Gluetun provides an HTTP API (not a web UI) for
   monitoring at port 8000. Use curl or other tools to interact with the API.
   
+  After installing STOP the container and fill in the private key in the exports file!!!!
+
+
   CHECKS:
   Check yoour instance with:
   sudo docker logs -f martinmeel-gluetun_server_1
