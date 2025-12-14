@@ -1,9 +1,9 @@
 services:
-  app_proxy:
-    environment:
-      PROXY_AUTH_ADD: false
-      APP_HOST: martinmeel-gluetun_server_1
-      APP_PORT: 8688
+  #app_proxy:
+  #  environment:
+  #    PROXY_AUTH_ADD: false
+  #    APP_HOST: martinmeel-gluetun_server_1
+  #    APP_PORT: 8688
 
   server:
     image: qmcgaw/gluetun:latest
