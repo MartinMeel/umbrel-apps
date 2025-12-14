@@ -30,11 +30,11 @@ services:
       - ${APP_DATA_DIR}/data:/gluetun
     environment:
       # Windscribe VPN Configuration
-      VPN_SERVICE_PROVIDER: windscribe
-      VPN_TYPE: openvpn
-      OPENVPN_USER: ${WINDSCRIBE_USERNAME}
-      OPENVPN_PASSWORD: ${WINDSCRIBE_PASSWORD}
-      SERVER_REGIONS: ${WINDSCRIBE_REGION:-Netherlands}
+      VPN_SERVICE_PROVIDER=windscribe
+      VPN_TYPE=openvpn
+      OPENVPN_USER=${WINDSCRIBE_USERNAME}
+      OPENVPN_PASSWORD=${WINDSCRIBE_PASSWORD}
+      SERVER_REGIONS=${WINDSCRIBE_REGION:-Netherlands}
       
       # Firewall settings
       # FIREWALL_OUTBOUND_SUBNETS: ${NETWORK_SUBNET:-10.21.0.0/16}
