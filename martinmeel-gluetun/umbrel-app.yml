@@ -8,48 +8,50 @@ description: >-
   Gluetun is a lightweight VPN client written in Go that supports multiple VPN providers
   including Windscribe. It acts as a VPN gateway for other Docker containers, allowing
   them to route their traffic through the VPN connection.
-  
-  
+
   This setup is pre-configured for Windscribe but supports many other providers. Other
   containers can route their traffic through Gluetun by using its network stack.
-  
-  
+
   Key features:
-  
   - Support for multiple VPN providers (Windscribe, NordVPN, ExpressVPN, etc.)
-  
   - Built-in firewall with kill switch
-  
   - DNS over TLS (DoT) support
-  
   - HTTP proxy server
-  
   - Health monitoring and automatic reconnection
-  
   - Port forwarding support (provider dependent)
   
+  IMPORTANT:
+  Before installing, make sure you have your ProtonVPN credentials ready. You'll need
+  to configure PROTONVPN_PRIVATE_KEY in the exports.sh file.
+  Gluetun provides an HTTP API (not a web UI) for
+  monitoring at port 8000. Use curl or other tools to interact with the API.
   
-  Before installing, make sure you have your Windscribe credentials ready. You'll need
-  to configure WINDSCRIBE_USERNAME and WINDSCRIBE_PASSWORD in the app settings.
-
-  IMPORTANT: You must edit the docker-compose.yml file before installing to add your
-  Windscribe username and password. Gluetun provides an HTTP API (not a web UI) for
-  monitoring at port 8888. Use curl or other tools to interact with the API.
-  
+  CHECKS:
   Check yoour instance with:
   sudo docker logs -f martinmeel-gluetun_server_1
 
-
-
-
+  Useful Gluetun Control Server Endpoints
   API Examples:
-  
-  - Check VPN status: curl http://umbrel.local:8000/v1/wireguard/status
-  
-  - Get public IP: curl http://umbrel.local:8000/v1/publicip/ip
+  # Get your VPN IP address
+  curl http://umbrel.local:8000/v1/publicip/ip
+
+  # WireGuard status
+  curl http://umbrel.local:8000/v1/wireguard/status
+
+  # Port forwarding status (if enabled)
+  curl http://umbrel.local:8000/v1/wireguard/portforwarded
+
+  # Update port forwarding
+  curl http://umbrel.local:8000/v1/wireguard/portforwarded -X PUT
+
+  # DNS filtering status
+  curl http://umbrel.local:8000/v1/dns/status
+
+  # See all available endpoints
+  curl http://umbrel.local:8000/v1/
 
 releaseNotes: >-
-  Initial release with Windscribe support. Configured to allow other containers
+  Initial release with ProtonVPN support. Configured to allow other containers
   to route through the VPN connection.
 developer: qdm12
 website: https://github.com/qdm12/gluetun
