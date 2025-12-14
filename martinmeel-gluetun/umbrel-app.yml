@@ -36,12 +36,17 @@ description: >-
   Windscribe username and password. Gluetun provides an HTTP API (not a web UI) for
   monitoring at port 8888. Use curl or other tools to interact with the API.
   
-  
+  Check yoour instance with:
+  sudo docker logs -f martinmeel-gluetun_server_1
+
+
+
+
   API Examples:
   
   - Check VPN status: curl http://umbrel.local:8888/v1/openvpn/status
   
-  - Get public IP: curl http://umbrel.local:8888/v1/publicip/ip
+  - Get public IP: curl http://umbrel.local:8000/v1/publicip/ip
 
 releaseNotes: >-
   Initial release with Windscribe support. Configured to allow other containers
