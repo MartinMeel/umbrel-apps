@@ -30,14 +30,9 @@ services:
       - ${APP_DATA_DIR}/data:/gluetun
     environment:
       # Windscribe VPN Configuration
-      - VPN_SERVICE_PROVIDER=windscribe
+      - VPN_SERVICE_PROVIDER=protonvpn
       - VPN_TYPE=wireguard
-      - WIREGUARD_PRIVATE_KEY=${WINDSCRIBE_PRIVATE_KEY}
-      - WIREGUARD_ADDRESSES=${WINDSCRIBE_ADDRESSES}
-      - WIREGUARD_PRESHARED_KEY=${WINDSCRIBE_PRESHARED_KEY}
-      #- WIREGUARD_PUBLIC_KEY=${WINDSCRIBE_PUBLIC_KEY}
-      #- WIREGUARD_ENDPOINT_IP=${WINDSCRIBE_ENDPOINT}
-      #- WIREGUARD_ENDPOINT_PORT=
+      - WIREGUARD_PRIVATE_KEY=${PROTON_PRIVATE_KEY}
       #- SERVER_REGIONS=Netherlands
       - SERVER_CITIES=Amsterdam
       # Firewall settings
@@ -55,12 +50,4 @@ services:
       - TZ:=Europe/Amsterdam
       
       # Health check URL
-      #HEALTH_VPN_DURATION_INITIAL: 60s
-    #restart: unless-stopped
-    #stop_grace_period: 30s
-    #healthcheck:
-    #  test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8888/v1/openvpn/status"]
-    #  interval: 30s
-    #  timeout: 10s
-    #  retries: 3
-    #  start_period: 60s
+      
