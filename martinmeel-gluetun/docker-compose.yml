@@ -6,7 +6,7 @@ services:
   #    APP_PORT: 8688
 
   server:
-    image: qmcgaw/gluetun:latest
+    image: qmcgaw/gluetun:v3.40.3
     # container_name: martinmeel-gluetun
     cap_add:
       - NET_ADMIN
