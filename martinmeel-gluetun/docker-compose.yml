@@ -32,9 +32,9 @@ services:
       # Windscribe VPN Configuration
       - VPN_SERVICE_PROVIDER=windscribe
       - VPN_TYPE=wireguard
-      - WIREGUARD_PRIVATE_KEY=wOEI9rqqbDwnN8/Bpp22sVz48T71vJ4fYmFWujulwUU=
-      - WIREGUARD_ADDRESSES=100.75.0.203/32
-      - WIREGUARD_PRESHARED_KEY=
+      - WIREGUARD_PRIVATE_KEY=${WINDSCRIBE_PRIVATE_KEY}
+      - WIREGUARD_ADDRESSES=${WIREGUARD_ADDRESSES}
+      - WIREGUARD_PRESHARED_KEY=${WIREGUARD_PRESHARED_KEY}
       - SERVER_REGIONS=Netherlands
       
       # Firewall settings

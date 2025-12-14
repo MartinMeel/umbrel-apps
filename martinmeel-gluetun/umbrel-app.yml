@@ -2,7 +2,7 @@ manifestVersion: 1
 id: martinmeel-gluetun
 category: networking
 name: Gluetun VPN
-version: "3.38.0"
+version: "3.40.3"
 tagline: Lightweight VPN client with support for multiple providers
 description: >-
   Gluetun is a lightweight VPN client written in Go that supports multiple VPN providers
