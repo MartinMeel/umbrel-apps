@@ -1,0 +1,50 @@
+manifestVersion: 1.1
+id: martinmeel-sonarr
+name: Sonarr
+tagline: Smart PVR for TV shows
+icon: https://raw.githubusercontent.com/Sonarr/Sonarr/develop/Logo/256.png
+category: Media
+version: "4.0.11"
+port: 8989
+description: >-
+  Sonarr is a PVR for Usenet and BitTorrent users. It can monitor multiple RSS feeds for new episodes of your favorite shows and will grab, sort and rename them. It can also be configured to automatically upgrade the quality of files already downloaded when a better quality format becomes available.
+  
+  
+  This app routes all traffic through the Gluetun VPN container for privacy and security.
+
+
+  Features:
+  
+  - Automatic episode monitoring and downloading
+  
+  - Beautiful web interface
+  
+  - Calendar to see all upcoming episodes
+  
+  - Support for major platforms including Usenet and torrents
+  
+  - Integrates with download clients
+  
+  - Full automation with RSS sync
+
+developer: Sonarr
+website: https://sonarr.tv
+submitter: Umbrel
+submission: https://github.com/getumbrel/umbrel-apps
+repo: https://github.com/Sonarr/Sonarr
+support: https://github.com/Sonarr/Sonarr/issues
+gallery:
+  - https://i.imgur.com/QHbfraS.png
+  - https://i.imgur.com/EqFfKbR.png
+  - https://i.imgur.com/HDLiTPM.png
+
+releaseNotes: >-
+  This release routes all Sonarr traffic through your Gluetun VPN container for enhanced privacy.
+
+dependencies:
+  - martinmeel-gluetun
+
+path: ""
+defaultUsername: ""
+defaultPassword: ""
+torOnly: false
