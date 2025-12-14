@@ -14,7 +14,7 @@ services:
       - /dev/net/tun:/dev/net/tun
     ports:
       # Gluetun control server
-      - 8688:8888
+      - 8888:8888
       # Expose ports for other containers to use
       # Sonarr
       - 8989:8989
@@ -31,10 +31,11 @@ services:
     environment:
       # Windscribe VPN Configuration
       - VPN_SERVICE_PROVIDER=windscribe
-      - VPN_TYPE=openvpn
-      - OPENVPN_USER=${WINDSCRIBE_USERNAME}
-      - OPENVPN_PASSWORD=${WINDSCRIBE_PASSWORD}
-      - SERVER_REGIONS=${WINDSCRIBE_REGION:-Netherlands}
+      - VPN_TYPE=wireguard
+      - WIREGUARD_PRIVATE_KEY=wOEI9rqqbDwnN8/Bpp22sVz48T71vJ4fYmFWujulwUU=
+      - WIREGUARD_ADDRESSES=100.75.0.203/32
+      - WIREGUARD_PRESHARED_KEY=
+      - SERVER_REGIONS=Netherlands
       
       # Firewall settings
       # FIREWALL_OUTBOUND_SUBNETS: ${NETWORK_SUBNET:-10.21.0.0/16}
@@ -55,7 +56,7 @@ services:
     #restart: unless-stopped
     #stop_grace_period: 30s
     #healthcheck:
-    #  test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8688/v1/openvpn/status"]
+    #  test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8888/v1/openvpn/status"]
     #  interval: 30s
     #  timeout: 10s
     #  retries: 3
