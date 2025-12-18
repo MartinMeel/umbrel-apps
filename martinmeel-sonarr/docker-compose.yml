@@ -19,5 +19,4 @@ services:
       - PGID=1000
       - TZ=Europe/Amsterdam
     # Note: No ports section needed - using Gluetun's exposed port 8989
-    restart: unless-stopped
     stop_grace_period: 5m
