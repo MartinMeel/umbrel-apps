@@ -25,7 +25,7 @@ services:
       # SABnzbd
       - 8080:8080
       # qBittorrent
-      - 8090:8090
+      # removed tot test port conflict - 8090:8090
       # Radarr
       - 7878:7878
     volumes:
