@@ -1,5 +1,5 @@
 manifestVersion: 1
-id: qbittorrent
+id: martinmeel-qbittorrent
 name: qBittorrent
 tagline: Free and reliable P2P BitTorrent client
 icon: https://raw.githubusercontent.com/qbittorrent/qBittorrent/master/src/icons/qbittorrent-tray.svg
