@@ -13,3 +13,4 @@ dependencies: []
 path: ""
 defaultUsername: "admin"
 defaultPassword: "adminpass"
+torOnly: false
