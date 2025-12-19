@@ -1,11 +1,10 @@
 manifestVersion: 1
 id: martinmeel-prowlarr
 name: Prowlarr
+version: "1.0.0"
 tagline: Indexer manager for Sonarr and Radarr
 icon: https://raw.githubusercontent.com/Prowlarr/Prowlarr/develop/Logo/256.png
-category: media
-version: "1.0.0"
-port: 9696
+category: MultiMedia
 description: >-
   Prowlarr is an indexer manager/proxy built on the popular *arr .net/reactjs base stack to integrate
   with your various PVR apps. Prowlarr supports management of both Torrent Trackers and Usenet Indexers.
@@ -13,17 +12,21 @@ description: >-
   of your indexers with no per app Indexer setup required.
   
   This version routes all traffic through Gluetun VPN for privacy and security.
-
 developer: Prowlarr Team
 website: https://prowlarr.com
 dependencies:
   - martinmeel-gluetun
 repo: https://github.com/Prowlarr/Prowlarr
 support: https://forums.prowlarr.com
+port: 9696
 gallery:
   - https://i.imgur.com/WlRLLP4.png
   - https://i.imgur.com/cG92nGK.png
 releaseNotes: >-
   Prowlarr configured to route through Gluetun VPN container
+path: ""
+defaultUsername: ""
+defaultPassword: ""
 submitter: Martin Meel
 submission: https://github.com/getumbrel/umbrel-apps
+#torOnly: false

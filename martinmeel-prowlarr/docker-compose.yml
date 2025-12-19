@@ -14,3 +14,4 @@ services:
       - PGID=1000
       - TZ=Europe/Amsterdam
     restart: unless-stopped
+    stop_grace_period: 5m
