@@ -26,38 +26,44 @@ description: >-
   ⚠️ IMPORTANT:
     Before installing, make sure you have your ProtonVPN credentials ready. 
     You'll need to configure PROTONVPN_PRIVATE_KEY in the exports.sh file.
-    
-  Gluetun provides an HTTP API (not a web UI) for monitoring at port 8000. Use curl or other tools to interact with the API.
+
+
+  Gluetun provides an HTTP API (not a web UI) for monitoring at port 8000. 
+  Use curl or other tools to interact with the API.
+  
+
   🛠️ SET-UP INSTRUCTIONS
     After installing STOP the container and fill in the private key in the exports file!!!!
     ⚠️ NOTE: Please ssh into your umbrel or via the settings icon -> Advanced settings -> Terminal (open)
 
 
   CHECKS:  
-    ⚠️ NOTE: Please ssh into your umbrel or via the settings icon -> Advanced settings -> Terminal (open)
+    ⚠️ NOTE: 
+    Please ssh into your umbrel or via the settings icon -> Advanced settings -> Terminal (open)
     Check your instance with:
     - sudo docker logs -f martinmeel-gluetun_server_1
   
   Useful Gluetun Control Server Endpoints:
     ⚠️ NOTE: Please ssh into your umbrel or via the settings icon -> Advanced settings -> Terminal (open) to 
     
-    API Examples: `Get your VPN IP address`
+    API Examples: 
+    Get your VPN IP address
     - sudo curl http://umbrel.local:8000/v1/publicip/ip
   
-    `WireGuard status`
-    - curl http://umbrel.local:8000/v1/wireguard/status
+    WireGuard status
+    - sudo curl http://umbrel.local:8000/v1/wireguard/status
   
-    `Port forwarding status (if enabled)`
-    - curl http://umbrel.local:8000/v1/wireguard/portforwarded
+    Port forwarding status (if enabled)
+    - sudo curl http://umbrel.local:8000/v1/wireguard/portforwarded
   
-    `Update port forwarding`
-    - curl http://umbrel.local:8000/v1/wireguard/portforwarded -X PUT
+    Update port forwarding
+    - sudo curl http://umbrel.local:8000/v1/wireguard/portforwarded -X PUT
   
-    `DNS filtering status`
-    - curl http://umbrel.local:8000/v1/dns/status
+    DNS filtering status
+    - sudo curl http://umbrel.local:8000/v1/dns/status
   
-    `See all available endpoints`
-    -curl http://umbrel.local:8000/v1/
+    See all available endpoints
+    -sudo curl http://umbrel.local:8000/v1/
 releaseNotes: >-
   Initial release with ProtonVPN support. Configured to allow other containers
   to route through the VPN connection.
