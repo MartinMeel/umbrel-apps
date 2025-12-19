@@ -56,7 +56,7 @@ description: >-
 releaseNotes: >-
   Initial release with ProtonVPN support. Configured to allow other containers
   to route through the VPN connection.
-icon: icon.svg
+icon: https://github.com/MartinMeel/umbrel-app-gallery/blob/main/martinmeel-gluetun/icon.svg
 developer: qdm12
 website: https://github.com/qdm12/gluetun
 dependencies: []
