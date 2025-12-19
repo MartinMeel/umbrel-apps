@@ -40,8 +40,6 @@ services:
       # Control server
       - HTTPPROXY=on
       - HTTPPROXY_LISTENING_ADDRESS=:8888
-      environment:
-  # ... your existing variables ...
       - HTTPPROXY_USER=test
       - HTTPPROXY_PASSWORD=test
       # Timezone
