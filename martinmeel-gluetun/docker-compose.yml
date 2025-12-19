@@ -19,11 +19,11 @@ services:
       - 8000:8000
       # Expose ports for other containers to use
       # Sonarr
-      - 8989:8989
+      # removed tot test port conflict - 8989:8989
       # Prowlarr
-      - 9696:9696
+      # removed tot test port conflict - 9696:9696
       # SABnzbd
-      - 8080:8080
+      # removed tot test port conflict - 8080:8080
       # qBittorrent
       # removed tot test port conflict - 8090:8090
       # Wirks without errors on qbittorrent side!!! So port needs to be removed because "The port will still be accessible within the Docker network, which is what app_proxy needs."
