@@ -21,8 +21,9 @@ repo: https://github.com/sabnzbd/sabnzbd
 support: https://forums.sabnzbd.org
 port: 8080
 gallery:
-  - https://i.imgur.com/gVR6RLy.png
-  - https://i.imgur.com/LHqC5S8.png
+  - https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-sabnzbd/1.jpg
+  - https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-sabnzbd/2.jpg
+  - https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-sabnzbd/3.jpg
 releaseNotes: >-
   SABnzbd configured to route through Gluetun VPN container
 path: ""

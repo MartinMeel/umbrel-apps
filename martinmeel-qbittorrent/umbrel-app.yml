@@ -23,9 +23,9 @@ repo: https://github.com/qbittorrent/qBittorrent
 support: https://github.com/qbittorrent/qBittorrent/issues/
 port: 8090
 gallery:
-  - 1.jpg
-  - 2.jpg
-  - 3.jpg
+  - https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-qbittorrent/1.jpg
+  - https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-qbittorrent/2.jpg
+  - https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-qbittorrent/3.jpg
 path: ""
 defaultUsername: "admin"
 defaultPassword: ""

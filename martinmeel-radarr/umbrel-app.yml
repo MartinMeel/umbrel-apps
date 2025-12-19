@@ -21,8 +21,9 @@ dependencies:
 repo: https://github.com/Radarr/Radarr
 support: https://forums.radarr.video
 gallery:
-  - https://i.imgur.com/fxWAmLo.png
-  - https://i.imgur.com/dKt5T3p.png
+  - https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-radarr/1.jpg
+  - https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-radarr/2.jpg
+  - https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-radarr/3.jpg
 releaseNotes: >-
   Radarr configured to route through Gluetun VPN container
 submitter: Martin Meel
