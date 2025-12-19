@@ -9,10 +9,11 @@ services:
     network_mode: "container:martinmeel-gluetun_server_1"
     volumes:
       - ${APP_DATA_DIR}/data/config:/config
-      - ${APP_DATA_DIR}/data/downloads:/downloads
-      - ${APP_DATA_DIR}/data/incomplete-downloads:/incomplete-downloads
+      - ${UMBREL_ROOT}/home/Downloads/complete:/complete
+      - ${UMBREL_ROOT}/home/Downloads/incomplete:/incomplete-downloads
     environment:
       - PUID=1000
       - PGID=1000
       - TZ=Europe/Amsterdam
     restart: unless-stopped
+    stop_grace_period: 1m

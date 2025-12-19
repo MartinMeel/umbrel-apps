@@ -1,11 +1,10 @@
 manifestVersion: 1
 id: martinmeel-sabnzbd
+category: MultiMedia
 name: SABnzbd
+version: "4.5.5"
 tagline: The automated Usenet download tool
 icon: https://raw.githubusercontent.com/sabnzbd/sabnzbd/develop/icons/logo-arrow.svg
-category: media
-version: "4.0.0"
-port: 8080
 description: >-
   SABnzbd is an Open Source Binary Newsreader written in Python. It's totally free, easy to use,
   and works practically everywhere. SABnzbd makes Usenet as simple and streamlined as possible by
@@ -13,19 +12,22 @@ description: >-
   where it will be automatically downloaded, verified, repaired, extracted and filed away with zero
   human interaction.
   
-  This version routes all traffic through Gluetun VPN for privacy and security.
-
+  ⚠️ This version routes all traffic through Gluetun VPN for privacy and security.
 developer: SABnzbd Team
 website: https://sabnzbd.org
 dependencies:
   - martinmeel-gluetun
 repo: https://github.com/sabnzbd/sabnzbd
 support: https://forums.sabnzbd.org
+port: 8080
 gallery:
   - https://i.imgur.com/gVR6RLy.png
   - https://i.imgur.com/LHqC5S8.png
 releaseNotes: >-
   SABnzbd configured to route through Gluetun VPN container
+path: ""
+defaultUsername: ""
+defaultPassword: ""
 submitter: Martin Meel
 submission: https://github.com/getumbrel/umbrel-apps
-torOnly: false
+#torOnly: false
