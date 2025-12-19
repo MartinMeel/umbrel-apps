@@ -9,10 +9,20 @@ services:
     network_mode: "container:martinmeel-gluetun_server_1"
     volumes:
       - ${APP_DATA_DIR}/data/config:/config
-      - ${APP_DATA_DIR}/data/movies:/movies
-      - ${APP_DATA_DIR}/data/downloads:/downloads
+      #- ${APP_DATA_DIR}/data/movies:/movies
+      #- ${APP_DATA_DIR}/data/downloads:/downloads
+      - ${UMBREL_ROOT}/home/Downloads/Films:/movies
+      - ${UMBREL_ROOT}/home/Downloads/Films2:/movies2
+      - ${UMBREL_ROOT}/home/Downloads/complete:/complete
     environment:
       - PUID=1000
       - PGID=1000
       - TZ=Europe/Amsterdam
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7878/ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
     restart: unless-stopped
+    stop_grace_period: 1m
