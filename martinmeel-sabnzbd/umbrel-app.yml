@@ -1,6 +1,6 @@
 manifestVersion: 1
 id: martinmeel-sabnzbd
-category: MultiMedia
+category: download
 name: SABnzbd
 version: "4.5.5"
 tagline: The automated Usenet download tool

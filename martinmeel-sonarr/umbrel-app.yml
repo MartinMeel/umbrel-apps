@@ -1,6 +1,6 @@
 manifestVersion: 1
 id: martinmeel-sonarr
-category: MultiMedia
+category: multimedia
 name: Sonarr
 version: "4.0.16"
 tagline: Smart PVR for TV shows

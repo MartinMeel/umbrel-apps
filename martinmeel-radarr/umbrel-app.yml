@@ -3,7 +3,7 @@ id: martinmeel-radarr
 name: Radarr
 tagline: Smart PVR for movies
 icon: https://raw.githubusercontent.com/Radarr/Radarr/develop/Logo/256.png
-category: media
+category: multimedia
 version: "5.0.0"
 port: 7878
 description: >-

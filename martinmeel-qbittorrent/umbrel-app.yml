@@ -1,6 +1,6 @@
 manifestVersion: 1
 id: martinmeel-qbittorrent
-category: networking
+category: download
 name: qBittorrent
 version: "5.1.4"
 tagline: Free and reliable P2P BitTorrent client
