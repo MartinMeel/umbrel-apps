@@ -39,22 +39,22 @@ description: >-
     
     
     API Examples:
-    'Get your VPN IP address'
+    `Get your VPN IP address`
     - curl http://umbrel.local:8000/v1/publicip/ip
   
-    'WireGuard status'
+    `WireGuard status`
     - curl http://umbrel.local:8000/v1/wireguard/status
   
-    'Port forwarding status (if enabled)''
+    `Port forwarding status (if enabled)`
     - curl http://umbrel.local:8000/v1/wireguard/portforwarded
   
-    'Update port forwarding'
+    `Update port forwarding`
     - curl http://umbrel.local:8000/v1/wireguard/portforwarded -X PUT
   
-    'DNS filtering status'
+    `DNS filtering status`
     - curl http://umbrel.local:8000/v1/dns/status
   
-    'See all available endpoints'
+    `See all available endpoints`
     -curl http://umbrel.local:8000/v1/
 releaseNotes: >-
   Initial release with ProtonVPN support. Configured to allow other containers
