@@ -1,5 +1,5 @@
 manifestVersion: 1
-id: martinmeel-gluetun
+id: martinmeel-gluetun-pfw
 category: networking
 name: Gluetun VPN
 version: "3.40.3"
