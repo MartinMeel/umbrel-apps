@@ -1,7 +1,7 @@
 services:
   app_proxy:
     environment:
-      APP_HOST: martinmeel-gluetun_server_1
+      APP_HOST: martinmeel-gluetun-pfw_server_1
       APP_PORT: 8090
 
   server:
