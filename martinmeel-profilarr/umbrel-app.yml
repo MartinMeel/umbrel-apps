@@ -16,7 +16,7 @@ developer: Prowlarr Team
 website: https://dictionarry.dev/
 repo: https://dictionarry.dev/
 support: https://dictionarry.dev/
-port: 9696
+port: 6868
 gallery:
   - https://github.com/Dictionarry-Hub/profilarr/blob/main/.github/images/preview.png
 releaseNotes: >-
