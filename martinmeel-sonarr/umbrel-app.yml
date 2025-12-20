@@ -14,8 +14,8 @@ description: >-
 
 developer: Sonarr Team
 website: https://sonarr.tv
-dependencies:
-  - martinmeel-gluetun
+dependencies: []
+  #- martinmeel-gluetun
 repo: https://github.com/Sonarr/Sonarr
 support: https://forums.sonarr.tv
 port: 8989

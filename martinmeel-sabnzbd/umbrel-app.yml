@@ -15,8 +15,8 @@ description: >-
   ⚠️ This version routes all traffic through Gluetun VPN for privacy and security.
 developer: SABnzbd Team
 website: https://sabnzbd.org
-dependencies:
-  - martinmeel-gluetun
+dependencies: []
+  #- martinmeel-gluetun
 repo: https://github.com/sabnzbd/sabnzbd
 support: https://forums.sabnzbd.org
 port: 8080

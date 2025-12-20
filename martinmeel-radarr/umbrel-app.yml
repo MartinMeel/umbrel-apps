@@ -16,8 +16,8 @@ description: >-
 
 developer: Radarr Team
 website: https://radarr.video
-dependencies:
-  - martinmeel-gluetun
+dependencies: []
+  #- martinmeel-gluetun
 repo: https://github.com/Radarr/Radarr
 support: https://forums.radarr.video
 gallery:
