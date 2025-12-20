@@ -49,7 +49,6 @@ dependencies: []
 repo: https://github.com/qdm12/gluetun
 support: https://github.com/qdm12/gluetun/issues
 gallery: []
-path: ""
 defaultUsername: ""
 defaultPassword: ""
 #torOnly: false #not needed.
