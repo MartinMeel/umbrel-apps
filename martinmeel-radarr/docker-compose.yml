@@ -11,7 +11,7 @@ services:
       - ${APP_DATA_DIR}/data/config:/config
       - ${UMBREL_ROOT}/home/Downloads/Films:/movies
       - ${UMBREL_ROOT}/home/Downloads/Films2:/movies2
-      - ${UMBREL_ROOT}/home/Downloads/complete:/downloads
+      - ${UMBREL_ROOT}/home/Downloads/complete:/complete
     environment:
       - PUID=1000
       - PGID=1000
