@@ -14,8 +14,8 @@ description: >-
   This version routes all traffic through Gluetun VPN for privacy and security.
 developer: Prowlarr Team
 website: https://prowlarr.com
-dependencies: []
-   #- martinmeel-gluetun
+dependencies:
+  - martinmeel-gluetun
 repo: https://github.com/Prowlarr/Prowlarr
 support: https://forums.prowlarr.com
 port: 9696

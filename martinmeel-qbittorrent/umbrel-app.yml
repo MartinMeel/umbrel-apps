@@ -18,7 +18,8 @@ description: >-
 icon: https://raw.githubusercontent.com/qbittorrent/qBittorrent/master/src/icons/qbittorrent-tray.svg
 developer: qBittorrent
 website: https://www.qbittorrent.org
-dependencies: []
+dependencies: 
+  - martinmeel-gluetun
 repo: https://github.com/qbittorrent/qBittorrent
 support: https://github.com/qbittorrent/qBittorrent/issues/
 port: 8090
