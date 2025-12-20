@@ -1,0 +1,55 @@
+manifestVersion: 1
+id: martinmeel-gluetun
+category: networking
+name: Gluetun VPN
+version: "3.40.3"
+tagline: Lightweight VPN client with support for multiple providers
+icon: https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-gluetun/gluetun.svg
+description: >-
+  Gluetun is a lightweight VPN client written in Go that supports multiple VPN providers
+  including ProtonVPN, Windscribe etc. It acts as a VPN gateway for other Docker containers, allowing
+  them to route their traffic through the VPN connection.
+  
+
+  This setup is pre-configured for ProtonVPN Wireguard but supports many other providers. Other
+  containers can route their traffic through Gluetun by using its network stack.
+  
+
+  Key features:
+    - Support for multiple VPN providers (Windscribe, NordVPN, ExpressVPN, etc.)
+    - Built-in firewall with kill switch
+    - DNS over TLS (DoT) support
+    - HTTP proxy server
+    - Health monitoring and automatic reconnection
+    - Port forwarding support (provider dependent)
+  
+  ⚠️ IMPORTANT:
+    Before installing, make sure you have your ProtonVPN credentials ready. 
+    You'll need to configure PROTONVPN_PRIVATE_KEY in the exports.sh file.
+
+
+  🛠️ SET-UP INSTRUCTIONS
+    After installing Gluetun STOP the container and fill in the private key in the exports file!!!!
+    ⚠️ NOTE: Please ssh into your umbrel or via the settings icon -> Advanced settings -> Terminal (open) to change the exports file.
+
+
+  Logs:  
+    ⚠️ NOTE: 
+    Please ssh into your umbrel or via the settings icon -> Advanced settings -> Terminal (open)
+    Check your instance with:
+    - sudo docker logs -f martinmeel-gluetun_server_1
+
+
+releaseNotes: >-
+  Initial release with ProtonVPN support. Configured to allow other containers
+  to route through the VPN connection.
+developer: qdm12
+website: https://github.com/qdm12/gluetun
+dependencies: []
+repo: https://github.com/qdm12/gluetun
+support: https://github.com/qdm12/gluetun/issues
+gallery: []
+path: ""
+defaultUsername: ""
+defaultPassword: ""
+#torOnly: false #not needed.
