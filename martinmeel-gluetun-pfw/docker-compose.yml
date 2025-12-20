@@ -26,7 +26,7 @@ services:
       # removed to test port conflict - 8080:8080
       # qBittorrent
       # removed to test port conflict - 8090:8090
-      # Wirks without errors on qbittorrent side!!! So port needs to be removed because "The port will still be accessible within the Docker network, which is what app_proxy needs."
+      # Works without errors on qbittorrent side!!! So port needs to be removed because "The port will still be accessible within the Docker network, which is what app_proxy needs."
       # Radarr
       # removed to test port conflict - 7878:7878
     volumes:

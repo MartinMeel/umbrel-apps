@@ -40,6 +40,9 @@ services:
       # Control server
       - HTTPPROXY=on
       - HTTPPROXY_LISTENING_ADDRESS=:8888
+      # Enable port forwarding. Note! Make sure you use the private key which covers the portforwarding option.
+      - VPN_PORT_FORWARDING=on
+      - VPN_PORT_FORWARDING_PROVIDER=protonvpn
       # Timezone
       - TZ=Europe/Amsterdam
     # Health check URL
