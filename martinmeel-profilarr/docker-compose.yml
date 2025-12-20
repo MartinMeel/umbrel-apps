@@ -6,11 +6,11 @@ services:
 
   server:
     image: santiagosayshey/profilarr:latest
-    network_mode: "container:martinmeel-gluetun_server_1"
+    #network_mode: "container:martinmeel-gluetun_server_1"
     volumes:
       - ${APP_DATA_DIR}/data/config:/config
-    #ports:
-    #  - 6868:6868
+    ports:
+      - 6868:6868
     environment:
       - PUID=1000
       - PGID=1000
