@@ -21,7 +21,7 @@ gallery:
   - https://github.com/Dictionarry-Hub/profilarr/blob/main/.github/images/preview.png
 releaseNotes: >-
   None
-path: ""
+#path: ""
 defaultUsername: ""
 defaultPassword: ""
 submitter: Martin Meel
