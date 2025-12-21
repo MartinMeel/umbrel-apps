@@ -16,7 +16,7 @@ developer: Prowlarr Team
 website: https://dictionarry.dev/
 repo: https://dictionarry.dev/
 support: https://dictionarry.dev/
-port: 6868
+port: 5858
 gallery:
   - https://github.com/Dictionarry-Hub/profilarr/blob/main/.github/images/preview.png
 releaseNotes: >-
@@ -26,4 +26,4 @@ defaultUsername: ""
 defaultPassword: ""
 submitter: Martin Meel
 submission: https://github.com/getumbrel/umbrel-apps
-#torOnly: false
+torOnly: false
