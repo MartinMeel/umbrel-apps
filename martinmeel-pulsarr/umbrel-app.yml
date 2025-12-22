@@ -1,31 +1,28 @@
 manifestVersion: 1
-id: martinmeel-radarr
-name: Radarr
-tagline: Smart PVR for movies
-icon: https://raw.githubusercontent.com/Radarr/Radarr/develop/Logo/256.png
+id: martinmeel-pulsarr
+name: Pulsarr via Gluetun
+tagline: Real-time Plex watchlist monitoring, routing, and notification center
+icon: https://raw.githubusercontent.com/jamcalli/pulsarr/master/assets/icons/pulsarr.svg
 category: multimedia
-version: "6.0.4.10291"
-port: 7878
+version: "0.8.3"
+port: 3003
 description: >-
-  Radarr is a movie collection manager for Usenet and BitTorrent users. It can monitor multiple RSS feeds
-  for new movies and will interface with clients and indexers to grab, sort, and rename them. It can also
-  be configured to automatically upgrade the quality of existing files in the library when a better quality
-  format becomes available.
+  Pulsarr bridges Plex watchlists with Sonarr and Radarr for real-time media monitoring and automated content acquisition—all from within the Plex app, no extra logins required.
   
   This version routes all traffic through Gluetun VPN for privacy and security.
 
-developer: Radarr Team
-website: https://radarr.video
-dependencies: []
+developer: Pulsarr Team
+website: https://jamcalli.github.io/Pulsarr/
+dependencies: [] #If you enable this then Pulsarr only install if Gluetun is installed. Also if you want to uninstall, Gluetun has to be uninstalled first!!!
   #- martinmeel-gluetun
-repo: https://github.com/Radarr/Radarr
-support: https://forums.radarr.video
+repo: https://jamcalli.github.io/Pulsarr/
+support: https://jamcalli.github.io/Pulsarr/
 gallery:
-  - https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-radarr/1.jpg
-  - https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-radarr/2.jpg
-  - https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-radarr/3.jpg
+  - https://raw.githubusercontent.com/jamcalli/pulsarr/master/assets/screenshots/Dashboard1.png
+  #- https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-radarr/2.jpg
+  #- https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-radarr/3.jpg
 releaseNotes: >-
-  Radarr configured to route through Gluetun VPN container
+  Pulsarr configured to route through Gluetun VPN container
 path: ""
 defaultUsername: ""
 defaultPassword: ""
