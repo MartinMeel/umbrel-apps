@@ -16,6 +16,11 @@ services:
       - PGID=1000
       - TZ=Europe/Amsterdam
       - WEBUI_PORT=8090
+      - HEALTH_TARGET_ADDRESSES=cloudflare.com:443,github.com:443
+      - HEALTH_SERVER_ADDRESS=127.0.0.1:9999
+      - HEALTH_RESTART_VPN=on
+      - DNS_SERVER=on
+      - DNS_UPSTREAM_RESOLVERS=cira family, cira private, cira protected, cleanbrowsing adult, cleanbrowsing family, cleanbrowsing security, cloudflare, cloudflare family, cloudflare security, google, libredns, opendns, quad9, quad9 secured, quad9 unsecured, quadrant
    # healthcheck:
    #   test: ["CMD", "curl", "-f", "http://localhost:8090/ping"]
    #   interval: 30s
