@@ -1,9 +1,9 @@
 services:
-  app_proxy:
-    environment:
-      APP_HOST: martinmeel-sonarr_server_1
-      APP_PORT: 2929
-      #PROXY_AUTH_WHITELIST: "/api/*"
+  #app_proxy:
+  #  environment:
+  #    APP_HOST: martinmeel-sonarr_server_1
+  #    APP_PORT: 2929
+  #    #PROXY_AUTH_WHITELIST: "/api/*"
 
   server:
     image: lscr.io/linuxserver/sonarr:4.0.16
