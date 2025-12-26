@@ -1,0 +1,27 @@
+services:
+  app_proxy:
+    environment:
+      APP_HOST: martinmeel-gluetun_server_1
+      APP_PORT: 11011
+      #PROXY_AUTH_WHITELIST: "/api/*"
+
+  server:
+    image: ghcr.io/cleanuparr/cleanuparr:latest
+    network_mode: "container:martinmeel-gluetun_server_1"
+    restart: unless-stopped
+    volumes:
+      - ${APP_DATA_DIR}/data/config:/config
+      # Mount your downloads directory if needed
+    environment:
+      - BASE_PATH=
+      - PUID=1000
+      - PGID=1000
+      - UMASK=022
+      - TZ=Europe/Amsterdam
+    # Health check configuration
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11011/health"]
+      interval: 30s        # Check every 30 seconds
+      timeout: 10s         # Allow up to 10 seconds for response
+      start_period: 30s    # Wait 30 seconds before first check
+      retries: 3           # Mark unhealthy after 3 consecutive failures

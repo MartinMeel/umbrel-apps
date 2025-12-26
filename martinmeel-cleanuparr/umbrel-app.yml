@@ -1,0 +1,48 @@
+manifestVersion: 1
+id: martinmeel-cleanuparr
+category: multimedia
+name: 3.Cleanuparr
+version: "2.4.7"
+tagline: Cleanup of unwanted or blocked files in Sonarr, Radarr, and supported download clients
+icon: https://github.com/Cleanuparr/Cleanuparr/blob/main/Logo/256.png?raw=true
+description: >-
+  Cleanuparr is a tool for automating the cleanup of unwanted or blocked files in Sonarr, Radarr, and supported download clients like qBittorrent. It removes incomplete or blocked downloads, updates queues, and enforces blacklists or whitelists to manage file selection. After removing blocked content, Cleanuparr can also trigger a search to replace the deleted shows/movies.
+  Cleanuparr was created primarily to address malicious files, such as *.lnk or *.zipx, that were getting stuck in Sonarr/Radarr and required manual intervention. Some of the reddit posts that made Cleanuparr come to life can be found here, here, here and here.
+
+  Important
+    Features:
+
+    Strike system to mark bad downloads.
+    Remove and block downloads that reached a maximum number of strikes.
+    Remove and block downloads that are failing to be imported by the arrs.
+    Remove and block downloads that are stalled or in metadata downloading state.
+    Remove and block downloads that have a low download speed or high estimated completion time.
+    Remove and block downloads blocked by qBittorrent or by Cleanuparr's Malware Blocker.
+    Remove and block known malware based on patterns found by the community.
+    Automatically trigger a search for downloads removed from the arrs.
+    Clean up downloads that have been seeding for a certain amount of time.
+    Remove downloads that are orphaned/have no hardlinks/are not referenced by the arrs anymore (with cross-seed support).
+    Notify on strike or download removal.
+    Ignore certain torrent hashes, categories, tags or trackers from being processed by Cleanuparr.
+
+developer: leanuparr
+website: https://github.com/Cleanuparr/Cleanuparr
+dependencies: []
+  #- martinmeel-gluetun
+repo: hhttps://github.com/Cleanuparr/Cleanuparr
+support: https://github.com/Cleanuparr/Cleanuparr/issues
+port: 11011
+gallery:
+  - https://cleanuparr.github.io/Cleanuparr/img/screenshots/dashboard.png
+  - https://cleanuparr.github.io/Cleanuparr/img/screenshots/notifications.png
+  - https://cleanuparr.github.io/Cleanuparr/img/screenshots/slow_rules.png
+  - https://cleanuparr.github.io/Cleanuparr/img/screenshots/stall_rules.png
+  - https://cleanuparr.github.io/Cleanuparr/img/screenshots/download_clients.png
+releaseNotes: >-
+  DICleanuparr configured to route through Gluetun VPN container
+path: ""
+defaultUsername: ""
+defaultPassword: ""
+submitter: Martin Meel
+submission: https://github.com/getumbrel/umbrel-apps
+torOnly: false
