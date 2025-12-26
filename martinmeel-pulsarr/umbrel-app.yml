@@ -1,6 +1,6 @@
 manifestVersion: 1
 id: martinmeel-pulsarr
-name: Pulsarr via Gluetun
+name: 4.2.Pulsarr
 tagline: Real-time Plex watchlist monitoring, routing, and notification center
 icon: https://raw.githubusercontent.com/jamcalli/pulsarr/master/assets/icons/pulsarr.svg
 category: multimedia

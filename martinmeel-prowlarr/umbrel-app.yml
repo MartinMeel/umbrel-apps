@@ -1,6 +1,6 @@
 manifestVersion: 1
 id: martinmeel-prowlarr
-name: Prowlarr
+name: 4.1.Prowlarr
 version: "1.0.0"
 tagline: Indexer manager for Sonarr and Radarr
 icon: https://raw.githubusercontent.com/Prowlarr/Prowlarr/develop/Logo/256.png

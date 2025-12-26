@@ -1,7 +1,7 @@
 manifestVersion: 1
 id: martinmeel-sonarr
 category: multimedia
-name: Sonarr
+name: 2.1.Sonarr
 version: "4.0.16"
 tagline: Smart PVR for TV shows
 icon: https://raw.githubusercontent.com/Sonarr/Sonarr/develop/Logo/256.png

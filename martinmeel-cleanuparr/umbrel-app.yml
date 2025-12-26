@@ -1,7 +1,7 @@
 manifestVersion: 1
 id: martinmeel-cleanuparr
 category: multimedia
-name: 3.Cleanuparr
+name: 4.4.Cleanuparr
 version: "2.4.7"
 tagline: Cleanup of unwanted or blocked files in Sonarr, Radarr, and supported download clients
 icon: https://github.com/Cleanuparr/Cleanuparr/blob/main/Logo/256.png?raw=true

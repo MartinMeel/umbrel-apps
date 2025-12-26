@@ -1,7 +1,7 @@
 manifestVersion: 1
 id: martinmeel-sabnzbd
 category: download
-name: SABnzbd
+name: 3.2.SABnzbd
 version: "4.5.5"
 tagline: The automated Usenet download tool
 icon: https://raw.githubusercontent.com/sabnzbd/sabnzbd/develop/icons/logo-arrow.svg
