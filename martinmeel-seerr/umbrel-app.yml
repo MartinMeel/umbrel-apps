@@ -33,7 +33,6 @@ repo: https://github.com/seerr-team/seerr
 support: https://github.com/seerr-team/seerr/issues
 gallery:
   - https://github.com/seerr-team/seerr/blob/develop/public/preview.jpg
-
 releaseNotes: >-
   Seerr configured to route through Gluetun VPN container
 path: ""
