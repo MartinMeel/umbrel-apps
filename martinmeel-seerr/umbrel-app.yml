@@ -1,0 +1,44 @@
+manifestVersion: 1
+id: martinmeel-seerr
+name: 4.3 Seerr
+tagline: Managing requests for your media library.
+icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/overseerr.png
+category: multimedia
+version: "2.7.3"
+port: 5055
+description: >-
+  (Jelly)Seerr is a free and open source software application for managing requests for your media library. It integrates with the media server of your choice: Jellyfin, Plex, and Emby. In addition, it integrates with your existing services, such as Sonarr, Radarr.
+
+  Features
+  - Full Jellyfin/Emby/Plex integration. Login and manage user access with Jellyfin/Emby/Plex.
+  - Syncs to your Jellyfin/Emby/Plex library to show what titles you already have.
+  - Supports Movies, Shows and Mixed Libraries.
+  - Integrates with Sonarr and Radarr. With more services to come in the future.
+  - Optionally set Override rules for requests to match with your defined conditions.
+  - Easy to use request system allowing users to request individual seasons or movies in a friendly, clean UI.
+  - Simple request management UI. Don't dig through the app to approve recent requests.
+  - Mobile-friendly design, for when you need to approve requests on the go.
+  - Granular permission system.
+  - Localization into other languages.
+  - Support for PostgreSQL and SQLite databases.
+  - Support for various notification agents.
+  - Easily Watchlist or Blacklist media.
+  - More features to come!
+
+developer: Seerr Team
+website: https://seerr.dev/
+dependencies: [] #If you enable this then Pulsarr only install if Gluetun is installed. Also if you want to uninstall, Gluetun has to be uninstalled first!!!
+  #- martinmeel-gluetun
+repo: https://github.com/seerr-team/seerr
+support: https://github.com/seerr-team/seerr/issues
+gallery:
+  - https://github.com/seerr-team/seerr/blob/develop/public/preview.jpg
+
+releaseNotes: >-
+  Seerr configured to route through Gluetun VPN container
+path: ""
+defaultUsername: ""
+defaultPassword: ""
+submitter: Martin Meel
+submission: https://github.com/getumbrel/umbrel-apps
+torOnly: false
