@@ -2,7 +2,7 @@ manifestVersion: 1
 id: martinmeel-tautulli
 name: 4.5 Tautulli
 tagline: Monitor your Plex Media Server.
-icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/overseerr.png
+icon: https://tautulli.com/images/93124B55.png
 category: multimedia
 version: "2.7.3"
 port: 8181
