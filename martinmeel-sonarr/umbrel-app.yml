@@ -14,7 +14,7 @@ description: >-
 
 developer: Sonarr Team
 website: https://sonarr.tv
-dependencies: []
+dependencies: [] #If you enable this, Sonarr will only install if Gluetun is installed. Also if you want to uninstall, Gluetun has to be uninstalled first!!!
   #- martinmeel-gluetun
 repo: https://github.com/Sonarr/Sonarr
 support: https://forums.sonarr.tv
@@ -28,6 +28,6 @@ releaseNotes: >-
 path: ""
 defaultUsername: ""
 defaultPassword: ""
-submitter: Martin Meel
+submitter: martinmeel
 submission: https://github.com/getumbrel/umbrel-apps
 torOnly: false

@@ -1,10 +1,10 @@
 manifestVersion: 1
 id: martinmeel-huntarr
-name: 4.3.Huntarr
-version: "8.2.10"
+name: 4.3 Huntarr
 tagline: Huntarr - Find Missing & Upgrade Media Items
 icon: https://github.com/plexguide/Huntarr.io/blob/main/frontend/static/logo/128.png?raw=true
 category: multimedia
+version: "8.2.10"
 description: >-
 
   🔄 Connect & Analyze - Huntarr connects to your Sonarr/Radarr/Lidarr/Readarr/Whisparr/Eros instances and analyzes your media libraries to identify both missing content and potential quality upgrades.
@@ -21,16 +21,15 @@ developer: Huntarr.io
 website: https://dictionarry.dev/
 repo: https://github.com/plexguide/Huntarr.io
 support: https://github.com/plexguide/Huntarr.io
-port: 9705
 gallery:
-  - https://private-user-images.githubusercontent.com/24727006/447141221-c060962c-01ee-4f53-a5ee-c67f31432e40.png?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NjY1NTY3NTAsIm5iZiI6MTc2NjU1NjQ1MCwicGF0aCI6Ii8yNDcyNzAwNi80NDcxNDEyMjEtYzA2MDk2MmMtMDFlZS00ZjUzLWE1ZWUtYzY3ZjMxNDMyZTQwLnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNTEyMjQlMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjUxMjI0VDA2MDczMFomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPWUyNTQ5MWEzYTQxY2UxY2E1YjQwNTY1YWZmMmExNDdmY2IxMWVhYWQ1OTFhMmQ1NmEyMWI2MmIxNzFlOWM1ZjYmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0In0.ocUtJTCnlU1PE6MdyMXuRJXDJ8ZuwdkMOMglm9lu2pM
-  - https://private-user-images.githubusercontent.com/24727006/442497453-93c1a5d3-e82a-416a-8d41-0379ea221d7a.png?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NjY1NTY3NTAsIm5iZiI6MTc2NjU1NjQ1MCwicGF0aCI6Ii8yNDcyNzAwNi80NDI0OTc0NTMtOTNjMWE1ZDMtZTgyYS00MTZhLThkNDEtMDM3OWVhMjIxZDdhLnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNTEyMjQlMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjUxMjI0VDA2MDczMFomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPTNlODVhODI4NmY2NjQwMThmOTUyMjljMjEwOGE4MjliNjZjZjg2OTIyYTZkMzU0M2Q4OGViNWFmMmZiMGU4MjMmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0In0.QD3Aw21uW6NwMHT7zT8tatLz87geWX0ztIMZtwKH7rw
-  - https://private-user-images.githubusercontent.com/24727006/442497534-e87867f8-0a8c-48d8-b6ef-234caa33e41f.png?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NjY1NTY3NTAsIm5iZiI6MTc2NjU1NjQ1MCwicGF0aCI6Ii8yNDcyNzAwNi80NDI0OTc1MzQtZTg3ODY3ZjgtMGE4Yy00OGQ4LWI2ZWYtMjM0Y2FhMzNlNDFmLnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNTEyMjQlMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjUxMjI0VDA2MDczMFomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPWM4ODc1ZTIwZTU1M2YyYjAxNDZlZTEzYTE2MjZhNWQ2ZmQxODdiZDJkNDM3NDZjOGI5MzVlNDQwYzE4MDVjZjEmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0In0.GkGsSj8p_mrw0mF7NvijuIA0hTfBPVjYwWekljPQ93s
-releaseNotes: >-
-  None
-submitter: Martin Meel
-submission: https://github.com/getumbrel/umbrel-apps
+    - https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-huntarr/1.jpg
+    - https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-huntarr/2.jpg
+    - https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-huntarr/3.jpg
+releasenotes: >-
+  Made a logic fix for Sonarr regarding air date delay. Will show if either or both episode mode is selected for missing and/or upgrades. Prior, would disappear if both were not in episode mode.
 path: ""
 defaultUsername: ""
 defaultPassword: ""
+submitter: martinmeel
+submission: https://github.com/getumbrel/umbrel-apps
 torOnly: false

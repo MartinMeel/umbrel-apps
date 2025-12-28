@@ -19,7 +19,7 @@ description: >-
     ⚠️ This version routes all traffic through Gluetun VPN for privacy and security.
 developer: Tautulli
 website: https://tautulli.com/
-dependencies: [] #If you enable this Tautulli only install if Gluetun is installed. Also if you want to uninstall, Gluetun has to be uninstalled first!!!
+dependencies: [] #If you enable this, Tautulli will only install if Gluetun is installed. Also if you want to uninstall, Gluetun has to be uninstalled first!!!
   #- martinmeel-gluetun
 repo: https://github.com/Tautulli/Tautulli
 support: https://tautulli.com/#support
@@ -32,6 +32,6 @@ releaseNotes: >-
 path: ""
 defaultUsername: ""
 defaultPassword: ""
-submitter: Martin Meel
+submitter: martinmeel
 submission: https://github.com/MartinMeel/umbrel-apps
 torOnly: false

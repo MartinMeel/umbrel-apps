@@ -2,7 +2,7 @@ manifestVersion: 1
 id: martinmeel-radarr
 name: 2.2.Radarr
 tagline: Smart PVR for movies
-icon: https://raw.githubusercontent.com/Radarr/Radarr/develop/Logo/256.png
+icon: https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-radarr/icon.svg
 category: multimedia
 version: "6.0.4.10291"
 port: 7878
@@ -12,11 +12,14 @@ description: >-
   be configured to automatically upgrade the quality of existing files in the library when a better quality
   format becomes available.
   
-  This version routes all traffic through Gluetun VPN for privacy and security.
+  🛠️ SETUP INSTRUCTIONS
+  TBD
+
+  ⚠️ This version routes all traffic through Gluetun VPN for privacy and security.
 
 developer: Radarr Team
 website: https://radarr.video
-dependencies: []
+dependencies: [] #If you enable this, Radarr will only install if Gluetun is installed. Also if you want to uninstall, Gluetun has to be uninstalled first!!!
   #- martinmeel-gluetun
 repo: https://github.com/Radarr/Radarr
 support: https://forums.radarr.video
@@ -25,10 +28,16 @@ gallery:
   - https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-radarr/2.jpg
   - https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-radarr/3.jpg
 releaseNotes: >-
-  Radarr configured to route through Gluetun VPN container
+  This update includes various improvements and bug fixes:
+    - Added support for private IPv6 networks
+    - Configured known networks to use standard private IP ranges at startup
+    - Fixed an issue with qBittorrent /login API success checks
+  
+  
+  Full release notes for Radarr are available at https://github.com/Radarr/Radarr/releases
 path: ""
 defaultUsername: ""
 defaultPassword: ""
 submitter: martinmeel
 submission: https://github.com/getumbrel/umbrel-apps
-#torOnly: false
+torOnly: false

@@ -2,7 +2,7 @@ manifestVersion: 1
 id: martinmeel-pulsarr
 name: 4.2.Pulsarr
 tagline: Real-time Plex watchlist monitoring, routing, and notification center
-icon: https://raw.githubusercontent.com/jamcalli/pulsarr/master/assets/icons/pulsarr.svg
+icon: https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-pulsarr/pulsarr.jpg
 category: multimedia
 version: "0.8.3"
 port: 3003
@@ -13,19 +13,19 @@ description: >-
 
 developer: Pulsarr Team
 website: https://jamcalli.github.io/Pulsarr/
-dependencies: [] #If you enable this then Pulsarr only install if Gluetun is installed. Also if you want to uninstall, Gluetun has to be uninstalled first!!!
+dependencies: [] #If you enable this, Pulsarr will only install if Gluetun is installed. Also if you want to uninstall, Gluetun has to be uninstalled first!!!
   #- martinmeel-gluetun
 repo: https://jamcalli.github.io/Pulsarr/
 support: https://jamcalli.github.io/Pulsarr/
 gallery:
   - https://raw.githubusercontent.com/jamcalli/pulsarr/master/assets/screenshots/Dashboard1.png
-  #- https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-radarr/2.jpg
-  #- https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-radarr/3.jpg
+  #- https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-pulsarr/2.jpg
+  #- https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-pulsarr/3.jpg
 releaseNotes: >-
   Pulsarr configured to route through Gluetun VPN container
 path: ""
 defaultUsername: ""
 defaultPassword: ""
-submitter: Martin Meel
+submitter: martinmeel
 submission: https://github.com/getumbrel/umbrel-apps
 torOnly: false

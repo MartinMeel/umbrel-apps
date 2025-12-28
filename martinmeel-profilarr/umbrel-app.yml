@@ -1,11 +1,13 @@
 manifestVersion: 1
 id: martinmeel-profilarr
-name: Profilarr
-version: "1.1.3"
-tagline: Configuration management tool for Radarr/Sonarr that automates importing and version control of custom formats and quality profiles.
+name: 4.1 Profilarr
+tagline: Configuration management tool for Radarr/Sonarr.
 icon: https://avatars.githubusercontent.com/u/171363348?s=48&v=4
 category: multimedia
+version: "1.1.3"
+port: 6868
 description: >-
+  Configuration management tool for Radarr/Sonarr that automates importing and version control of custom formats and quality profiles.
   🔄 Automatic synchronization with remote configuration databases
   🎯 Direct import to Radarr/Sonarr instances
   🔧 Git-based version control of your configurations
@@ -16,12 +18,15 @@ developer: Profilarr
 website: https://dictionarry.dev/
 repo: https://dictionarry.dev/
 support: https://dictionarry.dev/
-port: 6868
 gallery:
   - https://github.com/Dictionarry-Hub/profilarr/blob/main/.github/images/preview.png
 releaseNotes: >-
-  None
-submitter: Martin Meel
+  - fix(compiler): only compile both / arr specific formats on import by @santiagosayshey in c30dc33
+  - refactor(media-management): use ArrHandler logic from importer module to consolidate media management importing by @santiagosayshey in 7f5f44c
+  - feat(tasks): add ability to change repo sync / backup task interval by @santiagosayshey in 2e2abb9
+  - migration(languages): set default language score to -999999 by @santiagosayshey in 6c40d35
+  - chore(deploy): add environment handling and entrypoint script to set PGID, PUID and UMASK by @santiagosayshey in 7270bbf
+submitter: martinmeel
 submission: https://github.com/getumbrel/umbrel-apps
 path: ""
 defaultUsername: ""

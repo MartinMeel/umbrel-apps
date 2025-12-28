@@ -1,9 +1,11 @@
 manifestVersion: 1
 id: martinmeel-qbittorrent
-category: download
-name: 3.1.qBittorrent
-version: "5.1.4"
+name: 3.1 qBittorrent
 tagline: Free and reliable P2P BitTorrent client
+icon: https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-qbittorrent/icon.svg
+category: download
+version: "5.1.4"
+port: 8090
 description: >-
   qBittorrent is a cross-platform free and open-source BitTorrent client
   The qBittorrent project aims to provide an open-source software alternative to µTorrent.
@@ -12,24 +14,32 @@ description: >-
 
   qBittorrent is based on the Qt toolkit and libtorrent-rasterbar library.
 
-  ⚠️ This version needs a Gluetun container where the ports are defined for qBittorrent to work
-  ⚠️ To find the password just push the troubleshoot buttun and search for the password in the first lines.
+   ⚠️ To find the password just push the troubleshoot button and search for the password in the first lines.
 
-icon: https://raw.githubusercontent.com/qbittorrent/qBittorrent/master/src/icons/qbittorrent-tray.svg
+   ⚠️ This version routes all traffic through Gluetun VPN for privacy and security.
+
+
 developer: qBittorrent
 website: https://www.qbittorrent.org
-dependencies: []
+dependencies: [] #If you enable this, qBittorent will only install if Gluetun is installed. Also if you want to uninstall, Gluetun has to be uninstalled first!!!
 #  - martinmeel-gluetun
 repo: https://github.com/qbittorrent/qBittorrent
 support: https://github.com/qbittorrent/qBittorrent/issues/
-port: 8090
 gallery:
   - https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-qbittorrent/1.jpg
   - https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-qbittorrent/2.jpg
   - https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-qbittorrent/3.jpg
+releaseNotes: >-
+  This update includes various improvements and bug fixes:
+    - Added support for private IPv6 networks
+    - Configured known networks to use standard private IP ranges at startup
+    - Fixed an issue with qBittorrent /login API success checks
+  
+  
+  Full release notes for Radarr are available at https://github.com/Radarr/Radarr/releases
 path: ""
 defaultUsername: ""
 defaultPassword: ""
+submitter: martinmeel
+submission: https://github.com/MartinMeel/umbrel-apps
 torOnly: false
-releaseNotes: >-
-  This release includes several bug fixes and improvements for better performance and stability.

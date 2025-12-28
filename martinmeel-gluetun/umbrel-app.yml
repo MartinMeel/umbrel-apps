@@ -1,20 +1,20 @@
 manifestVersion: 1
 id: martinmeel-gluetun
-category: networking
-name: 1.Gluetun VPN
-version: "3.40.3"
+name: 1.0 Gluetun VPN
 tagline: Lightweight VPN client with support for multiple providers
 icon: https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-gluetun/gluetun.svg
+category: networking
+version: "3.40.3"
 description: >-
   Gluetun is a lightweight VPN client written in Go that supports multiple VPN providers
   including ProtonVPN, Windscribe etc. It acts as a VPN gateway for other Docker containers, allowing
   them to route their traffic through the VPN connection.
   
-
+  
   This setup is pre-configured for ProtonVPN Wireguard but supports many other providers. Other
   containers can route their traffic through Gluetun by using its network stack.
   
-
+  
   Key features:
     - Support for multiple VPN providers (Windscribe, NordVPN, ExpressVPN, etc.)
     - Built-in firewall with kill switch
@@ -43,7 +43,7 @@ description: >-
 
 releaseNotes: >-
   Initial release with ProtonVPN support. Configured to allow other containers
-  to route through the VPN connection.
+  route through the VPN connection.
 submitter: martinmeel
 developer: qdm12
 website: https://github.com/qdm12/gluetun

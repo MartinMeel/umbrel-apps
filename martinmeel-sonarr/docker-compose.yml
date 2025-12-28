@@ -5,7 +5,7 @@ services:
       APP_PORT: 8989
       # Use this if another app outside your umbrel device wants to connect via an API call
       PROXY_AUTH_WHITELIST: /api/*
-      # Set false if another app from outside your umbrell wants to connect without login in!
+      # Set false if another app from outside your umbrell wants to connect without login!
       PROXY_AUTH_ADD: 'false'
 
   server:

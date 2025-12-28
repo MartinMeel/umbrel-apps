@@ -1,32 +1,42 @@
 manifestVersion: 1
 id: martinmeel-prowlarr
-name: 4.1.Prowlarr
-version: "1.0.0"
+name: 4.1 Prowlarr
 tagline: Indexer manager for Sonarr and Radarr
-icon: https://raw.githubusercontent.com/Prowlarr/Prowlarr/develop/Logo/256.png
+icon: - https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-prowlarr/icon.svg
 category: multimedia
+version: "1.0.0"
+port: 9696
 description: >-
   Prowlarr is an indexer manager/proxy built on the popular *arr .net/reactjs base stack to integrate
   with your various PVR apps. Prowlarr supports management of both Torrent Trackers and Usenet Indexers.
   It integrates seamlessly with Lidarr, Mylar3, Radarr, Readarr, and Sonarr offering complete management
   of your indexers with no per app Indexer setup required.
   
-  This version routes all traffic through Gluetun VPN for privacy and security.
+  🛠️ SETUP INSTRUCTIONS
+  TBD
+  
+  ⚠️ This version routes all traffic through Gluetun VPN for privacy and security.
 developer: Prowlarr Team
 website: https://prowlarr.com
-dependencies:
-  - martinmeel-gluetun
+dependencies: [] #If you enable this, Prowlarr will only install if Gluetun is installed. Also if you want to uninstall, Gluetun has to be uninstalled first!!!
+  # - martinmeel-gluetun
 repo: https://github.com/Prowlarr/Prowlarr
 support: https://forums.prowlarr.com
-port: 9696
 gallery:
   - https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-prowlarr/1.jpg
   - https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-prowlarr/2.jpg
+  - https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-prowlarr/3.jpg
 releaseNotes: >-
-  Prowlarr configured to route through Gluetun VPN container
+  This update includes several new features and improvements:
+    - Improved qBittorrent login API success check
+    - Network configuration improvements with private IPv6 networks and RFC 1918 ranges
+    - Multiple bug fixes and translation updates
+  
+  
+  Full release notes are found at https://github.com/Prowlarr/Prowlarr/releases.
 path: ""
 defaultUsername: ""
 defaultPassword: ""
-submitter: Martin Meel
+submitter: martinmeel
 submission: https://github.com/getumbrel/umbrel-apps
-#torOnly: false
+torOnly: false

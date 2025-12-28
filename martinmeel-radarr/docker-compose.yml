@@ -5,11 +5,12 @@ services:
       APP_PORT: 7878
       # Use this if another app outside your umbrel device wants to connect via an API call
       PROXY_AUTH_WHITELIST: /api/*
-      # Set false if another app from outside your umbrell wants to connect without login in!
+      # Set false if another app from outside your umbrell wants to connect without login!
       PROXY_AUTH_ADD: 'false'
 
   server:
     image: lscr.io/linuxserver/radarr:latest
+    # Use Gluetun's network stack - all traffic goes through VPN
     network_mode: "container:martinmeel-gluetun_server_1"
     volumes:
       - ${APP_DATA_DIR}/data/config:/config
@@ -20,11 +21,5 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Europe/Amsterdam
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:7878/ping"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 60s
     restart: unless-stopped
     stop_grace_period: 1m

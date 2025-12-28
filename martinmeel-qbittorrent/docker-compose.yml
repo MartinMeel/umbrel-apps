@@ -10,6 +10,7 @@ services:
       
   server:
     image: lscr.io/linuxserver/qbittorrent:latest
+    # Use Gluetun's network stack - all traffic goes through VPN
     network_mode: "container:martinmeel-gluetun_server_1"
     volumes:
       - ${APP_DATA_DIR}/data/config:/config
