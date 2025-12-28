@@ -24,8 +24,10 @@ description: >-
     - Port forwarding support (provider dependent)
   
   ⚠️ IMPORTANT:
-    Before installing, make sure you have your ProtonVPN credentials ready. 
+    Before installing, make sure you have your ProtonVPN credentials ready. (Because i use protonvpn ;-) )
     You'll need to add the PROTONVPN_PRIVATE_KEY in the exports.sh file.
+    !! Also if you want port forwarding, choose the private key belonging to the portforwarding setup in the protonvpn configurator
+    https://protonvpn.com/support/vpn-config-download/
 
 
   🛠️ SET-UP INSTRUCTIONS
@@ -34,15 +36,15 @@ description: >-
 
 
   Logs:  
-    ⚠️ NOTE: 
+    ⚠️ NOTE: To follow the logs of the Gluetun container:
     Please ssh into your umbrel or via the settings icon -> Advanced settings -> Terminal (open)
-    Check your instance with:
     - sudo docker logs -f martinmeel-gluetun_server_1
 
 
 releaseNotes: >-
   Initial release with ProtonVPN support. Configured to allow other containers
   to route through the VPN connection.
+submitter: martinmeel
 developer: qdm12
 website: https://github.com/qdm12/gluetun
 dependencies: []

@@ -1,0 +1,23 @@
+services:
+  app_proxy:
+    environment:
+      APP_HOST: martinmeel-gluetun_server_1
+      APP_PORT: 8181
+      # Use this if another app outside your umbrel device wants to connect via an API call
+      PROXY_AUTH_WHITELIST: /api/*
+      # Set false if another app from outside your umbrell wants to connect without login in!
+      PROXY_AUTH_ADD: 'false'
+
+  app:
+    image: ghcr.io/tautulli/tautulli
+    # Use Gluetun's network stack - all traffic goes through VPN
+    network_mode: "container:martinmeel-gluetun_server_1"
+    restart: unless-stopped
+    volumes:
+      - ${APP_DATA_DIR}/data/config:/config
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Amsterdam
+    restart: unless-stopped
+    stop_grace_period: 1m
