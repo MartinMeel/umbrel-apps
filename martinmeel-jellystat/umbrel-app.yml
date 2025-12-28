@@ -1,0 +1,27 @@
+manifestVersion: 1
+id: martinmeel-jellystat
+category: multimedia
+name: 5.1 Jellystat
+version: "1.1.7"
+tagline: Jellystat is a free and open source Statistics App for Jellyfin! 
+icon: https://github.com/CyferShepard/Jellystat/blob/main/public/icon-b-192.png?raw=true
+description: >-
+  Jellystat is a free and open source Statistics App for Jellyfin! 
+  
+  
+developer: cyfershepard
+website: https://github.com/Cleanuparr/Cleanuparr
+dependencies: []
+  #- martinmeel-gluetun
+repo: hhttps://github.com/Cleanuparr/Cleanuparr
+support: https://github.com/Cleanuparr/Cleanuparr/issues
+port: 2000
+gallery: []
+releaseNotes: >-
+  Cleanuparr configured to route through Gluetun VPN container
+path: ""
+defaultUsername: ""
+defaultPassword: ""
+submitter: martinmeel
+submission: https://github.com/getumbrel/umbrel-apps
+torOnly: false
