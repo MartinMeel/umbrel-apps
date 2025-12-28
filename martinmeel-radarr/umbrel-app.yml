@@ -29,6 +29,6 @@ releaseNotes: >-
 path: ""
 defaultUsername: ""
 defaultPassword: ""
-submitter: Martin Meel
+submitter: martinmeel
 submission: https://github.com/getumbrel/umbrel-apps
 #torOnly: false
