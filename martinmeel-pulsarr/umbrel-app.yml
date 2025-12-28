@@ -1,8 +1,8 @@
 manifestVersion: 1
 id: martinmeel-pulsarr
-name: 4.2.Pulsarr
+name: 4.2 Pulsarr
 tagline: Real-time Plex watchlist monitoring, routing, and notification center
-icon: https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-pulsarr/pulsarr.jpg
+icon: https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-pulsarr/pulsarr.png
 category: multimedia
 version: "0.8.3"
 port: 3003

@@ -1,6 +1,6 @@
 manifestVersion: 1
 id: martinmeel-radarr
-name: 2.2.Radarr
+name: 2.2 Radarr
 tagline: Smart PVR for movies
 icon: https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-radarr/icon.svg
 category: multimedia
