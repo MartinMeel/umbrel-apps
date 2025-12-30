@@ -18,7 +18,7 @@ services:
     ports:
      - 81:80
     volumes:
-     - /home/umbrel/umbrel/app-data/martinmeel-spotweb/data/spotweb:/config
+     - /home/umbrel/umbrel/app-data/martinmeel-spotweb/spotweb:/config
 
   spotweb_db:
     image: linuxserver/mariadb
@@ -32,6 +32,6 @@ services:
      - MYSQL_USER=spotweb
      - MYSQL_PASSWORD=${SPOTWEB_DB_PASSWORD}
     volumes:
-     - /home/umbrel/umbrel/app-data/martinmeel-spotweb/data/mariadb:/config
+     - /home/umbrel/umbrel/app-data/martinmeel-spotweb/mariadb:/config
     ports:
      - 3306:3306
