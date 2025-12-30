@@ -1,0 +1,28 @@
+manifestVersion: 1
+id: martinmeel-youtarr
+category: multimedia
+name: 6. Youtarr
+version: "1.55.0"
+tagline: Youtarr is a self-hosted YouTube downloader
+description: >-
+   A.local:PORT_NUMBER`. For example, if your app runs on port 5050, open `http://umbrel.local:5050` in your browser. 
+website: https://getarcane.app/
+dependencies: []
+repo: https://github.com/getarcaneapp/arcane
+support: https://github.com/getarcaneapp/arcane/issues
+port: 3087
+icon: https://raw.githubusercontent.com/dennysubke/dennys-umbrel-app-gallery/main/denny-arcane/logo.png
+gallery:
+  - https://raw.githubusercontent.com/dennysubke/dennys-umbrel-app-gallery/main/denny-arcane/1.jpg
+  - https://raw.githubusercontent.com/dennysubke/dennys-umbrel-app-gallery/main/denny-arcane/2.jpg
+  - https://raw.githubusercontent.com/dennysubke/dennys-umbrel-app-gallery/main/denny-arcane/3.jpg
+  - https://raw.githubusercontent.com/dennysubke/dennys-umbrel-app-gallery/main/denny-arcane/4.jpg
+  - https://raw.githubusercontent.com/dennysubke/dennys-umbrel-app-gallery/main/denny-arcane/5.jpg
+path: ""
+defaultUsername: "admin"
+defaultPassword: "changeme"
+releaseNotes: >-
+  Full release notes are found at
+developer: DialmasterOrg
+submitter: martinmeel
+submission: https://github.com/getumbrel/umbrel-apps/pull/
