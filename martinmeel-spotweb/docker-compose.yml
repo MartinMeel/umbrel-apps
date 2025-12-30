@@ -12,7 +12,7 @@ services:
      - SPOTWEB_DB_NAME=spotweb
      - SPOTWEB_DB_USER=spotweb
      - SPOTWEB_DB_PASS=${SPOTWEB_DB_PASSWORD}
-     - "SPOTWEB_CRON_RETRIEVE=* */2 * * *"
+     - "SPOTWEB_CRON_RETRIEVE=0 */6 * * *"
     depends_on:
      - spotweb_db
     ports:
