@@ -1,6 +1,6 @@
 manifestVersion: 1
 id: martinmeel-spotweb
-name: Spotweb
+name: 6.0 Spotweb
 tagline: Spotweb is a decentralized usenet community based on the Spotnet protocol.
 icon: https://github.com/spotweb/spotweb/blob/develop/images/spotnet.gif?raw=true
 category: multimedia
