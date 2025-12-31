@@ -1,6 +1,6 @@
 manifestVersion: 1
 id: martinmeel-phpmyadmin
-name: 6.0 Profilarr
+name: 7.0 PHPMyadmin
 tagline: Admin management tool for mysql/mariadb databases.
 icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/phpmyadmin.png
 category: multimedia
