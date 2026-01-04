@@ -26,6 +26,9 @@ description: >-
 
   - Answer the questions and the last step is to create a new dbsettings.inc.php file.
   - Congratutaions. You have successfully installed Spotweb on your Umbrel node.
+
+   ⚠️ This version routes all traffic through Gluetun VPN for privacy and security.
+   
 developer: jgeusebroek
 website: https://github.com/jgeusebroek/docker-spotweb
 submitter: martinmeel

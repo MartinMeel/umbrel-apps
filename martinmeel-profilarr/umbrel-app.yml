@@ -13,6 +13,8 @@ description: >-
   🔧 Git-based version control of your configurations
   ⚡ Preserve local customizations during updates
   🛠️ Built-in conflict resolution
+
+  ⚠️ This version routes all traffic through Gluetun VPN for privacy and security.
   
 developer: Profilarr
 website: https://dictionarry.dev/

@@ -9,7 +9,7 @@ port: 3003
 description: >-
   Pulsarr bridges Plex watchlists with Sonarr and Radarr for real-time media monitoring and automated content acquisition—all from within the Plex app, no extra logins required.
   
-  This version routes all traffic through Gluetun VPN for privacy and security.
+   ⚠️ This version routes all traffic through Gluetun VPN for privacy and security.
 
 developer: Pulsarr Team
 website: https://jamcalli.github.io/Pulsarr/

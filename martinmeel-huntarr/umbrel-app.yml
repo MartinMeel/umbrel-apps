@@ -17,6 +17,7 @@ description: >-
 
   Repeat & Rest - Huntarr waits for your configured interval (adjustable in settings) before starting the next cycle, ensuring your indexers aren't overloaded while maintaining continuous improvement of your library.
   
+  ⚠️ This version routes all traffic through Gluetun VPN for privacy and security.
 developer: Huntarr.io
 website: https://dictionarry.dev/
 repo: https://github.com/plexguide/Huntarr.io

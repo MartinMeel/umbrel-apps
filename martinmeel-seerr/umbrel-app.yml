@@ -39,7 +39,7 @@ releaseNotes: >-
   Full release notes are available at https://github.com/fallenbagel/jellyseerr/releases
   
   Notes:
-  Seerr configured to route through Gluetun VPN container
+   ⚠️ This version routes all traffic through Gluetun VPN for privacy and security.
 path: ""
 defaultUsername: ""
 defaultPassword: ""

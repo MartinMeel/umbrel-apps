@@ -1,6 +1,7 @@
 services:
-  spotweb:
+  spotweb: #or server?
     image: jgeusebroek/spotweb
+    network_mode: container:martinmeel-gluetun_server_1
     restart: unless-stopped
     environment:
      - PUID=1000
@@ -15,8 +16,8 @@ services:
      - "SPOTWEB_CRON_RETRIEVE=0 */6 * * *"
     depends_on:
      - spotweb_db
-    ports:
-     - 81:80
+    #ports:  #Not needed as tge gluetun container will handle this.
+    # - 81:80
     volumes:
      - /home/umbrel/umbrel/app-data/martinmeel-spotweb/spotweb:/config
 
@@ -33,5 +34,6 @@ services:
      - MYSQL_PASSWORD=${SPOTWEB_DB_PASSWORD}
     volumes:
      - /home/umbrel/umbrel/app-data/martinmeel-spotweb/mariadb:/config
-    ports:
-     - 3306:3306
+    #ports:  #Not needed as the spotweb container will connect directly.
+    # - 3306:3306
+    
