@@ -5,6 +5,7 @@ tagline: Huntarr - Find Missing & Upgrade Media Items
 icon: https://github.com/plexguide/Huntarr.io/blob/main/frontend/static/logo/128.png?raw=true
 category: multimedia
 version: "8.2.10"
+port: 9705
 description: >-
 
   🔄 Connect & Analyze - Huntarr connects to your Sonarr/Radarr/Lidarr/Readarr/Whisparr/Eros instances and analyzes your media libraries to identify both missing content and potential quality upgrades.
