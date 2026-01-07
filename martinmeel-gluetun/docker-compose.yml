@@ -67,12 +67,15 @@ services:
       #- KILLSWITCH=on 
       # Timezone
       - TZ=Europe/Amsterdam
-      # Healthchecks
+      # Health checks
+      - HEALTH_ENABLED=on
       - HEALTH_TARGET_ADDRESSES=cloudflare.com:443,github.com:443
       - HEALTH_SERVER_ADDRESS=127.0.0.1:9999
       - HEALTH_RESTART_VPN=on
+      # DNS configuration
       - DNS_SERVER=on
       - DNS_UPSTREAM_RESOLVERS=cloudflare
+      # Allow local network access
       - FIREWALL_OUTBOUND_SUBNETS=192.168.2.0/24
     # Health check URL
     healthcheck:
