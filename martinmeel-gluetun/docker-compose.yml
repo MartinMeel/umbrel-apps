@@ -14,10 +14,8 @@ services:
     devices:
       - /dev/net/tun:/dev/net/tun
     ports:
-      # HTTP proxy
-      - 8888:8888
-      # Gluetun control server mostly used with openvpn!
-      - 8000:8000
+     # HTTP proxy (not needed when using gluetun as a proxy for other apps)
+      # - 8888:8888
       # There is no need to add the portnumbers of the applications that you need to work via gluetun.
       # Gluetun will handle this functionality.
       # Sonarr
@@ -46,7 +44,10 @@ services:
       - VPN_TYPE=wireguard
       - WIREGUARD_PRIVATE_KEY=${PROTONVPN_PRIVATE_KEY}
       - SERVER_COUNTRIES=Netherlands
-      # Control server
+      # Enble Control server
+      - HTTP_CONTROL_SERVER_ADDRESS:8000
+      - HTTP_CONTROL_SERVER_LOG=on
+      # Enable HTTP proxy
       - HTTPPROXY=on
       - HTTPPROXY_LISTENING_ADDRESS=:8888
       # Enable port forwarding. Note! Make sure you use the private key which covers the portforwarding option.
@@ -70,6 +71,7 @@ services:
       # Health checks
       - HEALTH_ENABLED=on
       - HEALTH_TARGET_ADDRESSES=cloudflare.com:443,github.com:443
+      - HEALTH_ICMP_TARGET_IPS=1.1.1.1,8.8.8.8
       - HEALTH_SERVER_ADDRESS=127.0.0.1:9999
       - HEALTH_RESTART_VPN=on
       # DNS configuration
@@ -77,12 +79,5 @@ services:
       - DNS_UPSTREAM_RESOLVERS=cloudflare
       # Allow local network access
       - FIREWALL_OUTBOUND_SUBNETS=192.168.2.0/24
-    # Health check URL
-    healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:9999/health"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-      start_period: 30s
     restart: unless-stopped
     stop_grace_period: 1m
