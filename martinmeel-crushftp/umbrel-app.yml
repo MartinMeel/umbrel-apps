@@ -1,7 +1,7 @@
 manifestVersion: 1
 id: martinmeel-crushftp
 category: file-management
-name: 10. Crushftp
+name: 7. Crushftp
 version: "11"
 port: 9090
 tagline: CrushFTP is an extremely powerful ftp server

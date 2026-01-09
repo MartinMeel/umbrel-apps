@@ -1,11 +1,10 @@
 services:
-  app_proxy:
-    environment:
-      APP_HOST: martinmeel-crushftp_server_1
-      APP_PORT: 9090
-      # Set false if another app from outside your umbrell wants to connect without login!
-      PROXY_AUTH_ADD: 'false'
-
+#  app_proxy:
+#    environment:
+#      APP_HOST: martinmeel-crushftp_server_1
+#      APP_PORT: 9090
+#      # Set false if another app from outside your umbrell wants to connect without login!
+#      PROXY_AUTH_ADD: 'false'
 
   crushftp-init:
     image: 'crushftp/crushftp11:latest-dev'
@@ -15,19 +14,19 @@ services:
     volumes:
     - ${APP_DATA_DIR}/data/config/:/app/CrushFTP11
     entrypoint: ["/bin/sh", "-c", "/entrypoint.sh"]
-    user: "1000:1000"  # "${UID}:${GID}"
+    user: "1000:1000"  #  "${UID}:${GID}"
   server: #needs to be named "server" else it won't work with the app_proxy!
     image: 'crushftp/crushftp11:latest'
   #  container_name: crushftp
-  #  ports:
-  #    - '8081:8080'
-  #    - '9099:9090'
-  #    - '8443:443'
+    ports:
+      - '8081:8080'
+      - '9099:9090'
+      - '8443:443'
     volumes:
     - ${APP_DATA_DIR}/data/config/:/app/CrushFTP11
     working_dir: "/app/CrushFTP11"
     entrypoint: ["java", "-Ddir=/app/CrushFTP11", "-Xmx512M", "-jar", "/app/CrushFTP11/plugins/lib/CrushFTPJarProxy.jar", "-ad", "crushadmin", "PASSFILE"]
-    user: "${UID}:${GID}"
+    user: "1000:1000" #  "${UID}:${GID}"
     depends_on:
       crushftp-init:
         condition: service_completed_successfully
