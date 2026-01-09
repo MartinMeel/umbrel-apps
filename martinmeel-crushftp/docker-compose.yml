@@ -2,7 +2,7 @@ services:
   app_proxy:
     environment:
       APP_HOST: martinmeel-crushftp_server_1
-      APP_PORT: 9099
+      APP_PORT: 9090
       # Set false if another app from outside your umbrell wants to connect without login!
       PROXY_AUTH_ADD: 'false'
 
@@ -19,10 +19,10 @@ services:
   server: #needs to be named "server" else it won't work with the app_proxy!
     image: 'crushftp/crushftp11:latest'
   #  container_name: crushftp
-    ports:
-      - '8081:8080'
-      - '9099:9090'
-      - '8443:443'
+  #  ports:
+  #    - '8081:8080'
+  #    - '9099:9090'
+  #    - '8443:443'
     volumes:
     - ${APP_DATA_DIR}/data/config/:/app/CrushFTP11
     working_dir: "/app/CrushFTP11"

@@ -3,7 +3,7 @@ id: martinmeel-crushftp
 category: file-management
 name: 10. Crushftp
 version: "11"
-port: 9099
+port: 9090
 tagline: CrushFTP is an extremely powerful ftp server
 icon: https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-sonarr/icon.svg
 description: >-
