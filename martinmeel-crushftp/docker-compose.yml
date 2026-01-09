@@ -1,10 +1,10 @@
 services:
-#  app_proxy:
-#    environment:
-#      APP_HOST: martinmeel-crushftp_server_1
-#      APP_PORT: 9090
-#      # Set false if another app from outside your umbrell wants to connect without login!
-#      PROXY_AUTH_ADD: 'false'
+  app_proxy:
+    environment:
+      APP_HOST: martinmeel-crushftp_server_1
+      APP_PORT: 9090
+      # Set false if another app from outside your umbrell wants to connect without login!
+      PROXY_AUTH_ADD: 'false'
 
   crushftp-init:
     image: 'crushftp/crushftp11:latest-dev'
@@ -19,9 +19,9 @@ services:
     image: 'crushftp/crushftp11:latest'
   #  container_name: crushftp
     ports:
-      - '8081:8080'
-      - '9090:9090'
-      - '8443:443'
+      #- '8081:8080'
+      - '19090:9090'
+      - '18443:443'
     volumes:
     - ${APP_DATA_DIR}/data/config/:/app/CrushFTP11
     working_dir: "/app/CrushFTP11"
@@ -30,10 +30,10 @@ services:
     depends_on:
       crushftp-init:
         condition: service_completed_successfully
-volumes:
-  local_folder:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ${PWD}
+#volumes:
+#  local_folder:
+#    driver: local
+#    driver_opts:
+#      type: none
+#      o: bind
+#      device: ${PWD}
