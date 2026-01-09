@@ -1,5 +1,7 @@
 services:
   app_proxy:
+    depends_on:
+    - server
     environment:
       APP_HOST: martinmeel-crushftp_server_1
       APP_PORT: 9090
