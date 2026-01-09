@@ -5,7 +5,7 @@ name: 10. Crushftp
 version: "11"
 port: 9090
 tagline: CrushFTP is an extremely powerful ftp server
-icon: https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-sonarr/icon.svg
+icon: https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-crushftp/icon.png
 description: >-
   
   CrushFTP is filled full of features. Features you might not use right away, 
@@ -24,9 +24,9 @@ repo: https://hub.docker.com/r/crushftp/crushftp11
 support: https://www.crushftp.com/support.html
 
 gallery:
-  - https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-sonarr/1.jpg
-  - https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-sonarr/2.jpg
-  - https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-sonarr/3.jpg
+  - https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-crushftp/1.png
+  - https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-crushftp/2.png
+  - https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-crushftp/3.png
 releaseNotes: >-
   1st release for umbrel
 
