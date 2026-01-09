@@ -19,7 +19,7 @@ description: >-
 developer: CrushFTP, LLC
 website: https://crushftp.com
 dependencies: [] 
-repo: https://github.com/Sonarr/Sonarr
+repo: https://hub.docker.com/r/crushftp/crushftp11
 support: https://www.crushftp.com/support.html
 port: 8989
 gallery:
@@ -28,6 +28,15 @@ gallery:
   - https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-sonarr/3.jpg
 releaseNotes: >-
   1st release for umbrel
+
+  WebInterface
+  The entire end user view of the WebInterface has been rewritten from scratch. 
+  This was a major undertaking and one of the main reasons for the wait. 
+  It was a massive undertaking to rewrite all that code and UI design that had grown for 14+ years. 
+  The key item we did here is we removed jQuery from end user usage 100%. 
+  So now everything is our own code and CSS. The UI is *much* faster, and can handle *much* larger 
+  directory listings etc. We have full control over everything now as well.
+
 path: ""
 defaultUsername: "crushadmin"
 defaultPassword: ""
