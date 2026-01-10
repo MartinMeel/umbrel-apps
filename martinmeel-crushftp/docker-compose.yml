@@ -1,11 +1,4 @@
 services:
-#  app_proxy: # (Not needed for local use)
-#    environment:
-#      APP_HOST: martinmeel-crushftp_server_1
-#      APP_PORT: 9090
-#      # Set false if another app from outside your umbrell wants to connect without login!
-#      PROXY_AUTH_ADD: 'false'
-
   crushftp-init:
     image: 'crushftp/crushftp11:latest-dev'
     environment:
@@ -30,11 +23,4 @@ services:
     depends_on:
       crushftp-init:
         condition: service_completed_successfully
-# Uncomment to use a local folder as data storage (for development purposes)
-#volumes:
-#  local_folder:
-#    driver: local
-#    driver_opts:
-#      type: none
-#      o: bind
-#      device: ${PWD}
+    restart: unless-stopped
