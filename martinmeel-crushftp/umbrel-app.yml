@@ -17,12 +17,13 @@ description: >-
   
   🛠️ SETUP INSTRUCTIONS !!!! IMPORTANT !!!!
 
-    1. After the app has installed just wait one or two minutes before continuing to step 2.
-    2. ssh into your Umbrel device using terminal or putty or whatever you like.  
-    3. execute this command: sudo chown -R $(id -u):$(id -u) /home/umbrel/umbrel/app-data/martinmeel-crushftp/CrushFTP11
-    4. Start the app from the Umbrel dashboard and wait another minute for it to be fully started. 
-    5. Login with the default username "crushadmin" and the password found in the passfile in the app data folder.
-    6. Change the default password immediately after logging in for security reasons. 
+    1. After the app has installed just wait one or two minutes before continuing to step 2. Do not click OPEN.
+    2. Stop the app from the Umbrel dashboard.
+    3. ssh into your Umbrel device using terminal or putty or whatever you like.  
+    4. Execute this command: sudo chown -R $(id -u):$(id -u) /home/umbrel/umbrel/app-data/martinmeel-crushftp/CrushFTP11
+    5. Start the app from the Umbrel dashboard and wait another minute for it to be fully started. 
+    6. Login with the default username "crushadmin" and the password found in the passfile in the app data folder.
+    7. Change the default password immediately after logging in for security reasons. 
 
 developer: CrushFTP, LLC
 website: https://crushftp.com
