@@ -14,7 +14,7 @@ services:
     - ${APP_DATA_DIR}/CrushFTP11/:/app/CrushFTP11
     entrypoint: ["/bin/sh", "-c", "/entrypoint.sh"]
     user: "${UID}:${GID}"
-  server: #needs to be named "server" else it won't work with the app_proxy!
+  crushftp:
     image: 'crushftp/crushftp11:latest'
     ports:
       - '18080:8080' # Web Interface
@@ -27,6 +27,9 @@ services:
     working_dir: "/app/CrushFTP11"
     entrypoint: ["java", "-Ddir=/app/CrushFTP11", "-Xmx512M", "-jar", "/app/CrushFTP11/plugins/lib/CrushFTPJarProxy.jar", "-ad", "crushadmin", "PASSFILE"]
     user: "${UID}:${GID}"
+    depends_on:
+      crushftp-init:
+        condition: service_completed_successfully
 # Uncomment to use a local folder as data storage (for development purposes)
 #volumes:
 #  local_folder:
