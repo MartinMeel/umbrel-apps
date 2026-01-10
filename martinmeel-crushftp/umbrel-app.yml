@@ -12,12 +12,8 @@ description: >-
   Usually, the feature is already there, just waiting for you to explore and use it! First time users will be up and running in no time, and power users 
   won't be disappointed with a lack of options, controls, or functionality.
   
-
-  login = crushadmin
-
-
-  password = 'password can be found in the passfile file in the app data folder after first run.'
-  
+    - login = crushadmin
+    - password = 'password can be found in the passfile file in the app data folder after first run.'
   
   🛠️ SETUP INSTRUCTIONS !!!! IMPORTANT !!!!
 
