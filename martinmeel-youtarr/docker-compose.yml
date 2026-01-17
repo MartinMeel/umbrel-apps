@@ -64,6 +64,8 @@ services:
     depends_on:
       youtarr-db:
         condition: service_healthy
+    # Use Gluetun's network stack - all traffic goes through VPN
+    network_mode: "container:martinmeel-gluetun_server_1"
     environment:
       # DEPRECATED but retained for backwards compatibility with old images for now
       IN_DOCKER_CONTAINER: 1
