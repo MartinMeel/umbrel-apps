@@ -5,7 +5,7 @@ tagline: Download subtitles for Sonarr and Radarr
 icon: https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-radarr/icon.svg
 category: multimedia
 version: "1.5.4"
-port: 7878
+port: 6767
 description: >-
   Bazarr is a companion application to Sonarr and Radarr that manages and downloads subtitles based on your requirements.
    
