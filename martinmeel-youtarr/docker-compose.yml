@@ -8,7 +8,7 @@ services:
       # Set false if another app from outside your umbrell wants to connect without login!
       PROXY_AUTH_ADD: 'false'
 
-# IMPORTANT NOTES:
+# IMPORTANT NOTES:§
 # 1) UID/GID and folders setup:
 # By default the youtarr service runs as ROOT (UID 0, GID 0) for compatibility with existing setups.
 # For improved security, you can set YOUTARR_UID and YOUTARR_GID environment variables to run the container as a non-root user.

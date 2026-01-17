@@ -18,24 +18,10 @@ services:
       # - 8888:8888
       # There is no need to add the portnumbers of the applications that you need to work via gluetun.
       # Gluetun will handle this functionality.
-      # Sonarr
-      # removed else port conflict - 8989:8989
-      # Prowlarr
-      # removed else port conflict - 9696:9696
       # SABnzbd
       # removed else port conflict - 8080:8080
       # qBittorrent
       # removed else port conflict - 8090:8090
-      # Radarr
-      # removed else port conflict - 7878:7878
-      # Huntarr
-      # removed else port conflict - 9705:9705
-      # Overseerr
-      # removed else port conflict - 5055:5055
-      # Tautulli
-      # removed else port conflict - 8181:8181
-      # Profilarr
-      # removed else port conflict - 6868:6868
     volumes:
       - ${APP_DATA_DIR}/data:/gluetun
     environment:
@@ -48,8 +34,8 @@ services:
       - HTTP_CONTROL_SERVER_ADDRESS:8000
       - HTTP_CONTROL_SERVER_LOG=on
       # Enable HTTP proxy
-      - HTTPPROXY=on
-      - HTTPPROXY_LISTENING_ADDRESS=:8888
+      #- HTTPPROXY=on
+      #- HTTPPROXY_LISTENING_ADDRESS=:8888
       # Enable port forwarding. Note! Make sure you use the private key which covers the portforwarding option.
       - VPN_PORT_FORWARDING=on
       - VPN_PORT_FORWARDING_PROVIDER=protonvpn
@@ -57,11 +43,11 @@ services:
       - VPN_PORT_FORWARDING_UP_COMMAND=/bin/sh -c 'wget -O- --retry-connrefused --post-data "json={\"listen_port\":{{PORTS}},\"random_port\":false,\"upnp\":false}" http://127.0.0.1:8090/api/v2/app/setPreferences 2>&1'
       - VPN_PORT_FORWARDING_DOWN_COMMAND=/bin/sh -c 'wget -O- --retry-connrefused --post-data "json={\"listen_port\":0}" http://127.0.0.1:8090/api/v2/app/setPreferences 2>&1'
       # DNS over TLS
-      #- DOT=on
-      #- DOT_PROVIDERS=cloudflare,google
+      - DOT=on
+      - DOT_PROVIDERS=cloudflare,google
       # Ads and malware blocking (not needed if using protonvpn with private key for ade and malware blocking)
       #- BLOCK_ADS=on
-      #- BLOCK_MALWARE=on
+      - BLOCK_MALWARE=on
       # Enable the firewall
       #- FIREWALL=on
       # Enable the kill switch
