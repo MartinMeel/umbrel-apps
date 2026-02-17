@@ -45,7 +45,7 @@ services:
       - WIREGUARD_PRIVATE_KEY=${PROTONVPN_PRIVATE_KEY}
       - SERVER_COUNTRIES=Netherlands
       # Enble Control server
-      - HTTP_CONTROL_SERVER_ADDRESS:8000
+      - HTTP_CONTROL_SERVER_ADDRESS=:8000
       - HTTP_CONTROL_SERVER_LOG=on
       # Enable HTTP proxy
       - HTTPPROXY=on
