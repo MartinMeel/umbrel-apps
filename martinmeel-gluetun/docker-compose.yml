@@ -56,16 +56,10 @@ services:
       # Script that automatically updates portforwarding on qBittorrent.
       - VPN_PORT_FORWARDING_UP_COMMAND=/bin/sh -c 'wget -O- --retry-connrefused --post-data "json={\"listen_port\":{{PORTS}},\"random_port\":false,\"upnp\":false}" http://127.0.0.1:8090/api/v2/app/setPreferences 2>&1'
       - VPN_PORT_FORWARDING_DOWN_COMMAND=/bin/sh -c 'wget -O- --retry-connrefused --post-data "json={\"listen_port\":0}" http://127.0.0.1:8090/api/v2/app/setPreferences 2>&1'
-      # DNS over TLS
-      #- DOT=on
-      #- DOT_PROVIDERS=cloudflare,google
-      # Ads and malware blocking (not needed if using protonvpn with private key for ade and malware blocking)
-      #- BLOCK_ADS=on
-      #- BLOCK_MALWARE=on
       # Enable the firewall
       #- FIREWALL=on
-      # Enable the kill switch
-      #- KILLSWITCH=on 
+      # Allow local network access
+      - FIREWALL_OUTBOUND_SUBNETS=192.168.2.0/24
       # Timezone
       - TZ=Europe/Amsterdam
       # Health checks
@@ -77,7 +71,8 @@ services:
       # DNS configuration
       - DNS_SERVER=on
       - DNS_UPSTREAM_RESOLVERS=cloudflare
-      # Allow local network access
-      - FIREWALL_OUTBOUND_SUBNETS=192.168.2.0/24
+      - DNS_UPSTREAM_RESOLVER_TYPE=dot
+      - DNS_UPSTREAM_IPV6=off
+      - DNS_CACHING=on
     restart: unless-stopped
     stop_grace_period: 1m
