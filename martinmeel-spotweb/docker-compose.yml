@@ -16,7 +16,7 @@ services:
      - "SPOTWEB_CRON_RETRIEVE=0 */6 * * *"
     depends_on:
      - spotweb_db
-    #ports:  #Not needed as tge gluetun container will handle this.
+    #ports:  #Not needed as the gluetun container will handle this.
     # - 81:80
     volumes:
      - /home/umbrel/umbrel/app-data/martinmeel-spotweb/spotweb:/config
