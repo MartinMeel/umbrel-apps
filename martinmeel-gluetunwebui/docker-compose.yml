@@ -18,8 +18,8 @@ services:
       #- GLUETUN_API_KEY=yourtoken
       #- GLUETUN_USER=username
       #- GLUETUN_PASSWORD=password
-    networks:
-      - umbrel_main_network
+#   networks:
+#      - umbrel_main_network
     restart: unless-stopped
     read_only: true
     tmpfs:
