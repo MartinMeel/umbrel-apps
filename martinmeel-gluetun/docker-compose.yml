@@ -69,10 +69,10 @@ services:
       - HEALTH_SERVER_ADDRESS=127.0.0.1:9999
       - HEALTH_RESTART_VPN=on
       # DNS configuration
-      - DNS_SERVER=on
-      - DNS_UPSTREAM_RESOLVERS=cloudflare
-      - DNS_UPSTREAM_RESOLVER_TYPE=dot
-      - DNS_UPSTREAM_IPV6=off
-      - DNS_CACHING=on
+      #- DNS_SERVER=on
+      #- DNS_UPSTREAM_RESOLVERS=cloudflare
+      #- DNS_UPSTREAM_RESOLVER_TYPE=dot
+      #- DNS_UPSTREAM_IPV6=off
+      #- DNS_CACHING=on
     restart: unless-stopped
     stop_grace_period: 1m
