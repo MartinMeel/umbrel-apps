@@ -1,0 +1,55 @@
+manifestVersion: 1
+id: martinmeel-gluetunwebui
+name: 1.1 Gluetun WEBUI
+tagline: Lightweight VPN client with support for multiple providers
+icon: https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-gluetun/gluetun.svg
+category: networking
+version: "1.0.1"
+description: >-
+  A lightweight web UI for monitoring and controlling Gluetun — the VPN client container for Docker.
+  
+  This setup is pre-configured for ProtonVPN Wireguard but supports many other providers. Other
+  containers can route their traffic through Gluetun by using its network stack.
+  
+  
+  Key features:
+    - ✨ Multi-VPN Support — Monitor & control up to 20 Gluetun instances simultaneously
+    - Live VPN status banner (connected / paused / disconnected)
+    - Public exit IP, country, region, city, and organisation
+    - VPN provider, protocol (WireGuard / OpenVPN), server details
+    - Port forwarding and DNS status
+    - Start / Stop VPN controls
+    - Auto-refresh with configurable interval (5s – 60s)
+    - Last 30 poll ticks colour-coded in history bar
+    - Responsive design (mobile, tablet, desktop)
+  
+  ⚠️ IMPORTANT:
+    Before installing, make sure you have your ProtonVPN credentials ready. (Because i use protonvpn ;-) )
+    You'll need to add the PROTONVPN_PRIVATE_KEY in the exports.sh file.
+    !! Also if you want port forwarding, choose the private key belonging to the portforwarding setup in the protonvpn configurator
+    https://protonvpn.com/support/vpn-config-download/
+
+
+  🛠️ SET-UP INSTRUCTIONS
+    After installing Gluetun STOP the container and fill in the private key in the exports file!!!!
+    ⚠️ NOTE: Please ssh into your umbrel or via the settings icon -> Advanced settings -> Terminal (open) to change the exports file.
+
+
+  Logs:  
+    ⚠️ NOTE: To follow the logs of the Gluetun container:
+    Please ssh into your umbrel or via the settings icon -> Advanced settings -> Terminal (open)
+    - sudo docker logs -f martinmeel-gluetun_server_1
+
+
+releaseNotes: >-
+  Initial release.
+submitter: martinmeel
+developer: qSir-Scuzza
+website: https://github.com/Sir-Scuzza/gluetun-webui
+dependencies: []
+repo: https://github.com/Sir-Scuzza/gluetun-webui
+support: https://github.com/Sir-Scuzza/gluetun-webui/issues
+gallery: []
+defaultUsername: ""
+defaultPassword: ""
+#torOnly: false #not needed.
