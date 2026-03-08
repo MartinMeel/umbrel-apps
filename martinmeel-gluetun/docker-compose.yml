@@ -13,29 +13,31 @@ services:
       - NET_ADMIN
     devices:
       - /dev/net/tun:/dev/net/tun
-    #ports:
-     # HTTP proxy (not needed when using gluetun as a proxy for other apps)
+    ports:
+      # HTTP proxy (not needed when using gluetun as a proxy for other apps)
       # - 8888:8888
-      # There is no need to add the portnumbers of the applications that you need to work via gluetun.
-      # Gluetun will handle this functionality.
+      # It seems that it is not needed to add the portnumbers of the applications that you need to work via gluetun.
+      # Experiment if you find some strange behaviour!!
       # Sonarr
-      # removed else port conflict - 8989:8989
+      # - 8989:8989
       # Prowlarr
-      # removed else port conflict - 9696:9696
+      # - 9696:9696
       # SABnzbd
-      # removed else port conflict - 8080:8080
+      # - 8080:8080
       # qBittorrent
-      # removed else port conflict - 8090:8090
+      # - 8090:8090
       # Radarr
-      # removed else port conflict - 7878:7878
+      # - 7878:7878
       # Huntarr
-      # removed else port conflict - 9705:9705
+      # - 9705:9705
       # Overseerr
-      # removed else port conflict - 5055:5055
+      # - 5055:5055
       # Tautulli
-      # removed else port conflict - 8181:8181
+      # - 8181:8181
       # Profilarr
-      # removed else port conflict - 6868:6868
+      # - 6868:6868
+      # Spotweb
+      - 81:80
     volumes:
       - ${APP_DATA_DIR}/data:/gluetun
     environment:
@@ -69,10 +71,9 @@ services:
       - HEALTH_SERVER_ADDRESS=127.0.0.1:9999
       - HEALTH_RESTART_VPN=on
       # DNS configuration
-      #- DNS_SERVER=on
-      #- DNS_UPSTREAM_RESOLVERS=cloudflare
-      #- DNS_UPSTREAM_RESOLVER_TYPE=dot
-      #- DNS_UPSTREAM_IPV6=off
-      #- DNS_CACHING=on
+      - DNS_UPSTREAM_RESOLVERS=cloudflare
+      - DNS_UPSTREAM_RESOLVER_TYPE=dot
+      - DNS_UPSTREAM_IPV6=off
+      - DNS_CACHING=on
     restart: unless-stopped
     stop_grace_period: 1m
