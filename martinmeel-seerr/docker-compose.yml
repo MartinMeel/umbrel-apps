@@ -9,7 +9,7 @@ services:
       PROXY_AUTH_ADD: 'false'
 
   server:
-    image: ghcr.io/fallenbagel/jellyseerr:latest
+    image: ghcr.io/seerr-team/seerr:latest
     init: true
     network_mode: "container:martinmeel-gluetun_server_1"
     environment:
@@ -24,3 +24,4 @@ services:
       interval: 15s
       retries: 3
     restart: unless-stopped
+    
