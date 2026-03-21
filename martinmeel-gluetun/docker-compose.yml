@@ -14,23 +14,21 @@ services:
     devices:
       - /dev/net/tun:/dev/net/tun
     ports:
-      # HTTP proxy (not needed when using gluetun as a proxy for other apps)
-      # - 8888:8888
+      # HTTP proxy (needed when using gluetun as a proxy for other apps)
+      - 8888:8888
       # It seems that it is not needed to add the portnumbers of the applications that you need to work via gluetun.
       # Experiment if you find some strange behaviour!!
       # Sonarr
       # - 8989:8989
       # Prowlarr
-      # - 9696:9696
+      - 9696:9696
       # SABnzbd
       # - 8080:8080
       # qBittorrent
       # - 8090:8090
       # Radarr
       # - 7878:7878
-      # Huntarr
-      # - 9705:9705
-      # Overseerr
+      # Seerr
       # - 5055:5055
       # Tautulli
       # - 8181:8181
@@ -74,6 +72,6 @@ services:
       - DNS_UPSTREAM_RESOLVERS=cloudflare
       - DNS_UPSTREAM_RESOLVER_TYPE=dot
       - DNS_UPSTREAM_IPV6=off
-      - DNS_CACHING=on
+      - DNS_CACHING=off
     restart: unless-stopped
     stop_grace_period: 1m
