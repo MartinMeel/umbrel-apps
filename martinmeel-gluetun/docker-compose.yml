@@ -1,11 +1,4 @@
 services:
-  # No Need to use the umbrel proxy app because gluetun will take over this functionality. Sort of ;-)
-  #app_proxy:
-  #  environment:
-      #PROXY_AUTH_ADD: false
-      #APP_HOST: martinmeel-gluetun_server_1
-      #APP_PORT: 8888
-
   server:
     image: qmcgaw/gluetun:latest
     # container_name: martinmeel-gluetun
