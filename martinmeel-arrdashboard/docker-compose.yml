@@ -9,7 +9,6 @@ services:
       PROXY_AUTH_ADD: 'false'
   arr-dashboard:
     image: khak1s/arr-dashboard:latest
-    container_name: arr-dashboard
     environment:
       - PUID=1000  # Set to your user ID (run `id -u` on host)
       - PGID=1000  # Set to your group ID (run `id -g` on host)
