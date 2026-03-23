@@ -1,0 +1,37 @@
+manifestVersion: 1
+id: martinmeel-arrdashboard
+category: multimedia
+name: 2.6 BArr Dashboard
+version: "12.9.1"
+tagline: A unified dashboard for managing multiple Sonarr, Radarr, Prowlarr, Lidarr, Readarr, Plex, Tautulli, and Seerr instances.
+icon: https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-bazarr/icon.svg
+port: 3000
+description: >-
+  A unified dashboard for managing multiple Sonarr, Radarr, Prowlarr, Lidarr, Readarr, Plex, Tautulli, and Seerr instances. Consolidate your media automation management into a single, secure, and powerful interface.
+   
+  🛠️ SETUP INSTRUCTIONS
+  During initial set-up, you will need to input your Umbrel device's IP address to connect to Sonarr and/or Radarr. 
+  You can find your device's IP address by visiting your router's admin dashboard or by using an IP scanning tool like Angry IP Scanner. 
+  You will also need to input your API key for Sonarr and/or Radarr. You can find your API keys in the settings of the Sonarr and Radarr apps.
+
+  ⚠️ This version routes all traffic through Gluetun VPN for privacy and security.
+
+developer: Kha-kis
+website: https://github.com/Kha-kis/arr-dashboard
+dependencies: [] #If you enable this, Bazarr will only install if Gluetun is installed. Also if you want to uninstall, Gluetun has to be uninstalled first!!!
+  #- martinmeel-gluetun
+repo: https://github.com/Kha-kis/arr-dashboard
+support: https://github.com/Kha-kis/arr-dashboard/issues
+gallery:
+  - https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-bazarr/1.jpg
+  - https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-bazarr/2.jpg
+  - https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-bazarr/3.jpg
+releaseNotes: >-
+  This update includes various improvements and bug fixes:
+  Full release notes for Bazarr are available at hhttps://github.com/Kha-kis/arr-dashboard/releases
+path: ""
+defaultUsername: ""
+defaultPassword: ""
+submitter: martinmeel
+submission: https://github.com/getumbrel/umbrel-apps
+torOnly: false
