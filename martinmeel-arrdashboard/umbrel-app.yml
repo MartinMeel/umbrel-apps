@@ -1,11 +1,11 @@
 manifestVersion: 1
 id: martinmeel-arrdashboard
 category: multimedia
-name: 2.6 BArr Dashboard
-version: "12.9.1"
+name: 2.6 Arr Dashboard
+version: "12.11.0"
 tagline: A unified dashboard for managing multiple Sonarr, Radarr, Prowlarr, Lidarr, Readarr, Plex, Tautulli, and Seerr instances.
-icon: https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-bazarr/icon.svg
-port: 3000
+icon: https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-arr-dashboard/icon.png
+port: 3443
 description: >-
   A unified dashboard for managing multiple Sonarr, Radarr, Prowlarr, Lidarr, Readarr, Plex, Tautulli, and Seerr instances. Consolidate your media automation management into a single, secure, and powerful interface.
    
@@ -23,9 +23,9 @@ dependencies: [] #If you enable this, Bazarr will only install if Gluetun is ins
 repo: https://github.com/Kha-kis/arr-dashboard
 support: https://github.com/Kha-kis/arr-dashboard/issues
 gallery:
-  - https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-bazarr/1.jpg
-  - https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-bazarr/2.jpg
-  - https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-bazarr/3.jpg
+  - 
+  - 
+  - 
 releaseNotes: >-
   This update includes various improvements and bug fixes:
   Full release notes for Bazarr are available at hhttps://github.com/Kha-kis/arr-dashboard/releases
