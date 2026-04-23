@@ -9,12 +9,10 @@ services:
     container_name: termix_web
     restart: on-failure
     stop_grace_period: 1m
-    ports:
-      - "8034:8080"
     volumes:
       - "${APP_DATA_DIR}/data:/app/data"
     environment:
-      PORT: "8080"
+      PORT: "8084"
     depends_on:
       - termix_guacd
  
