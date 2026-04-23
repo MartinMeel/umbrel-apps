@@ -1,32 +1,31 @@
 services:
   termix:
     image: ghcr.io/lukegus/termix:latest
-    container_name: termix
-    restart: unless-stopped
+    container_name: termix_web
+    restart: on-failure
+    stop_grace_period: 1m
     ports:
       - "8034:8080"
     volumes:
-      - termix-data:/app/data
-    #environment:
-    #  PORT: "8080"
+      - "${APP_DATA_DIR}/data:/app/data"
+    environment:
+      PORT: "8080"
     depends_on:
       - guacd
     networks:
-      - termix-net
-
+      default:
+        ipv4_address: $APP_TERMIX_IP
+ 
   guacd:
     image: guacamole/guacd:1.6.0
-    container_name: guacd
-    restart: unless-stopped
-    ports:
-      - "4822:4822"
+    container_name: termix_guacd
+    restart: on-failure
+    stop_grace_period: 1m
+    # guacd listens internally only — not exposed to host
     networks:
-      - termix-net
-
-volumes:
-  termix-data:
-    driver: local
-
+      default:
+        ipv4_address: $APP_TERMIX_GUACD_IP
+ 
 networks:
-  termix-net:
-    driver: bridge
+  default:
+    name: $APP_NETWORK
