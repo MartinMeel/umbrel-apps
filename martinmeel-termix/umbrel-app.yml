@@ -1,0 +1,52 @@
+manifestVersion: 1
+id: martinmeel-termix
+category: file-management
+name: 12. Termix
+version: "2.1.0"
+port: 8034
+tagline: Termix
+icon: https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-crushftp/icon.png
+description: >-
+  
+  Termix
+
+    - login = 
+    - password = 'password can be found in the passfile file in the app data folder after first run.'
+  
+  🛠️ SETUP INSTRUCTIONS !!!! IMPORTANT !!!!
+
+    1. After the app has installed wait TWO (2) minutes before continuing to step 2. Do not click Open!!
+    2. Stop the app from the Umbrel dashboard.
+    3. ssh into your Umbrel device using terminal or putty or whatever you like.  
+    4. Execute this command: sudo chown -R $(id -u):$(id -u) /home/umbrel/umbrel/app-data/martinmeel-crushftp/CrushFTP11
+    5. Start the app from the Umbrel dashboard and wait another minute for it to be fully started. 
+    6. Login with the default username "crushadmin" and the password found in the passfile in the app data folder.
+    7. Change the default password immediately after logging in for security reasons. 
+
+developer: Termix
+website: https://crushftp.com
+dependencies: [] 
+repo: https://hub.docker.com/r/crushftp/crushftp11
+support: https://www.crushftp.com/support.html
+
+gallery:
+  - 1.png
+  - 2.png
+  - 3.png
+releaseNotes: >-
+  1st release for umbrel
+
+  WebInterface
+  The entire end user view of the WebInterface has been rewritten from scratch. 
+  This was a major undertaking and one of the main reasons for the wait. 
+  It was a massive undertaking to rewrite all that code and UI design that had grown for 14+ years. 
+  The key item we did here is we removed jQuery from end user usage 100%. 
+  So now everything is our own code and CSS. The UI is *much* faster, and can handle *much* larger 
+  directory listings etc. We have full control over everything now as well.
+
+path: ""
+defaultUsername: "termix"
+defaultPassword: ""
+submitter: martinmeel
+submission: https://github.com/getumbrel/umbrel-apps
+torOnly: false
