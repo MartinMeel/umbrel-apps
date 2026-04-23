@@ -1,5 +1,5 @@
 manifestVersion: 1.1
-id: termix
+id: martinmeel-termix
 name: Termix
 tagline: Web-based SSH terminal, tunneling, and file management
 icon: https://raw.githubusercontent.com/Termix-SSH/Termix/main/public/favicon.ico
