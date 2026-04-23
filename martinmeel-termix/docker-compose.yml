@@ -1,5 +1,10 @@
 services:
-  termix:
+  app_proxy:
+    environment:
+      APP_HOST: termix_web
+      APP_PORT: 8034
+ 
+  termix_web:
     image: ghcr.io/lukegus/termix:latest
     container_name: termix_web
     restart: on-failure
@@ -11,21 +16,10 @@ services:
     environment:
       PORT: "8080"
     depends_on:
-      - guacd
-    networks:
-      default:
-        ipv4_address: $APP_TERMIX_IP
+      - termix_guacd
  
-  guacd:
+  termix_guacd:
     image: guacamole/guacd:1.6.0
     container_name: termix_guacd
     restart: on-failure
     stop_grace_period: 1m
-    # guacd listens internally only — not exposed to host
-    networks:
-      default:
-        ipv4_address: $APP_TERMIX_GUACD_IP
- 
-networks:
-  default:
-    name: $APP_NETWORK
