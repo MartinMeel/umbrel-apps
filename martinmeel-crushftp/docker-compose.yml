@@ -12,7 +12,7 @@ services:
     ports:
       - '19090:9090' # HTTP Web Interface
       - '18443:443' # HTTPS Web Interface
-      - '12121:2121' # FTP
+      # - '12121:2121' # FTP
       - '12222:2222' # SFTP
     volumes:
     - ${APP_DATA_DIR}/CrushFTP11/:/app/CrushFTP11
