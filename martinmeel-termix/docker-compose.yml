@@ -1,23 +1,26 @@
+version: "3.7"
+
 services:
   app_proxy:
     environment:
-      APP_HOST: termix_web
-      APP_PORT: 8034
- 
-  termix_web:
-    image: ghcr.io/lukegus/termix:latest
-    container_name: termix_web
+      APP_HOST: martinmeel-termix_web_1
+      APP_PORT: 8080
+
+  web:
+    image: ghcr.io/lukegus/termix:release-2.1.0@sha256:52e45c1ea3fb85be5b3ade5ff42eed0946fe81131cbd834f6960e00797f17f86
     restart: on-failure
     stop_grace_period: 1m
     volumes:
       - "${APP_DATA_DIR}/data:/app/data"
     environment:
-      PORT: "8084"
+      PORT: "8080"
+      DATA_DIR: "/app/data"
+      GUACD_HOST: guacd
+      GUACD_PORT: "4822"
     depends_on:
-      - termix_guacd
- 
-  termix_guacd:
+      - guacd
+
+  guacd:
     image: guacamole/guacd:1.6.0
-    container_name: termix_guacd
     restart: on-failure
     stop_grace_period: 1m
