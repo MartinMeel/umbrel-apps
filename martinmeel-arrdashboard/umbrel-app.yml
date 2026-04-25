@@ -2,17 +2,12 @@ manifestVersion: 1
 id: martinmeel-arrdashboard
 category: multimedia
 name: 2.6 Arr Dashboard
-version: "12.14.0"
-tagline: A unified dashboard for managing multiple Sonarr, Radarr, Prowlarr, Lidarr, Readarr, Plex, Tautulli, and Seerr instances.
+version: "2.16.1"
+tagline: A unified dashboard for managing multiple Sonarr, Radarr, Prowlarr, Lidarr, Readarr, Plex, Tautulli, Jellyfin, Emby, and Seerr instances.
 icon: https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-arr-dashboard/icon.png
 port: 3443
 description: >-
-  A unified dashboard for managing multiple Sonarr, Radarr, Prowlarr, Lidarr, Readarr, Plex, Tautulli, and Seerr instances. Consolidate your media automation management into a single, secure, and powerful interface.
-   
-  🛠️ SETUP INSTRUCTIONS
-  During initial set-up, you will need to input your Umbrel device's IP address to connect to Sonarr and/or Radarr. 
-  You can find your device's IP address by visiting your router's admin dashboard or by using an IP scanning tool like Angry IP Scanner. 
-  You will also need to input your API key for Sonarr and/or Radarr. You can find your API keys in the settings of the Sonarr and Radarr apps.
+  A unified dashboard for managing multiple Sonarr, Radarr, Prowlarr, Lidarr, Readarr, Plex, Tautulli, Jellyfin, Emby, and Seerr instances. 
 
 developer: Kha-kis
 website: https://github.com/Kha-kis/arr-dashboard
@@ -26,7 +21,7 @@ gallery:
   - 
 releaseNotes: >-
   This update includes various improvements and bug fixes:
-  Full release notes for Bazarr are available at hhttps://github.com/Kha-kis/arr-dashboard/releases
+  Full release notes for arr-dashboard are available at hhttps://github.com/Kha-kis/arr-dashboard/releases
 path: ""
 defaultUsername: ""
 defaultPassword: ""
