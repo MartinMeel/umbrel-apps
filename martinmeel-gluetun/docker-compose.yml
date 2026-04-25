@@ -1,6 +1,6 @@
 services:
   server:
-    image: qmcgaw/gluetun:v3.40.3@sha256:ef4a44819a60469682c7b5e69183e6401171891feaa60186652d292c59e41b30
+    image: qmcgaw/gluetun
     cap_add:
       - NET_ADMIN
     devices:
@@ -8,6 +8,9 @@ services:
     ports:
       # HTTP proxy (needed when using gluetun as a proxy for other apps)
       - 8888:8888
+      # If you need Shadowsocks, you can add the ports here. 
+      # - 8388:8388/tcp # Shadowsocks
+      # - 8388:8388/udp # Shadowsocks
       # It seems that it is not needed to add the portnumbers of the applications that you need to work via gluetun.
       # Experiment if you find some strange behaviour!!
       # Sonarr
