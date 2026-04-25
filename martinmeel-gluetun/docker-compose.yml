@@ -54,7 +54,7 @@ services:
       # Enable the firewall
       #- FIREWALL=on
       # Allow local network access
-      - FIREWALL_OUTBOUND_SUBNETS=192.168.2.0/24
+      - FIREWALL_OUTBOUND_SUBNETS=192.168.2.0/24 # Use your own network. 
       # Timezone
       - TZ=Europe/Amsterdam
       # Health checks
