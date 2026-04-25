@@ -2,11 +2,11 @@ services:
   app_proxy:  # The Umbrel App Proxy automatically protects an app by requiring the user to enter their Umbrel password (either when they login into the main Web UI or by visiting an app directly e.g.
     environment:
        APP_HOST: martinmeel-arrdashboard_web_1 # <web-container-dns-name>
-       APP_PORT: 3443  # <web-container-port-number>
+       APP_PORT: 3000  # <web-container-port-number>
+       # There could be cases where you wish to disable authentication. That can be done by adding this env. var. 
+       PROXY_AUTH_ADD: 'false'
        # Use this if another app outside your umbrel device wants to connect via an API call
        # PROXY_AUTH_WHITELIST: /api/*
-       # There could be cases where you wish to disable this authentication. That can be done by adding this env. var. 
-       PROXY_AUTH_ADD: 'false'
        # Another example could be that the root of the web application (/) should be publicly accessible but the admin section be protected by Umbrel. This can be achieved by adding these env. vars. to the app_proxy Docker Compose service:
        # PROXY_AUTH_WHITELIST: "*"
        # PROXY_AUTH_BLACKLIST: "/admin/*"
@@ -21,9 +21,10 @@ services:
     # ports:
       # You do not need to expose the port that your app's web server is listening on if you're using the app_proxy service.
       # This is handled by the APP_HOST and APP_PORT environment variables in the service above.
+      # - 3000:3000 # Use <host-port>:<container-port> # Not needed. APP_PORT handles the internal port of the app. In umbrel-app.yml the port where you wish to connectr to is handeld there. This is only needed if you want to expose the app outside of the app_proxy.
       #
       # If you need to expose additional ports, you can do so like this, replacing <port> with the port number:
-      #- 3443:3003
+      # - <host-port>:<container-port>
     restart: unless-stopped
     stop_grace_period: 1m
     
