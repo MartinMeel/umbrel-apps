@@ -1,6 +1,6 @@
 services:
   server:
-    image: qmcgaw/gluetun
+    image: qmcgaw/gluetun:3.40.2
     cap_add:
       - NET_ADMIN
     devices:
