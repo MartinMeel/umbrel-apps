@@ -11,7 +11,7 @@ description: >-
 
 developer: Kha-kis
 website: https://github.com/Kha-kis/arr-dashboard
-dependencies: [] #If you enable this, this app will only install if Gluetun is installed. Also if you want to uninstall, Gluetun has to be uninstalled first!!!
+dependencies: [] #If you enable this, this app will only install if Gluetun is installed. Also if you want to uninstall, Gluetun has to be uninstalled first!!! So be carefull with this option! Also use the [] if you want to have no dependencies. If you want to have multiple dependencies, add them like this: [dependency1, dependency2, dependency3]
   #- martinmeel-gluetun
 repo: https://github.com/Kha-kis/arr-dashboard
 support: https://github.com/Kha-kis/arr-dashboard/issues
