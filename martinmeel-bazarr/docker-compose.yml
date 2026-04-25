@@ -1,16 +1,19 @@
 services:
-  app_proxy:
+  app_proxy: # The Umbrel App Proxy automatically protects an app by requiring the user to enter their Umbrel password (either when they login into the main Web UI or by visiting an app directly e.g.
     environment:
-      APP_HOST: martinmeel-gluetun_server_1
-      APP_PORT: 6767
+      APP_HOST: martinmeel-gluetun_server_1 # This is the name of the Gluetun container, which is the one that will be running the app proxy. Do not change this if you want all trafic over VPN.
+      APP_PORT: 6767 # The internal portnumber of Bazarr, which is 6767 by default. 
       # Use this if another app outside your umbrel device wants to connect via an API call
       PROXY_AUTH_WHITELIST: /api/*
-      # Set false if another app from outside your umbrell wants to connect without UMBREL login!
+      # There could be cases where you wish to disable authentication. That can be done by adding this env. var. 
       PROXY_AUTH_ADD: 'false'
+      # Another example could be that the root of the web application (/) should be publicly accessible but the admin section be protected by Umbrel. This can be achieved by adding these env. vars. to the app_proxy Docker Compose service:
+      # PROXY_AUTH_WHITELIST: "*"
+      # PROXY_AUTH_BLACKLIST: "/admin/*"
 
   bazarr:
-    image: lscr.io/linuxserver/bazarr:latest
-    # Use Gluetun's network stack - all traffic goes through VPN
+    image: linuxserver/bazarr:1.5.6@sha256:b0bc617664dbca25845ac3b1bb6411b145b6a44a6d173071c9d2f426524fdd9f
+    # Use Gluetun's network stack - traffic goes through VPN
     network_mode: "container:martinmeel-gluetun_server_1"
     environment:
       - PUID=1000
@@ -18,13 +21,14 @@ services:
       - TZ=Europe/Amsterdam
     volumes:
       - ${APP_DATA_DIR}/data/config:/config
-      # Below is your media directories, adjust as needed
-      - ${MOVIES1}:/movies
-      - ${MOVIES2}:/movies1
-      - ${SERIES1}:/tv
-      - ${SERIES2}:/tvold
-    #ports:
-    #  - 6767:6767
+      # Below are your media directories, adjust as needed. I mounted them in Umbrel in fstab. Be aware that after an update of Umbrel, you might have to remount/add them accordingly in fstab.
+      # For example: my "Films" directory is in /home/umbrel/umbrel/Downloads/Films on my Umbrel, so I added the following line to my fstab to automaount it on boot:
+      # //ip-address-of-your-server/Films /home/umbrel/umbrel/home/Downloads/Films cifs credentials=/root/.smbcredentials,uid=1000,user 0 0
+      # Do this for all your media directories and adjust the paths accordingly in the volumes section below. Use google or AI to find out how to do this if you don't know how.
+      # ${UMBREL_ROOT} is the root directory of your Umbrel, which is /home/umbrel/umbrel.
+      - ${UMBREL_ROOT}/home/Downloads/Films:/movies
+      - ${UMBREL_ROOT}/home/Downloads/TVSeries:/tv
+      - ${UMBREL_ROOT}/home/Downloads/TVSeriesOld:/tvold
     restart: unless-stopped
     stop_grace_period: 1m
     
