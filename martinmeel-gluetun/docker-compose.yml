@@ -1,7 +1,6 @@
 services:
   server:
-    image: qmcgaw/gluetun:latest
-    # container_name: martinmeel-gluetun
+    image: qmcgaw/gluetun:v3.40.3@sha256:ef4a44819a60469682c7b5e69183e6401171891feaa60186652d292c59e41b30
     cap_add:
       - NET_ADMIN
     devices:
@@ -13,12 +12,6 @@ services:
       # Experiment if you find some strange behaviour!!
       # Sonarr
       # - 8989:8989
-      # Prowlarr
-      - 9696:9696
-      # SABnzbd
-      # - 8080:8080
-      # qBittorrent
-      # - 8090:8090
       # Radarr
       # - 7878:7878
       # Seerr
@@ -27,6 +20,12 @@ services:
       # - 8181:8181
       # Profilarr
       # - 6868:6868
+      # Prowlarr
+      # - 9696:9696
+      # SABnzbd
+      # - 8080:8080
+      # qBittorrent
+      # - 8090:8090
       # Spotweb
       - 81:80
     volumes:

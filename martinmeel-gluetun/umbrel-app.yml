@@ -5,6 +5,8 @@ tagline: Lightweight VPN client with support for multiple providers
 icon: https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-gluetun/gluetun.svg
 category: networking
 version: "3.40.3"
+port: 8000
+path: "/v1/version"
 description: >-
   Gluetun is a lightweight VPN client written in Go that supports multiple VPN providers
   including ProtonVPN, Windscribe etc. It acts as a VPN gateway for other Docker containers, allowing
@@ -32,12 +34,12 @@ description: >-
 
   🛠️ SET-UP INSTRUCTIONS
     After installing Gluetun STOP the container and fill in the private key in the exports file!!!!
-    ⚠️ NOTE: Please ssh into your umbrel or via the settings icon -> Advanced settings -> Terminal (open) to change the exports file.
+    ⚠️ NOTE: ssh into your umbrel or via the settings icon -> Advanced settings -> Terminal (open) to change the exports file.
 
 
   Logs:  
     ⚠️ NOTE: To follow the logs of the Gluetun container:
-    Please ssh into your umbrel or via the settings icon -> Advanced settings -> Terminal (open)
+    ssh into your umbrel or via the settings icon -> Advanced settings -> Terminal (open)
     - sudo docker logs -f martinmeel-gluetun_server_1
 
 
