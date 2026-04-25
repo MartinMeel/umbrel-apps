@@ -1,7 +1,7 @@
 services:
   app_proxy:  # The Umbrel App Proxy automatically protects an app by requiring the user to enter their Umbrel password (either when they login into the main Web UI or by visiting an app directly e.g.
     environment:
-       APP_HOST: martinmeel-arr-dashboard_web_1 # <web-container-dns-name>
+       APP_HOST: martinmeel-arrdashboard_web_1 # <web-container-dns-name>
        APP_PORT: 3443  # <web-container-port-number>
        # Use this if another app outside your umbrel device wants to connect via an API call
        # PROXY_AUTH_WHITELIST: /api/*
@@ -12,7 +12,7 @@ services:
        # PROXY_AUTH_BLACKLIST: "/admin/*"
 
   web: # Officially should be "app:" or "web:""
-    image: khak1s/arr-dashboard:latest
+    image: khak1s/arr-dashboard:2.16.1@sha256:52216515e3c137dbf81b6a86f7e5b7fbc43fbafe73c44f55e64680fd2e3716ac
     environment:
       - PUID=1000  # Set to your user ID (run `id -u` on host)
       - PGID=1000  # Set to your group ID (run `id -g` on host)

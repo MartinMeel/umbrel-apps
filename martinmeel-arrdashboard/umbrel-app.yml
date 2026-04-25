@@ -16,9 +16,9 @@ dependencies: [] #If you enable this, this app will only install if Gluetun is i
 repo: https://github.com/Kha-kis/arr-dashboard
 support: https://github.com/Kha-kis/arr-dashboard/issues
 gallery:
-  - 
-  - 
-  - 
+  - []
+  - []
+  - []
 releaseNotes: >-
   This update includes various improvements and bug fixes:
   Full release notes for arr-dashboard are available at hhttps://github.com/Kha-kis/arr-dashboard/releases
