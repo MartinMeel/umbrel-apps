@@ -4,7 +4,7 @@ name: 1.0 Gluetun VPN
 tagline: Lightweight VPN client with support for multiple providers
 icon: https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-gluetun/gluetun.svg
 category: networking
-version: "3.40.2"
+version: "3.40.x"
 description: >-
   Gluetun is a lightweight VPN client written in Go that supports multiple VPN providers
   including ProtonVPN, Windscribe etc. It acts as a VPN gateway for other Docker containers, allowing
