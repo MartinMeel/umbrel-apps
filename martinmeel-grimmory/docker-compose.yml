@@ -16,7 +16,7 @@ services:
     environment:
       USER_ID: 1000
       GROUP_ID: 1000
-      TZ: ${TZ}
+      TZ: ${TZ:Europe/Amsterdam}
       DATABASE_URL: jdbc:mariadb://db:3306/grimmory
       DATABASE_USERNAME: grimmory
       DATABASE_PASSWORD: ${APP_SEED}
@@ -39,7 +39,7 @@ services:
     environment:
       PUID: 1000
       PGID: 1000
-      TZ: ${TZ}
+      TZ: ${TZ:Europe/Amsterdam}
       MYSQL_ROOT_PASSWORD: ${APP_SEED}
       MYSQL_DATABASE: grimmory
       MYSQL_USER: grimmory
