@@ -1,0 +1,26 @@
+manifestVersion: 1
+id: grimmory
+category: media
+name: Grimmory
+version: "3.0.2"
+tagline: A serious self-hosted digital library
+description: >-
+  Grimmory is a self-hosted digital library for organizing, reading,
+  annotating, syncing, and sharing your book collection. It supports EPUB,
+  MOBI, AZW, AZW3, FB2, PDF, CBZ, CBR, CB7, M4B, M4A, MP3, and OPUS files,
+  with smart shelves, metadata lookup, a browser reader, Kobo and KOReader
+  sync, OPDS support, multi-user accounts, and a BookDrop watched folder for
+  imports.
+developer: Grimmory Tools
+website: https://grimmory.org
+dependencies: []
+repo: https://github.com/grimmory-tools/grimmory
+support: https://github.com/grimmory-tools/grimmory/issues
+port: 6060
+gallery: []
+path: ""
+defaultUsername: ""
+defaultPassword: ""
+submitter: ""
+submission: ""
+releaseNotes: ""

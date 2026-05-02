@@ -1,0 +1,53 @@
+version: "3.7"
+
+services:
+  app_proxy:
+    environment:
+      APP_HOST: grimmory_web_1
+      APP_PORT: 6060
+
+  web:
+    image: grimmory/grimmory:v3.0.2
+    restart: on-failure
+    stop_grace_period: 1m
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      USER_ID: 1000
+      GROUP_ID: 1000
+      TZ: ${TZ}
+      DATABASE_URL: jdbc:mariadb://db:3306/grimmory
+      DATABASE_USERNAME: grimmory
+      DATABASE_PASSWORD: ${APP_SEED}
+      API_DOCS_ENABLED: "false"
+      DISK_TYPE: LOCAL
+    volumes:
+      - ${APP_DATA_DIR}/data:/app/data
+      - ${APP_DATA_DIR}/books:/books
+      - ${APP_DATA_DIR}/bookdrop:/bookdrop
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O - http://localhost:6060/api/v1/healthcheck || exit 1"]
+      interval: 60s
+      retries: 5
+      start_period: 60s
+      timeout: 10s
+
+  db:
+    image: lscr.io/linuxserver/mariadb:11.4.5
+    restart: on-failure
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: ${TZ}
+      MYSQL_ROOT_PASSWORD: ${APP_SEED}
+      MYSQL_DATABASE: grimmory
+      MYSQL_USER: grimmory
+      MYSQL_PASSWORD: ${APP_SEED}
+    volumes:
+      - ${APP_DATA_DIR}/mariadb:/config
+    healthcheck:
+      test: ["CMD", "mariadb-admin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
