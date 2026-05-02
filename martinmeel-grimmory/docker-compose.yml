@@ -3,7 +3,7 @@ version: "3.7"
 services:
   app_proxy:
     environment:
-      APP_HOST: grimmory_web_1
+      APP_HOST: martinmeel-grimmory_web_1
       APP_PORT: 6060
 
   web:
