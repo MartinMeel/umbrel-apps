@@ -4,6 +4,7 @@ category: media
 name: Grimmory
 version: "3.0.2"
 tagline: A serious self-hosted digital library
+icon: https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-grimmory/icon.svg
 description: >-
   Grimmory is a self-hosted digital library for organizing, reading,
   annotating, syncing, and sharing your book collection. It supports EPUB,
