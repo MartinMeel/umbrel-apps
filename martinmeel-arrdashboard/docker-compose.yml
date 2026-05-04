@@ -12,7 +12,7 @@ services:
        # PROXY_AUTH_BLACKLIST: "/admin/*"
 
   web: # Officially should be "app:" or "web:""
-    image: khak1s/arr-dashboard:2.18.2@sha256:6699ee8df1f75172ca084ab71da788d50e9b8906a76ffb9137955882501dda29
+    image: khak1s/arr-dashboard:2.18.2@sha256:8d4a0f4f5857e0631f04257938823386f6b4039150e8a0feaf0e280796fa3fea
     environment:
       - PUID=1000  # Set to your user ID (run `id -u` on host)
       - PGID=1000  # Set to your group ID (run `id -g` on host)
