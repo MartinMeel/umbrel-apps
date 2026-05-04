@@ -2,7 +2,7 @@ services:
   app_proxy: # The Umbrel App Proxy automatically protects an app by requiring the user to enter their Umbrel password (either when they login into the main Web UI or by visiting an app directly e.g.
     environment:
       APP_HOST: martinmeel-gluetun_server_1 # This is the name of the Gluetun container, which is the one that will be running the app proxy. Do not change this if you want all trafic over VPN.
-      APP_PORT: 6767 # The internal portnumber of Bazarr, which is 6767 by default. 
+      APP_PORT: 6767 # <web/app-container-port-number>The internal portnumber of Bazarr, which is 6767 by default. 
       # Use this if another app outside your umbrel device wants to connect via an API call
       PROXY_AUTH_WHITELIST: /api/*
       # There could be cases where you wish to disable authentication. That can be done by adding this env. var. 
@@ -11,13 +11,13 @@ services:
       # PROXY_AUTH_WHITELIST: "*"
       # PROXY_AUTH_BLACKLIST: "/admin/*"
 
-  bazarr:
+  bazarr: # Officially should be "app:" or "web:"
     image: linuxserver/bazarr:1.5.6@sha256:b0bc617664dbca25845ac3b1bb6411b145b6a44a6d173071c9d2f426524fdd9f
     # Use Gluetun's network stack - traffic goes through VPN
     network_mode: "container:martinmeel-gluetun_server_1"
     environment:
-      - PUID=1000
-      - PGID=1000
+      - PUID=1000 # Set to your user ID (run `id -u` on host)
+      - PGID=1000 # Set to your group ID (run `id -g` on host)
       - TZ=Europe/Amsterdam
     volumes:
       - ${APP_DATA_DIR}/data/config:/config
@@ -29,6 +29,13 @@ services:
       - ${UMBREL_ROOT}/home/Downloads/Films:/movies
       - ${UMBREL_ROOT}/home/Downloads/TVSeries:/tv
       - ${UMBREL_ROOT}/home/Downloads/TVSeriesOld:/tvold
+    # ports:
+      # You do not need to expose the port that your app's web server is listening on if you're using the app_proxy service.
+      # This is handled by the APP_HOST and APP_PORT environment variables in the service above.
+      # - 3000:3000 # Use <host-port>:<container-port> # Not needed. APP_PORT handles the internal port of the app. In umbrel-app.yml the port where you wish to connectr to is handeld there. This is only needed if you want to expose the app outside of the app_proxy.
+      #
+      # If you need to expose additional ports, you can do so like this, replacing <port> with the port number:
+      # - <host-port>:<container-port>
     restart: unless-stopped
     stop_grace_period: 1m
     
