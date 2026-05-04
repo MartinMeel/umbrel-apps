@@ -2,7 +2,7 @@ manifestVersion: 1
 id: martinmeel-arrdashboard
 category: multimedia
 name: 2.6 Arr Dashboard
-version: "2.16.1"
+version: "2.18.2"
 tagline: A unified dashboard for managing multiple Sonarr, Radarr, Prowlarr, Lidarr, Readarr, Plex, Tautulli, Jellyfin, Emby, and Seerr instances.
 icon: https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-arrdashboard/icon.png
 port: 3443
