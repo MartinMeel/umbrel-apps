@@ -16,7 +16,7 @@ services:
     environment:
       USER_ID: 1000
       GROUP_ID: 1000
-      TZ: ${TZ:Europe/Amsterdam}
+      TZ: ${TZ}
       DATABASE_URL: jdbc:mariadb://db:3306/grimmory
       DATABASE_USERNAME: grimmory
       DATABASE_PASSWORD: ${APP_SEED}
