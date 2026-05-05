@@ -1,12 +1,12 @@
 services:
   app_proxy:
     environment:
-      APP_HOST: martinmeel-nasinit_init_1
+      APP_HOST: martinmeel-umbrelinit_init_1
       APP_PORT: 7891
  
   init:
     image: debian:bookworm-slim
-    container_name: martinmeel-nasinit_init_1
+    container_name: martinmeel-umbrelinit_init_1
     restart: on-failure
     privileged: true
     pid: host

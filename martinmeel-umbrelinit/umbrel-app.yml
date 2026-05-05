@@ -1,11 +1,11 @@
 manifestVersion: 1
-id: martinmeel-nasinit
+id: martinmeel-naumbrelinit
 category: networking
-name: NAS Init
+name: Umbrel Init
 version: "1.0.0"
 tagline: Auto-mount NAS shares and install mc on every boot
 description: >-
-  Automatically mounts NAS CIFS shares from 192.168.2.168 and installs
+  Automatically mounts NAS CIFS shares from your NAS and installs
   mc (Midnight Commander) on every boot via umbreld's managed container system.
 
 
@@ -16,7 +16,7 @@ description: >-
   - mc installation status
 
   - Last run timestamp
-developer: Martin
+developer: martinmeel
 website: https://github.com/martinmeel/umbrel-apps
 dependencies: []
 repo: https://github.com/martinmeel/umbrel-apps
