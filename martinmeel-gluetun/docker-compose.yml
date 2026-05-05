@@ -34,25 +34,28 @@ services:
     volumes:
       - ${APP_DATA_DIR}/data:/gluetun
     environment:
+      # PLEASE READ ALSO the Gluetun WIKI page: https://github.com/qdm12/gluetun-wiki for more info on how to use it. 
       # ProtonVPN VPN Configuration
       - VPN_SERVICE_PROVIDER=protonvpn
       - VPN_TYPE=wireguard
       - WIREGUARD_PRIVATE_KEY=${PROTONVPN_PRIVATE_KEY}
       - SERVER_COUNTRIES=Netherlands
+      # MTU, change if needed
+      - WIREGUARD_MTU=1360
       # Enble Control server
       - HTTP_CONTROL_SERVER_ADDRESS=:8000
       - HTTP_CONTROL_SERVER_LOG=on
       # Enable HTTP proxy
       - HTTPPROXY=on
       - HTTPPROXY_LISTENING_ADDRESS=:8888
-      # Enable port forwarding. Note! Make sure you use the private key which covers the portforwarding option.
+      # Enable port forwarding. Note! Make sure you use a private key (protonVPN) which covers the portforwarding option.
       - VPN_PORT_FORWARDING=on
       - VPN_PORT_FORWARDING_PROVIDER=protonvpn
       # Script that automatically updates portforwarding on qBittorrent.
       - VPN_PORT_FORWARDING_UP_COMMAND=/bin/sh -c 'wget -O- --retry-connrefused --post-data "json={\"listen_port\":{{PORTS}},\"random_port\":false,\"upnp\":false}" http://127.0.0.1:8090/api/v2/app/setPreferences 2>&1'
       - VPN_PORT_FORWARDING_DOWN_COMMAND=/bin/sh -c 'wget -O- --retry-connrefused --post-data "json={\"listen_port\":0}" http://127.0.0.1:8090/api/v2/app/setPreferences 2>&1'
       # Enable the firewall
-      #- FIREWALL=on
+      # - FIREWALL=on
       # Allow local network access
       - FIREWALL_OUTBOUND_SUBNETS=192.168.2.0/24 # Use your own network. 
       # Timezone
@@ -68,5 +71,13 @@ services:
       - DNS_UPSTREAM_RESOLVER_TYPE=dot
       - DNS_UPSTREAM_IPV6=off
       - DNS_CACHING=off
+      # Gluetun version information
+      - VERSION_INFORMATION=off
+      # Help Gluetun from AI scrapping
+      - BORINGPOLL_GLUETUNCOM=off
+      # Especially for ProtonVPN?
+      - BLOCK_MALICIOUS=off
+      - BLOCK_SURVEILLANCE=off
+      - BLOCK_ADS=off
     restart: unless-stopped
     stop_grace_period: 1m

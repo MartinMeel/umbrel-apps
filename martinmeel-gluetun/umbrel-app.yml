@@ -31,7 +31,7 @@ description: >-
 
 
   🛠️ SET-UP INSTRUCTIONS
-    After installing Gluetun STOP the container and fill in the private key in the exports file!!!!
+    After installing Gluetun, STOP the container and fill in the private key in the exports file!!!!
     ⚠️ NOTE: ssh into your umbrel or via the settings icon -> Advanced settings -> Terminal (open) to change the exports file.
 
 
