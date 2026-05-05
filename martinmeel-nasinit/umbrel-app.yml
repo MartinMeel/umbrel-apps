@@ -1,0 +1,27 @@
+manifestVersion: 1
+id: martinmeel-nasinit
+category: networking
+name: NAS Init
+version: "1.0.0"
+tagline: Auto-mount NAS shares and install mc on every boot
+description: >-
+  Automatically mounts NAS CIFS shares from 192.168.2.168 and installs
+  mc (Midnight Commander) on every boot via umbreld's managed container system.
+
+
+  Opens a simple status dashboard showing:
+
+  - Mount status for all 4 NAS shares (qbittorrent & sabnzbd complete/incomplete)
+
+  - mc installation status
+
+  - Last run timestamp
+developer: Martin
+website: https://github.com/martindev/martindev-umbrel-store
+dependencies: []
+repo: https://github.com/martindev/martindev-umbrel-store
+support: https://github.com/martindev/martindev-umbrel-store/issues
+port: 7891
+gallery: []
+releaseNotes: >-
+  Initial release. Mounts NAS shares and installs mc on boot.
