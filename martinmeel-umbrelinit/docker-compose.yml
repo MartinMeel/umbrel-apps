@@ -12,5 +12,5 @@ services:
     pid: host
     volumes:
       - /home/umbrel:/home/umbrel
-    entrypoint: ["/bin/bash", "/home/umbrel/docker-init/startup.sh"]
+    entrypoint: ["/bin/bash", "/home/umbrel/umbrel/app-data/martinmeel-umbrelinit/startup.sh"]
  
