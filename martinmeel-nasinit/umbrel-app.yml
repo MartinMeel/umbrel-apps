@@ -17,10 +17,10 @@ description: >-
 
   - Last run timestamp
 developer: Martin
-website: https://github.com/martindev/martindev-umbrel-store
+website: https://github.com/martinmeel/umbrel-apps
 dependencies: []
-repo: https://github.com/martindev/martindev-umbrel-store
-support: https://github.com/martindev/martindev-umbrel-store/issues
+repo: https://github.com/martinmeel/umbrel-apps
+support: https://github.com/martinmeel/umbrel-apps/issues
 port: 7891
 gallery: []
 releaseNotes: >-
