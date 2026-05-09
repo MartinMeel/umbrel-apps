@@ -1,0 +1,24 @@
+manifestVersion: 1.1
+id: martinmeel-system-status
+name: MartinMeel Media Automation
+tagline: Automate SMB mounts and Gluetun restart handling
+category: networking
+Icon: icon.svg
+version: "1.0.0"
+description: >-
+  An Umbrel app that installs host-side SMB mount automation, creates the
+  daily Gluetun restart timer, restarts all dependent containers in order,
+  and provides a status dashboard for the whole setup.
+releaseNotes: >-
+  Initial release.
+developer: MartinMeel
+website: https://github.com/MartinMeel/umbrel-apps
+dependencies: []
+repo: https://github.com/MartinMeel/umbrel-apps
+support: https://github.com/MartinMeel/umbrel-apps
+port: 3000
+gallery: []
+path: ""
+defaultUsername: ""
+defaultPassword: ""
+submitter: MartinMeel
