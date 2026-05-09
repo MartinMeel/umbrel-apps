@@ -1,0 +1,40 @@
+#!/bin/bash
+
+set -eu
+
+APP_ID="martinmeel-system-status"
+UMBREL_ROOT="/home/umbrel/umbrel"
+CUSTOM_HOOKS_DIR="$UMBREL_ROOT/custom-hooks"
+HOST_PRE_START="$CUSTOM_HOOKS_DIR/pre-start"
+HOST_GLUETUN="$CUSTOM_HOOKS_DIR/gluetun-daily-restart.sh"
+PRE_START_BACKUP="$CUSTOM_HOOKS_DIR/pre-start.$APP_ID.user-backup"
+GLUETUN_BACKUP="$CUSTOM_HOOKS_DIR/gluetun-daily-restart.sh.$APP_ID.user-backup"
+MARKER="# Managed by $APP_ID"
+SYSTEMD_DIR="/etc/systemd/system"
+SERVICE_FILE="$SYSTEMD_DIR/umbrel-gluetun-daily-restart.service"
+TIMER_FILE="$SYSTEMD_DIR/umbrel-gluetun-daily-restart.timer"
+
+restore_or_remove() {
+  local target="$1"
+  local backup="$2"
+
+  if [ -f "$target" ] && grep -qF "$MARKER" "$target" 2>/dev/null; then
+    rm -f "$target"
+  fi
+
+  if [ -e "$backup" ]; then
+    mv "$backup" "$target"
+  fi
+}
+
+if command -v systemctl >/dev/null 2>&1; then
+  systemctl disable --now umbrel-gluetun-daily-restart.timer >/dev/null 2>&1 || true
+fi
+
+rm -f "$SERVICE_FILE" "$TIMER_FILE"
+if command -v systemctl >/dev/null 2>&1; then
+  systemctl daemon-reload >/dev/null 2>&1 || true
+fi
+
+restore_or_remove "$HOST_PRE_START" "$PRE_START_BACKUP"
+restore_or_remove "$HOST_GLUETUN" "$GLUETUN_BACKUP"
