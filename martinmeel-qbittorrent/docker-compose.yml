@@ -1,13 +1,19 @@
 services:
   app_proxy:
     environment:
+      # Use Gluetun's network stack
       APP_HOST: martinmeel-gluetun_server_1
+      # Use another port than 8080. SABnzbd is using this!
       APP_PORT: 8090
-      # Use this else you won't be able to connect from outside your umbrell!
+      # Use this if another app outside your umbrel device wants to connect via an API call
       PROXY_AUTH_WHITELIST: "*"
-      # Set false if another app from outside your umbrell wants to connect without login in!
+      # There could be cases where you wish to disable authentication. That can be done by adding this env. var. 
       PROXY_AUTH_ADD: 'false'
-      
+      # Another example could be that the root of the web application (/) should be publicly accessible but the admin section be protected by Umbrel. This can be achieved by adding these env. vars. to the app_proxy Docker Compose service:
+      # PROXY_AUTH_WHITELIST: "*"
+      # PROXY_AUTH_BLACKLIST: "/admin/*"
+
+
   server:
     image: lscr.io/linuxserver/qbittorrent:latest
     # Use Gluetun's network stack - all traffic goes through VPN
