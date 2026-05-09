@@ -1,8 +1,8 @@
 services:
-  app_proxy:
-    environment:
-      APP_HOST: martinmeel-system-status_server_1
-      APP_PORT: 3000
+#  app_proxy:
+#    environment:
+#      APP_HOST: martinmeel-system-status_server_1
+#      APP_PORT: 3000
 
   server:
     image: node:20-alpine
@@ -13,8 +13,8 @@ services:
     volumes:
       - ./runtime:/app:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ${UMBREL_ROOT}/home:/host-home:ro
-      - ${UMBREL_ROOT}/custom-hooks:/host-hooks:ro
+      - /home/umbrel/umbrel/home:/host-home:ro
+      - /home/umbrel/umbrel/custom-hooks:/host-hooks:ro
       - /etc/systemd/system:/host-systemd:ro
     environment:
       - APP_PORT=3000
