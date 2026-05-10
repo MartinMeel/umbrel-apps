@@ -11,7 +11,7 @@ services:
       - node
       - server.js
     ports:
-      - "3000:3000"
+      - "3040:3000"
     volumes:
       - ${APP_DATA_DIR}/server.js:/app/server.js:ro
       - ${APP_DATA_DIR}/static:/app/static:ro
