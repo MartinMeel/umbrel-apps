@@ -37,8 +37,15 @@ function renderKeyValue(items) {
 function renderShares(data) {
   shares.innerHTML = data.shares
     .map(
-      (entry) =>
-        `<article class="card"><div class="card-top"><strong>${safe(entry.share)}</strong>${entry.mounted && entry.responsive ? badge(true, "Mounted") : entry.mounted ? stateBadge("warn", "Unreachable") : badge(false, "Unmounted")}</div>${renderKeyValue([{ label: "Target", value: safe(entry.hostPath) }, { label: "Directory exists", value: yesNo(entry.exists) }, { label: "Mounted in kernel", value: yesNo(entry.mounted) }, { label: "Reachable now", value: yesNo(entry.responsive) }])}</article>`,
+      (entry) => {
+        const statusBadge =
+          entry.strictState === "mounted"
+            ? badge(true, "Mounted")
+            : entry.strictState === "stale-suspected"
+              ? stateBadge("warn", "Stale suspected")
+              : badge(false, "Unmounted");
+        return `<article class="card"><div class="card-top"><strong>${safe(entry.share)}</strong>${statusBadge}</div>${renderKeyValue([{ label: "Target", value: safe(entry.hostPath) }, { label: "Directory exists", value: yesNo(entry.exists) }, { label: "Mounted in kernel", value: yesNo(entry.mounted) }, { label: "Reachable now", value: yesNo(entry.responsive) }, { label: "Filesystem", value: safe(entry.fsType || "n/a") }, { label: "Mount source", value: safe(entry.mountSource || "n/a") }, { label: "Probe", value: safe(entry.probe || "n/a") }])}</article>`;
+      },
     )
     .join("");
 }
