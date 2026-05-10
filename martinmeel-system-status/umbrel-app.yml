@@ -15,7 +15,7 @@ website: https://github.com/MartinMeel/umbrel-apps
 dependencies: []
 repo: https://github.com/MartinMeel/umbrel-apps
 support: https://github.com/MartinMeel/umbrel-apps
-port: 3040
+port: 3011
 gallery: []
 path: ""
 defaultUsername: ""
