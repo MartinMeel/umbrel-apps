@@ -1,8 +1,8 @@
 services:
- # app_proxy:
- #   environment:
- #     APP_HOST: martinmeel-system-status_server_1
- #     APP_PORT: 3000
+  app_proxy:
+    environment:
+      APP_HOST: martinmeel-system-status_server_1
+      APP_PORT: 3000
 
   server:
     image: node:20-alpine
@@ -21,6 +21,6 @@ services:
       - ${UMBREL_ROOT}/custom-hooks:/host-hooks:ro
       - /etc/systemd/system:/host-systemd:ro
       - /var/lib/dpkg/status:/host-dpkg-status:ro
-    environment:
-      - APP_PORT=3000
+   # environment:
+   #   - APP_PORT=3000
     restart: unless-stopped
