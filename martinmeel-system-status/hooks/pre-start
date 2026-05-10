@@ -1,6 +1,0 @@
-#!/bin/bash
-
-set -eu
-. "$(cd "$(dirname "$0")" && pwd)/lib.sh"
-generate_runtime
-install_host_integration
