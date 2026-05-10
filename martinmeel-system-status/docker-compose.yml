@@ -1,8 +1,8 @@
 services:
-  app_proxy:
-    environment:
-      APP_HOST: martinmeel-system-status_server_1
-      APP_PORT: 3000
+ # app_proxy:
+ #   environment:
+ #     APP_HOST: martinmeel-system-status_server_1
+ #     APP_PORT: 3000
 
   server:
     image: node:20-alpine
