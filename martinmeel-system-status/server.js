@@ -114,12 +114,19 @@ async function getMountedShares() {
     mountsContent = await fsp.readFile("/proc/mounts", "utf8");
   } catch {}
 
+  const mountLines = mountsContent.split("\n");
+
   const shares = SHARES.map((entry) => {
     const encodedPath = entry.mountpoint.replace(/ /g, "\\040");
+    const mountLine = mountLines.find((line) => line.includes(` ${encodedPath} `)) || "";
+    const mountSource = mountLine ? mountLine.split(" ")[0] : null;
+    const fsType = mountLine ? mountLine.split(" ")[2] : null;
     return {
       ...entry,
       exists: fs.existsSync(entry.mountpoint),
       mounted: mountsContent.includes(` ${encodedPath} `),
+      mountSource,
+      fsType,
     };
   });
 
@@ -130,23 +137,39 @@ async function getMountedShares() {
           ...entry,
           responsive: false,
           probe: "not-mounted",
+          strictState: "unmounted",
         };
       }
 
       try {
         // Mounted CIFS shares can remain in /proc/mounts after the NAS side goes away.
-        // Probe the mountpoint with a short timeout so the UI can tell "mounted" from "responsive".
-        await execFileAsync("timeout", ["3", "ls", "-1", entry.mountpoint], { timeout: 5000 });
+        // Probe with multiple real filesystem operations so we can distinguish
+        // a healthy mount from one that is only still present in the kernel.
+        await execFileAsync(
+          "timeout",
+          [
+            "4",
+            "sh",
+            "-c",
+            `set -eu
+stat "${entry.mountpoint}" >/dev/null
+ls -1A "${entry.mountpoint}" >/dev/null
+df -P "${entry.mountpoint}" >/dev/null`,
+          ],
+          { timeout: 6000 },
+        );
         return {
           ...entry,
           responsive: true,
           probe: "ok",
+          strictState: "mounted",
         };
       } catch (error) {
         return {
           ...entry,
           responsive: false,
           probe: error.killed ? "timeout" : "error",
+          strictState: "stale-suspected",
         };
       }
     }),
