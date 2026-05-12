@@ -28,7 +28,7 @@ services:
       # ${UMBREL_ROOT} is the root directory of your Umbrel, which is /home/umbrel/umbrel.
       - ${UMBREL_ROOT}/home/Downloads/Films:/movies
       - ${UMBREL_ROOT}/home/Downloads/TVSeries:/tv
-      - ${UMBREL_ROOT}/home/Downloads/TVSeriesOld:/tvold
+      - ${UMBREL_ROOT}/home/Downloads/TVSeriesOLD:/tvold
     # ports:
       # You do not need to expose the port that your app's web server is listening on if you're using the app_proxy service.
       # This is handled by the APP_HOST and APP_PORT environment variables in the service above.
