@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="nl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Compose Path Editor</title>
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="hero">
+        <div>
+          <p class="eyebrow">Umbrel beheer</p>
+          <h1>Compose Path Editor</h1>
+          <p class="subtitle">Selecteer een geïnstalleerde app, kies een vast downloadpad en pas één regel in docker-compose.yml veilig aan.</p>
+        </div>
+        <button id="refreshButton" type="button">Vernieuwen</button>
+      </header>
+
+      <section class="notice">
+        <strong>Let op:</strong> elke wijziging maakt automatisch een backup naast het originele bestand. Herstart de aangepaste Umbrel app na het opslaan.
+      </section>
+
+      <section class="grid">
+        <article class="card">
+          <div class="step">1</div>
+          <h2>Kies docker-compose.yml</h2>
+          <label for="appSelect">Geïnstalleerde apps en compose-bestanden</label>
+          <select id="appSelect"></select>
+          <p id="selectedFile" class="muted"></p>
+        </article>
+
+        <article class="card">
+          <div class="step">2</div>
+          <h2>Kies nieuw pad</h2>
+          <label for="pathSelect">Beschikbare paden</label>
+          <select id="pathSelect"></select>
+        </article>
+      </section>
+
+      <section class="card full">
+        <div class="step">3</div>
+        <h2>Kies regel uit docker-compose.yml</h2>
+        <p class="muted">Aanbevolen regels bevatten meestal een volume-pad. De app vervangt bij volume-regels alleen het host-pad en laat het container-pad intact.</p>
+        <div class="toolbar">
+          <label class="checkbox"><input id="recommendedOnly" type="checkbox" checked /> Toon alleen aanbevolen regels</label>
+        </div>
+        <div id="lineList" class="lines"></div>
+      </section>
+
+      <section class="card full">
+        <div class="step">4</div>
+        <h2>Controleer en pas toe</h2>
+        <div class="actions">
+          <button id="previewButton" type="button">Voorbeeld tonen</button>
+          <button id="applyButton" type="button" class="primary" disabled>Wijziging toepassen</button>
+        </div>
+        <div id="status" class="status" role="status"></div>
+        <pre id="diff" class="diff" aria-label="Voorbeeld van wijziging"></pre>
+      </section>
+    </main>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>

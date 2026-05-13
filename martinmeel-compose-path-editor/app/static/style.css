@@ -1,0 +1,168 @@
+:root {
+  color-scheme: dark;
+  --bg: #0f172a;
+  --card: rgba(15, 23, 42, 0.82);
+  --muted: #94a3b8;
+  --text: #e5e7eb;
+  --accent: #60a5fa;
+  --accent-strong: #2563eb;
+  --danger: #fca5a5;
+  --ok: #86efac;
+  --border: rgba(148, 163, 184, 0.26);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: radial-gradient(circle at top left, rgba(37, 99, 235, 0.35), transparent 36rem), var(--bg);
+  color: var(--text);
+}
+
+.shell {
+  width: min(1180px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 40px 0 64px;
+}
+
+.hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.eyebrow {
+  color: var(--accent);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin: 0 0 8px;
+}
+
+h1, h2, p { margin-top: 0; }
+h1 { font-size: clamp(2rem, 5vw, 4rem); margin-bottom: 12px; }
+h2 { font-size: 1.2rem; }
+.subtitle { max-width: 760px; color: #cbd5e1; font-size: 1.05rem; line-height: 1.6; }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.card, .notice {
+  border: 1px solid var(--border);
+  background: var(--card);
+  border-radius: 24px;
+  padding: 22px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.18);
+  backdrop-filter: blur(10px);
+}
+
+.full { margin-bottom: 18px; }
+.notice { color: #dbeafe; margin-bottom: 18px; }
+
+.step {
+  display: inline-flex;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  align-items: center;
+  justify-content: center;
+  background: rgba(96, 165, 250, 0.18);
+  color: #bfdbfe;
+  font-weight: 800;
+  margin-bottom: 12px;
+}
+
+label {
+  display: block;
+  color: #cbd5e1;
+  font-weight: 650;
+  margin-bottom: 8px;
+}
+
+select, button {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 12px 14px;
+  background: rgba(15, 23, 42, 0.9);
+  color: var(--text);
+  font: inherit;
+}
+
+button {
+  width: auto;
+  cursor: pointer;
+  font-weight: 750;
+}
+button:hover { border-color: var(--accent); }
+button:disabled { cursor: not-allowed; opacity: 0.52; }
+.primary { background: var(--accent-strong); border-color: var(--accent-strong); }
+
+.muted { color: var(--muted); font-size: 0.94rem; line-height: 1.5; word-break: break-word; }
+.toolbar { display: flex; justify-content: space-between; align-items: center; margin: 14px 0; }
+.checkbox { display: inline-flex; align-items: center; gap: 8px; margin: 0; }
+.checkbox input { width: 18px; height: 18px; }
+
+.lines {
+  max-height: 470px;
+  overflow: auto;
+  display: grid;
+  gap: 8px;
+  padding-right: 4px;
+}
+
+.line {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 12px;
+  align-items: start;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 12px;
+  background: rgba(2, 6, 23, 0.55);
+  cursor: pointer;
+}
+.line:hover, .line.selected { border-color: var(--accent); }
+.line input { margin-top: 4px; }
+.line-number { color: var(--muted); min-width: 48px; }
+.line-text { white-space: pre-wrap; word-break: break-word; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; }
+.badge {
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  padding: 4px 8px;
+  color: #bfdbfe;
+  font-size: 0.78rem;
+  white-space: nowrap;
+}
+.actions { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+.status { min-height: 28px; color: #cbd5e1; margin-bottom: 12px; line-height: 1.5; }
+.status.error { color: var(--danger); }
+.status.ok { color: var(--ok); }
+.diff {
+  display: none;
+  min-height: 140px;
+  max-height: 420px;
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 16px;
+  background: rgba(2, 6, 23, 0.74);
+  color: #d1d5db;
+  white-space: pre-wrap;
+}
+.diff.visible { display: block; }
+
+@media (max-width: 780px) {
+  .hero, .grid { grid-template-columns: 1fr; display: grid; }
+  .hero button { width: 100%; }
+  .line { grid-template-columns: auto 1fr; }
+  .badge { grid-column: 2; justify-self: start; }
+}
