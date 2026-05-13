@@ -1,0 +1,27 @@
+manifestVersion: 1.1
+id: martinmeel-compose-path-editor
+category: developer
+name: Compose Path Editor
+version: "0.1.0"
+tagline: Wijzig downloadpaden in Umbrel docker-compose.yml bestanden
+releaseNotes: >-
+  Eerste versie. Selecteer een geïnstalleerde app, kies een toegestaan downloadpad,
+  kies de compose-regel en pas de wijziging toe met automatische backup.
+description: >-
+  Compose Path Editor is een lokale beheer-app voor Umbrel waarmee je snel een
+  docker-compose.yml bestand van een geïnstalleerde app kunt selecteren en een
+  host downloadpad in een volume-regel kunt vervangen door één van de vooraf
+  ingestelde paden. Voor iedere wijziging wordt automatisch een backupbestand
+  gemaakt naast het originele docker-compose.yml bestand.
+developer: MartinMeel
+website: https://github.com/MartinMeel/umbrel-apps/compose-path-editor
+repo: https://github.com/MartinMeel/umbrel-apps/compose-path-editor
+support: https://github.com/MartinMeel/umbrel-apps/compose-path-editor/issues
+port: 8099
+gallery: []
+path: ""
+defaultUsername: ""
+defaultPassword: ""
+dependencies: []
+submitter: MartinMeel
+submission: ""
