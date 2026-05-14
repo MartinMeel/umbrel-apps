@@ -17,6 +17,34 @@ ALLOWED_PATHS = [
 ]
 SOURCE_RE = re.compile(r"(?P<source>(?:/home/umbrel/umbrel|\$[{]UMBREL_ROOT[}])/home/Downloads[^:\s\"']*|\$[{]APP_DATA_DIR[}][^:\s\"']*)(?=:[^:]+)")
 
+LOG_FILE = Path('/tmp/compose-path-editor-debug.log')
+MAX_LOG_BYTES = 120000
+
+def log_event(op_id, message):
+  ts = time.strftime('%Y-%m-%d %H:%M:%S')
+  safe_op = re.sub(r'[^A-Za-z0-9_.-]+', '_', str(op_id or 'general'))[:80]
+  line = f'[{ts}] [{safe_op}] {message}\n'
+  try:
+      with LOG_FILE.open('a', encoding='utf-8') as f:
+          f.write(line)
+      if LOG_FILE.stat().st_size > MAX_LOG_BYTES:
+          data = LOG_FILE.read_text(encoding='utf-8', errors='replace')[-MAX_LOG_BYTES:]
+          LOG_FILE.write_text(data, encoding='utf-8')
+  except Exception:
+      pass
+  print(line.rstrip(), flush=True)
+
+def get_logs(op_id=None):
+  try:
+      data = LOG_FILE.read_text(encoding='utf-8', errors='replace')
+  except FileNotFoundError:
+      return ''
+  if op_id:
+      token = '[' + re.sub(r'[^A-Za-z0-9_.-]+', '_', str(op_id))[:80] + ']'
+      lines = [line for line in data.splitlines() if token in line]
+      return '\n'.join(lines[-300:])
+  return '\n'.join(data.splitlines()[-300:])
+
 def preferred_compose_path(old_source, new_path):
   prefix = '/home/umbrel/umbrel'
   if new_path.startswith('${UMBREL_ROOT}'):
@@ -27,9 +55,9 @@ def preferred_compose_path(old_source, new_path):
 
 def html():
   paths = json.dumps(ALLOWED_PATHS)
-  return """<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Compose Path Editor</title><style>body{font-family:system-ui,-apple-system,Segoe UI,sans-serif;margin:0;background:#111827;color:#e5e7eb}main{max-width:980px;margin:0 auto;padding:32px 18px}.card{background:#1f2937;border:1px solid #374151;border-radius:18px;padding:22px;margin:18px 0;box-shadow:0 10px 30px #0004}h1{margin:0 0 8px;font-size:32px}h2{font-size:18px;margin:0 0 14px}.muted{color:#9ca3af}.small{font-size:13px}select,input,button{width:100%;font:inherit;border-radius:12px;border:1px solid #4b5563;background:#111827;color:#f9fafb;padding:12px;box-sizing:border-box}.checks{display:grid;gap:8px}.check{display:flex;align-items:center;gap:10px;padding:11px 12px;border:1px solid #4b5563;border-radius:12px;background:#111827;cursor:pointer}.check input{width:auto;margin:0}.check span{overflow-wrap:anywhere}.operation{display:grid;gap:8px;margin-bottom:14px}.operation label{display:flex;gap:10px;align-items:flex-start;padding:12px;border:1px solid #4b5563;border-radius:12px;background:#111827;cursor:pointer}.operation input{width:auto;margin-top:3px}.operation strong{display:block}.operation small{display:block;color:#9ca3af;margin-top:3px}button{background:#2563eb;border:0;font-weight:700;cursor:pointer;margin-top:10px}button:disabled{opacity:.45}pre{white-space:pre-wrap;background:#0b1220;border-radius:12px;padding:14px;overflow:auto}.ok{color:#86efac}.err{color:#fca5a5}code{color:#bfdbfe}</style></head><body><main><h1>Compose Path Editor</h1><p class="muted">Select an installed Umbrel app, choose an existing volume line, then decide whether you want to replace that line, add new line(s), or do both. A backup is created before every change, and backups can be restored from this page.</p><div class="card"><h2>1. Select docker-compose.yml</h2><select id="apps"><option>Loading...</option></select></div><div class="card"><h2>2. Select volume line from docker-compose.yml</h2><select id="lines"><option>Select an app first</option></select><pre id="preview" class="muted">No volume line selected.</pre></div><div class="card"><h2>3. Choose action and path(s)</h2><div class="operation"><label><input type="radio" name="op" value="replace" checked><span><strong>Replace only</strong><small>Replace the source path of the selected volume line. Select exactly one path below.</small></span></label><label><input type="radio" name="op" value="add"><span><strong>Add only</strong><small>Do not change the selected line. Add one or more new volume lines directly after it.</small></span></label><label><input type="radio" name="op" value="both"><span><strong>Replace and add</strong><small>Replace the selected line with the first selected path, and add the remaining selected paths after it.</small></span></label></div><div class="checks" id="paths"></div><p class="muted small">New paths use <code>${UMBREL_ROOT}</code>. Added lines use the folder name as container target, for example <code>${UMBREL_ROOT}/home/Downloads/Films:/Films</code>.</p><button id="apply" disabled>Apply selected action</button><p id="status" class="muted"></p></div><div class="card"><h2>4. Restore a backup</h2><p class="muted small">Select a backup created by this app and restore it to docker-compose.yml. A safety backup of the current docker-compose.yml is created before restoring.</p><select id="backups"><option>Select an app first</option></select><button id="restore" disabled>Restore selected backup</button><p id="restoreStatus" class="muted"></p></div></main><script>const allowed = """ + paths + r""";const apps=document.getElementById('apps'),paths=document.getElementById('paths'),lines=document.getElementById('lines'),preview=document.getElementById('preview'),applyBtn=document.getElementById('apply'),status=document.getElementById('status'),backups=document.getElementById('backups'),restoreBtn=document.getElementById('restore'),restoreStatus=document.getElementById('restoreStatus');let current=[];function esc(s){return String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}function op(){return document.querySelector('input[name=op]:checked').value;}function selectedPaths(){return Array.from(paths.querySelectorAll('input[type=checkbox]:checked')).map(o=>o.value);}function renderPaths(){paths.innerHTML=allowed.map((p,i)=>`<label class="check"><input type="checkbox" value="${esc(p)}" ${i==0?'checked':''}><span>${esc(p)}</span></label>`).join('');paths.querySelectorAll('input').forEach(x=>x.onchange=renderPreview);}async function loadBackups(){restoreStatus.textContent='';restoreBtn.disabled=true;const id=apps.value;if(!id){backups.innerHTML='<option value="">Select an app first</option>';return;}const r=await fetch('/api/backups?app_id='+encodeURIComponent(id));const data=await r.json();if(!r.ok){backups.innerHTML='<option value="">Could not load backups</option>';restoreStatus.innerHTML='<span class="err">Error:</span> '+esc(data.error||'Unknown');return;}backups.innerHTML=data.backups.length?data.backups.map(b=>`<option value="${esc(b.name)}">${esc(b.name)} - ${esc(b.size)} bytes</option>`).join(''):'<option value="">No backups found for this app</option>';restoreBtn.disabled=!data.backups.length;}async function loadApps(){const r=await fetch('/api/apps');const data=await r.json();apps.innerHTML=data.apps.length?data.apps.map(a=>`<option value="${esc(a.id)}">${esc(a.id)} - ${esc(a.path)}</option>`).join(''):'<option value="">No apps found</option>';await loadLines();await loadBackups();}async function loadLines(){status.textContent='';applyBtn.disabled=true;preview.textContent='Loading...';const id=apps.value;if(!id){preview.textContent='No app selected.';return;}const r=await fetch('/api/file?app_id='+encodeURIComponent(id));const data=await r.json();current=data.lines||[];lines.innerHTML=current.length?current.map(l=>`<option value="${l.no}">${l.no+1}: ${esc(l.text).slice(0,180)}</option>`).join(''):'<option>No replaceable or extendable volume lines found</option>';renderPreview();}async function refreshLineListPreserveResult(selectedNo){const id=apps.value;if(!id)return;const r=await fetch('/api/file?app_id='+encodeURIComponent(id));const data=await r.json();current=data.lines||[];lines.innerHTML=current.length?current.map(l=>`<option value="${l.no}">${l.no+1}: ${esc(l.text).slice(0,180)}</option>`).join(''):'<option>No replaceable or extendable volume lines found</option>';if(current.some(l=>l.no===selectedNo)){lines.value=String(selectedNo);}applyBtn.disabled=false;}function renderPreview(){const no=Number(lines.value);const item=current.find(x=>x.no===no);const chosen=selectedPaths();const mode=op();if(!item){preview.textContent='No volume line selected.';applyBtn.disabled=true;return;}let message='Selected line:\n'+item.text+'\n\nAction: '+({'replace':'Replace only','add':'Add only','both':'Replace and add'}[mode])+'\n\nSelected path(s):\n'+(chosen.length?chosen.join('\n'):'No path selected');let valid=false;if(mode==='replace'){valid=chosen.length===1;message+='\n\nResult: the selected line will be replaced. Nothing will be added.';}else if(mode==='add'){valid=chosen.length>=1;message+='\n\nResult: the selected line will stay unchanged. New line(s) will be added after it.';}else{valid=chosen.length>=1;message+='\n\nResult: the selected line will be replaced with the first selected path. Any extra selected paths will be added after it.';}preview.textContent=message;applyBtn.disabled=!valid;}document.querySelectorAll('input[name=op]').forEach(x=>x.onchange=renderPreview);apps.onchange=async()=>{await loadLines();await loadBackups();};lines.onchange=renderPreview;applyBtn.onclick=async()=>{const chosen=selectedPaths();const mode=op();status.textContent='Step 1/4: stopping the selected target app with /opt/umbreld/umbreld. This can take up to 45 seconds...';applyBtn.disabled=true;let payload={app_id:apps.value,line_no:Number(lines.value),operation:mode,paths:chosen};const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),90000);let r,data;try{r=await fetch('/api/modify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload),signal:controller.signal});data=await r.json();}catch(e){status.innerHTML='<span class="err">Error:</span> The request timed out or was interrupted while stopping/restarting the target app. The file was not confirmed changed. Check the app logs for the exact Umbrel command output.';applyBtn.disabled=false;return;}finally{clearTimeout(timer);}if(r.ok){let details=[];if(data.old&&data.new)details.push('Old line:\n'+data.old+'\n\nNew line:\n'+data.new);if(data.added&&data.added.length)details.push('Inserted line(s):\n'+data.added.join('\n'));status.innerHTML='<span class="ok">Target app restarted. Changes verified and saved.</span> I stopped the selected app, wrote the change, inspected docker-compose.yml, confirmed the selected change is present, and restarted the app. Backup: '+esc(data.backup);preview.textContent=(details.join('\n\n')||'Applied.')+'\n\nVerification: '+(data.verified_message||'The docker-compose.yml file was read back and the requested change was found.');await refreshLineListPreserveResult(Number(lines.value));await loadBackups();}else{status.innerHTML='<span class="err">Error:</span> '+esc(data.error||'Unknown');renderPreview();}};restoreBtn.onclick=async()=>{const backup=backups.value;if(!backup)return;restoreStatus.textContent='Step 1/4: stopping the selected target app with /opt/umbreld/umbreld. This can take up to 45 seconds...';restoreBtn.disabled=true;const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),90000);let r,data;try{r=await fetch('/api/restore',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({app_id:apps.value,backup_name:backup}),signal:controller.signal});data=await r.json();}catch(e){restoreStatus.innerHTML='<span class="err">Error:</span> The request timed out or was interrupted while stopping/restarting the target app. The file was not confirmed changed. Check the app logs for the exact Umbrel command output.';restoreBtn.disabled=false;return;}finally{clearTimeout(timer);}if(r.ok){restoreStatus.innerHTML='<span class="ok">Target app restarted. Backup restored and verified.</span> I stopped the selected app, restored and verified the backup, and restarted the app. Restored '+esc(data.restored)+' to docker-compose.yml. Safety backup before restore: '+esc(data.safety_backup);preview.textContent='Restored backup:\n'+data.restored+'\n\nVerification: '+(data.verified_message||'docker-compose.yml now matches the selected backup.');await loadLines();await loadBackups();}else{restoreStatus.innerHTML='<span class="err">Error:</span> '+esc(data.error||'Unknown');restoreBtn.disabled=false;}};renderPaths();loadApps().catch(e=>{status.innerHTML='<span class="err">'+esc(String(e))+'</span>';});</script></body></html>"""
+  return """<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Compose Path Editor</title><style>body{font-family:system-ui,-apple-system,Segoe UI,sans-serif;margin:0;background:#111827;color:#e5e7eb}main{max-width:980px;margin:0 auto;padding:32px 18px}.card{background:#1f2937;border:1px solid #374151;border-radius:18px;padding:22px;margin:18px 0;box-shadow:0 10px 30px #0004}h1{margin:0 0 8px;font-size:32px}h2{font-size:18px;margin:0 0 14px}.muted{color:#9ca3af}.small{font-size:13px}select,input,button{width:100%;font:inherit;border-radius:12px;border:1px solid #4b5563;background:#111827;color:#f9fafb;padding:12px;box-sizing:border-box}.checks{display:grid;gap:8px}.check{display:flex;align-items:center;gap:10px;padding:11px 12px;border:1px solid #4b5563;border-radius:12px;background:#111827;cursor:pointer}.check input{width:auto;margin:0}.check span{overflow-wrap:anywhere}.operation{display:grid;gap:8px;margin-bottom:14px}.operation label{display:flex;gap:10px;align-items:flex-start;padding:12px;border:1px solid #4b5563;border-radius:12px;background:#111827;cursor:pointer}.operation input{width:auto;margin-top:3px}.operation strong{display:block}.operation small{display:block;color:#9ca3af;margin-top:3px}button{background:#2563eb;border:0;font-weight:700;cursor:pointer;margin-top:10px}button:disabled{opacity:.45}pre{white-space:pre-wrap;background:#0b1220;border-radius:12px;padding:14px;overflow:auto}.ok{color:#86efac}.err{color:#fca5a5}code{color:#bfdbfe}.logbox{max-height:260px;overflow:auto;font-size:12px;border:1px solid #374151}</style></head><body><main><h1>Compose Path Editor</h1><p class="muted">Select an installed Umbrel app, choose an existing volume line, then decide whether you want to replace that line, add new line(s), or do both. A backup is created before every change, and backups can be restored from this page.</p><div class="card"><h2>1. Select docker-compose.yml</h2><select id="apps"><option>Loading...</option></select></div><div class="card"><h2>2. Select volume line from docker-compose.yml</h2><select id="lines"><option>Select an app first</option></select><pre id="preview" class="muted">No volume line selected.</pre></div><div class="card"><h2>3. Choose action and path(s)</h2><div class="operation"><label><input type="radio" name="op" value="replace" checked><span><strong>Replace only</strong><small>Replace the source path of the selected volume line. Select exactly one path below.</small></span></label><label><input type="radio" name="op" value="add"><span><strong>Add only</strong><small>Do not change the selected line. Add one or more new volume lines directly after it.</small></span></label><label><input type="radio" name="op" value="both"><span><strong>Replace and add</strong><small>Replace the selected line with the first selected path, and add the remaining selected paths after it.</small></span></label></div><div class="checks" id="paths"></div><p class="muted small">New paths use <code>${UMBREL_ROOT}</code>. Added lines use the folder name as container target, for example <code>${UMBREL_ROOT}/home/Downloads/Films:/Films</code>.</p><button id="apply" disabled>Apply selected action</button><p id="status" class="muted"></p><h3>Live debug log</h3><pre id="liveLog" class="logbox muted">No operation running.</pre></div><div class="card"><h2>4. Restore a backup</h2><p class="muted small">Select a backup created by this app and restore it to docker-compose.yml. A safety backup of the current docker-compose.yml is created before restoring.</p><select id="backups"><option>Select an app first</option></select><button id="restore" disabled>Restore selected backup</button><p id="restoreStatus" class="muted"></p></div></main><script>const allowed = """ + paths + r""";const apps=document.getElementById('apps'),paths=document.getElementById('paths'),lines=document.getElementById('lines'),preview=document.getElementById('preview'),applyBtn=document.getElementById('apply'),status=document.getElementById('status'),backups=document.getElementById('backups'),restoreBtn=document.getElementById('restore'),restoreStatus=document.getElementById('restoreStatus'),liveLog=document.getElementById('liveLog');let current=[];let logTimer=null;function newOpId(){return Date.now()+'-'+Math.random().toString(16).slice(2);}function startLogPoll(opId){if(logTimer)clearInterval(logTimer);liveLog.textContent='Starting operation '+opId+'...';async function poll(){try{const r=await fetch('/api/logs?op_id='+encodeURIComponent(opId));const d=await r.json();if(d.logs)liveLog.textContent=d.logs;}catch(e){}};poll();logTimer=setInterval(poll,1500);}function stopLogPoll(){if(logTimer){clearInterval(logTimer);logTimer=null;}}function esc(s){return String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}function op(){return document.querySelector('input[name=op]:checked').value;}function selectedPaths(){return Array.from(paths.querySelectorAll('input[type=checkbox]:checked')).map(o=>o.value);}function renderPaths(){paths.innerHTML=allowed.map((p,i)=>`<label class="check"><input type="checkbox" value="${esc(p)}" ${i==0?'checked':''}><span>${esc(p)}</span></label>`).join('');paths.querySelectorAll('input').forEach(x=>x.onchange=renderPreview);}async function loadBackups(){restoreStatus.textContent='';restoreBtn.disabled=true;const id=apps.value;if(!id){backups.innerHTML='<option value="">Select an app first</option>';return;}const r=await fetch('/api/backups?app_id='+encodeURIComponent(id));const data=await r.json();if(!r.ok){backups.innerHTML='<option value="">Could not load backups</option>';restoreStatus.innerHTML='<span class="err">Error:</span> '+esc(data.error||'Unknown');return;}backups.innerHTML=data.backups.length?data.backups.map(b=>`<option value="${esc(b.name)}">${esc(b.name)} - ${esc(b.size)} bytes</option>`).join(''):'<option value="">No backups found for this app</option>';restoreBtn.disabled=!data.backups.length;}async function loadApps(){const r=await fetch('/api/apps');const data=await r.json();apps.innerHTML=data.apps.length?data.apps.map(a=>`<option value="${esc(a.id)}">${esc(a.id)} - ${esc(a.path)}</option>`).join(''):'<option value="">No apps found</option>';await loadLines();await loadBackups();}async function loadLines(){status.textContent='';applyBtn.disabled=true;preview.textContent='Loading...';const id=apps.value;if(!id){preview.textContent='No app selected.';return;}const r=await fetch('/api/file?app_id='+encodeURIComponent(id));const data=await r.json();current=data.lines||[];lines.innerHTML=current.length?current.map(l=>`<option value="${l.no}">${l.no+1}: ${esc(l.text).slice(0,180)}</option>`).join(''):'<option>No replaceable or extendable volume lines found</option>';renderPreview();}async function refreshLineListPreserveResult(selectedNo){const id=apps.value;if(!id)return;const r=await fetch('/api/file?app_id='+encodeURIComponent(id));const data=await r.json();current=data.lines||[];lines.innerHTML=current.length?current.map(l=>`<option value="${l.no}">${l.no+1}: ${esc(l.text).slice(0,180)}</option>`).join(''):'<option>No replaceable or extendable volume lines found</option>';if(current.some(l=>l.no===selectedNo)){lines.value=String(selectedNo);}applyBtn.disabled=false;}function renderPreview(){const no=Number(lines.value);const item=current.find(x=>x.no===no);const chosen=selectedPaths();const mode=op();if(!item){preview.textContent='No volume line selected.';applyBtn.disabled=true;return;}let message='Selected line:\n'+item.text+'\n\nAction: '+({'replace':'Replace only','add':'Add only','both':'Replace and add'}[mode])+'\n\nSelected path(s):\n'+(chosen.length?chosen.join('\n'):'No path selected');let valid=false;if(mode==='replace'){valid=chosen.length===1;message+='\n\nResult: the selected line will be replaced. Nothing will be added.';}else if(mode==='add'){valid=chosen.length>=1;message+='\n\nResult: the selected line will stay unchanged. New line(s) will be added after it.';}else{valid=chosen.length>=1;message+='\n\nResult: the selected line will be replaced with the first selected path. Any extra selected paths will be added after it.';}preview.textContent=message;applyBtn.disabled=!valid;}document.querySelectorAll('input[name=op]').forEach(x=>x.onchange=renderPreview);apps.onchange=async()=>{await loadLines();await loadBackups();};lines.onchange=renderPreview;applyBtn.onclick=async()=>{const chosen=selectedPaths();const mode=op();status.textContent='Step 1/4: stopping the selected target app with /opt/umbreld/umbreld. This can take up to 45 seconds...';applyBtn.disabled=true;const opId=newOpId();startLogPoll(opId);let payload={app_id:apps.value,line_no:Number(lines.value),operation:mode,paths:chosen,op_id:opId};const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),90000);let r,data;try{r=await fetch('/api/modify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload),signal:controller.signal});data=await r.json();}catch(e){status.innerHTML='<span class="err">Error:</span> The request timed out or was interrupted while stopping/restarting the target app. The file was not confirmed changed. Check the app logs for the exact Umbrel command output.';applyBtn.disabled=false;return;}finally{clearTimeout(timer);stopLogPoll();}if(r.ok){let details=[];if(data.old&&data.new)details.push('Old line:\n'+data.old+'\n\nNew line:\n'+data.new);if(data.added&&data.added.length)details.push('Inserted line(s):\n'+data.added.join('\n'));status.innerHTML='<span class="ok">Target app restarted. Changes verified and saved.</span> I stopped the selected app, wrote the change, inspected docker-compose.yml, confirmed the selected change is present, and restarted the app. Backup: '+esc(data.backup);preview.textContent=(details.join('\n\n')||'Applied.')+'\n\nVerification: '+(data.verified_message||'The docker-compose.yml file was read back and the requested change was found.');await refreshLineListPreserveResult(Number(lines.value));if(data.debug_log)liveLog.textContent=data.debug_log;await loadBackups();}else{status.innerHTML='<span class="err">Error:</span> '+esc(data.error||'Unknown');if(data.debug_log)liveLog.textContent=data.debug_log;renderPreview();}};restoreBtn.onclick=async()=>{const backup=backups.value;if(!backup)return;restoreStatus.textContent='Step 1/4: stopping the selected target app with /opt/umbreld/umbreld. This can take up to 45 seconds...';restoreBtn.disabled=true;const opId=newOpId();startLogPoll(opId);const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),90000);let r,data;try{r=await fetch('/api/restore',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({app_id:apps.value,backup_name:backup,op_id:opId}),signal:controller.signal});data=await r.json();}catch(e){restoreStatus.innerHTML='<span class="err">Error:</span> The request timed out or was interrupted while stopping/restarting the target app. The file was not confirmed changed. Check the app logs for the exact Umbrel command output.';restoreBtn.disabled=false;return;}finally{clearTimeout(timer);stopLogPoll();}if(r.ok){restoreStatus.innerHTML='<span class="ok">Target app restarted. Backup restored and verified.</span> I stopped the selected app, restored and verified the backup, and restarted the app. Restored '+esc(data.restored)+' to docker-compose.yml. Safety backup before restore: '+esc(data.safety_backup);preview.textContent='Restored backup:\n'+data.restored+'\n\nVerification: '+(data.verified_message||'docker-compose.yml now matches the selected backup.');if(data.debug_log)liveLog.textContent=data.debug_log;await loadLines();await loadBackups();}else{restoreStatus.innerHTML='<span class="err">Error:</span> '+esc(data.error||'Unknown');if(data.debug_log)liveLog.textContent=data.debug_log;restoreBtn.disabled=false;}};renderPaths();loadApps().catch(e=>{status.innerHTML='<span class="err">'+esc(String(e))+'</span>';});</script></body></html>"""
 
-def run_umbreld_app_command(app_id, action):
+def run_umbreld_app_command(app_id, action, op_id=None):
   """Run the host-side Umbrel app control command with a hard timeout.
 
   The app runs in a container, so this uses chroot into the mounted host root
@@ -45,6 +73,7 @@ def run_umbreld_app_command(app_id, action):
   if not Path('/hostfs/opt/umbreld/umbreld').exists():
       raise RuntimeError('Host /opt/umbreld/umbreld was not found at /hostfs/opt/umbreld/umbreld')
 
+  log_event(op_id, f'Preparing app control action: {action} for {app_id}')
   subcommand = 'apps.%s.mutate' % action
   base_command = '/opt/umbreld/umbreld client ' + subcommand + ' --appId ' + app_id
   host_path = '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/umbreld/bin:/opt/umbreld'
@@ -63,20 +92,27 @@ def run_umbreld_app_command(app_id, action):
   env['PATH'] = '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:' + env.get('PATH', '')
   errors = []
   for cmd in candidates:
+      log_event(op_id, 'Trying command: ' + ' '.join(cmd))
       try:
           completed = subprocess.run(cmd, cwd='/', env=env, text=True, capture_output=True, timeout=55, stdin=subprocess.DEVNULL)
       except FileNotFoundError:
+          log_event(op_id, 'Command executable not found: ' + cmd[0])
           errors.append('not found: ' + cmd[0])
           continue
       except subprocess.TimeoutExpired as e:
-          errors.append('timeout after 55s: ' + ' '.join(cmd) + ' :: stdout=' + ((e.stdout or '') if isinstance(e.stdout, str) else '').strip() + ' stderr=' + ((e.stderr or '') if isinstance(e.stderr, str) else '').strip())
+          out = ((e.stdout or '') if isinstance(e.stdout, str) else '').strip()
+          err = ((e.stderr or '') if isinstance(e.stderr, str) else '').strip()
+          log_event(op_id, 'Timeout after 55s. stdout=' + out + ' stderr=' + err)
+          errors.append('timeout after 55s: ' + ' '.join(cmd) + ' :: stdout=' + out + ' stderr=' + err)
           continue
       except Exception as e:
           errors.append('failed to run ' + ' '.join(cmd) + ': ' + str(e))
           continue
       stdout = (completed.stdout or '').strip()
       stderr = (completed.stderr or '').strip()
+      log_event(op_id, 'Command returned exit code ' + str(completed.returncode) + '. stdout=' + stdout + ' stderr=' + stderr)
       if completed.returncode == 0:
+          log_event(op_id, 'App control action succeeded: ' + action)
           return {'action': action, 'command': base_command, 'stdout': stdout, 'stderr': stderr}
       output = (stderr + '\n' + stdout).strip()
       if completed.returncode == 124:
@@ -85,20 +121,28 @@ def run_umbreld_app_command(app_id, action):
           errors.append('command failed with exit code %s: %s :: %s' % (completed.returncode, ' '.join(cmd), output))
   raise RuntimeError('Could not run /opt/umbreld/umbreld client apps.%s.mutate for %s. Tried: %s' % (action, app_id, ' | '.join(errors)))
 
-def run_with_target_app_restart(app_id, change_func):
-  stop_result = run_umbreld_app_command(app_id, 'stop')
+def run_with_target_app_restart(app_id, change_func, op_id=None):
+  log_event(op_id, 'START operation for target app: ' + str(app_id))
+  log_event(op_id, 'Step 1/4: stopping target app')
+  stop_result = run_umbreld_app_command(app_id, 'stop', op_id=op_id)
+  log_event(op_id, 'Step 2/4: writing docker-compose.yml change or restoring backup')
   change_result = None
   change_error = None
   try:
       change_result = change_func()
+      log_event(op_id, 'Step 2/4 succeeded. Backup: ' + str(change_result.get('backup') or change_result.get('safety_backup') or 'n/a'))
   except Exception as e:
       change_error = e
+      log_event(op_id, 'Step 2/4 FAILED: ' + str(e))
+  log_event(op_id, 'Step 3/4: restarting target app')
   start_result = None
   start_error = None
   try:
-      start_result = run_umbreld_app_command(app_id, 'restart')
+      start_result = run_umbreld_app_command(app_id, 'restart', op_id=op_id)
+      log_event(op_id, 'Step 3/4 succeeded')
   except Exception as e:
       start_error = e
+      log_event(op_id, 'Step 3/4 FAILED: ' + str(e))
 
   if change_error is not None:
       msg = 'Target app was stopped, but the compose change failed: %s' % change_error
@@ -106,16 +150,20 @@ def run_with_target_app_restart(app_id, change_func):
           msg += ' Also failed to restart the target app: %s' % start_error
       else:
           msg += ' The target app was restarted.'
-      raise RuntimeError(msg)
+      raise RuntimeError(msg + '\n\nDebug log:\n' + get_logs(op_id))
   if start_error is not None:
-      raise RuntimeError('Compose change was written and verified, but restarting the target app failed: %s. Backup: %s' % (start_error, change_result.get('backup', 'unknown')))
+      raise RuntimeError('Compose change was written and verified, but restarting the target app failed: %s. Backup: %s\n\nDebug log:\n%s' % (start_error, change_result.get('backup', 'unknown'), get_logs(op_id)))
 
+  log_event(op_id, 'Step 4/4: completed successfully')
   change_result['app_control'] = {
       'stopped': True,
       'restarted': True,
       'stop_command': stop_result.get('command'),
       'restart_command': start_result.get('command'),
+      'stop_stdout': stop_result.get('stdout'),
+      'restart_stdout': start_result.get('stdout'),
   }
+  change_result['debug_log'] = get_logs(op_id)
   change_result['verified_message'] = (change_result.get('verified_message') or 'Verified.') + ' The target app was stopped before writing and restarted after verification.'
   return change_result
 
@@ -349,6 +397,7 @@ class Handler(BaseHTTPRequestHandler):
           elif u.path == '/api/apps': self.send_json({'apps': list_apps()})
           elif u.path == '/api/file': self.send_json({'lines': compose_lines(parse_qs(u.query).get('app_id',[''])[0])})
           elif u.path == '/api/backups': self.send_json({'backups': list_backups(parse_qs(u.query).get('app_id',[''])[0])})
+          elif u.path == '/api/logs': self.send_json({'logs': get_logs(parse_qs(u.query).get('op_id',[''])[0])})
           else: self.send_json({'error':'Not found'},404)
       except Exception as e: self.send_json({'error':str(e)},400)
   def do_POST(self):
@@ -364,15 +413,16 @@ class Handler(BaseHTTPRequestHandler):
               self.send_json({'backup': backup, 'added': added})
           elif path == '/api/modify':
               app_id = body.get('app_id')
-              result = run_with_target_app_restart(app_id, lambda: modify_paths(app_id, body.get('line_no'), body.get('operation'), body.get('paths')))
+              result = run_with_target_app_restart(app_id, lambda: modify_paths(app_id, body.get('line_no'), body.get('operation'), body.get('paths')), op_id=body.get('op_id'))
               self.send_json(result)
           elif path == '/api/restore':
               app_id = body.get('app_id')
-              result = run_with_target_app_restart(app_id, lambda: restore_backup(app_id, body.get('backup_name')))
+              result = run_with_target_app_restart(app_id, lambda: restore_backup(app_id, body.get('backup_name')), op_id=body.get('op_id'))
               self.send_json(result)
           else:
               self.send_json({'error':'Not found'},404)
-      except Exception as e: self.send_json({'error':str(e)},400)
+      except Exception as e:
+          self.send_json({'error':str(e), 'debug_log': get_logs(body.get('op_id') if 'body' in locals() and isinstance(body, dict) else None)},400)
   def log_message(self, fmt, *args): print('%s - %s' % (self.address_string(), fmt%args), flush=True)
 
 ThreadingHTTPServer(('0.0.0.0', 8099), Handler).serve_forever()
