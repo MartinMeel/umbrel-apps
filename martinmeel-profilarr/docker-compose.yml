@@ -1,10 +1,17 @@
 services:
-  app_proxy:
+  app_proxy: # The Umbrel App Proxy automatically protects an app by requiring the user to enter their Umbrel password (either when they login into the main Web UI or by visiting an app directly e.g.)
     environment:
-      APP_HOST: martinmeel-gluetun_server_1
-      APP_PORT: 6868
-      #PROXY_AUTH_ADD: false
-  server:
+      APP_HOST: martinmeel-gluetun_server_1 # <web-container-dns-name>  This is the name of the Gluetun container, which is the one that will be running the app proxy. Do not change this if you want all trafic over VPN.
+      APP_PORT: 6868 # <web/app-container-port-number>  The internal portnumber of profilarr, which is 6868 by default.
+      # There could be cases where you wish to disable authentication. That can be done by adding this env. var. 
+      # PROXY_AUTH_ADD: false
+      # Use this if another app outside your umbrel device wants to connect via an API call.
+      # PROXY_AUTH_WHITELIST: /api/*
+      # Another example could be that the root of the web application (/) should be publicly accessible but the admin section be protected by Umbrel. This can be achieved by adding these env. vars. to the app_proxy Docker Compose service:
+      # PROXY_AUTH_WHITELIST: "*"
+      # PROXY_AUTH_BLACKLIST: "/admin/*"
+
+  server: # Officially should be "app:" or "web:"
     image: santiagosayshey/profilarr:latest
     network_mode: "container:martinmeel-gluetun_server_1"
     volumes:
