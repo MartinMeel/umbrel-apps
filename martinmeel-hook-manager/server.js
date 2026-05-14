@@ -41,6 +41,17 @@ function readCredentials() {
   return fs.readFileSync(CREDENTIALS_PATH, "utf8");
 }
 
+function maskCredentials(contents) {
+  return contents
+    .split(/\r?\n/)
+    .map((line) => {
+      if (line.startsWith("username=")) return "username=********";
+      if (line.startsWith("password=")) return "password=********";
+      return line;
+    })
+    .join("\n");
+}
+
 function credentialsReady(contents) {
   return !contents.includes("CHANGE_ME") && /(^|\n)username=/.test(contents) && /(^|\n)password=/.test(contents);
 }
@@ -125,9 +136,10 @@ const server = http.createServer((req, res) => {
   if (req.method === "GET" && parsedUrl.pathname === "/api/credentials") {
     const contents = readCredentials();
     sendJson(res, 200, {
-      path: CREDENTIALS_PATH,
-      contents,
+      path: CREDENTIALS_PATH.replace("/host-app-data", "/home/umbrel/umbrel/app-data"),
+      contents: credentialsReady(contents) ? maskCredentials(contents) : contents,
       ready: credentialsReady(contents),
+      masked: credentialsReady(contents),
     });
     return;
   }
