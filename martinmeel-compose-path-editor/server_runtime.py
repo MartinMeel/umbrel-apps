@@ -17,7 +17,7 @@ ALLOWED_PATHS = [
   '${UMBREL_ROOT}/home/Downloads/TVSeriesOLD:/tvold',
 ]
 
-SRC_RE = re.compile(r'(?P<prefix>^\s*-\s*)(?P<src>(?:\$\{UMBREL_ROOT\}|/home/umbrel/umbrel)/home/Downloads/[^:\s"\']+|\$\{APP_DATA_DIR\}/[^:\s"\']+)(?P<rest>:.+)$')
+SRC_RE = re.compile(r'(?P<prefix>^\s*-\s*)(?P<src>(?:\$\{UMBREL_ROOT\}|/home/umbrel/umbrel)/home/Downloads(?:/[^:\s"\']+)?|\$\{APP_DATA_DIR\}/[^:\s"\']+)(?P<rest>:.+)$')
 LOGS = {}
 
 
