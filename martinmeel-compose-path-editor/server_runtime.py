@@ -1,4 +1,4 @@
-import json, os, re, shutil, subprocess, time
+import json, os, re, shutil, time, subprocess, uuid, threading
 from pathlib import Path
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlparse, parse_qs
@@ -6,6 +6,8 @@ from urllib.parse import urlparse, parse_qs
 ROOT = Path(os.environ.get('HOST_UMBREL_ROOT', '/host/umbrel')).resolve()
 APP_DATA = (ROOT / 'app-data').resolve()
 SELF_APP_ID = os.environ.get('APP_ID', 'martinmeel-compose-path-editor')
+PORT = int(os.environ.get('PORT','8099'))
+
 ALLOWED_PATHS = [
   '${UMBREL_ROOT}/home/Downloads/qbittorrent/complete',
   '${UMBREL_ROOT}/home/Downloads/qbittorrent/incomplete',
@@ -15,414 +17,198 @@ ALLOWED_PATHS = [
   '${UMBREL_ROOT}/home/Downloads/TVSerie',
   '${UMBREL_ROOT}/home/Downloads/TVSeriesOLD',
 ]
-SOURCE_RE = re.compile(r"(?P<source>(?:/home/umbrel/umbrel|\$[{]UMBREL_ROOT[}])/home/Downloads[^:\s\"']*|\$[{]APP_DATA_DIR[}][^:\s\"']*)(?=:[^:]+)")
 
-LOG_FILE = Path('/tmp/compose-path-editor-debug.log')
-MAX_LOG_BYTES = 120000
+SRC_RE = re.compile(r'(?P<prefix>^\s*-\s*)(?P<src>(?:\$\{UMBREL_ROOT\}|/home/umbrel/umbrel)/home/Downloads/[^:\s"\']+|\$\{APP_DATA_DIR\}/[^:\s"\']+)(?P<rest>:.+)$')
+LOGS = {}
 
-def log_event(op_id, message):
-  ts = time.strftime('%Y-%m-%d %H:%M:%S')
-  safe_op = re.sub(r'[^A-Za-z0-9_.-]+', '_', str(op_id or 'general'))[:80]
-  line = f'[{ts}] [{safe_op}] {message}\n'
-  try:
-      with LOG_FILE.open('a', encoding='utf-8') as f:
-          f.write(line)
-      if LOG_FILE.stat().st_size > MAX_LOG_BYTES:
-          data = LOG_FILE.read_text(encoding='utf-8', errors='replace')[-MAX_LOG_BYTES:]
-          LOG_FILE.write_text(data, encoding='utf-8')
-  except Exception:
-      pass
-  print(line.rstrip(), flush=True)
 
-def get_logs(op_id=None):
-  try:
-      data = LOG_FILE.read_text(encoding='utf-8', errors='replace')
-  except FileNotFoundError:
-      return ''
-  if op_id:
-      token = '[' + re.sub(r'[^A-Za-z0-9_.-]+', '_', str(op_id))[:80] + ']'
-      lines = [line for line in data.splitlines() if token in line]
-      return '\n'.join(lines[-300:])
-  return '\n'.join(data.splitlines()[-300:])
+def addlog(op, msg):
+    line = f"[{time.strftime('%Y-%m-%d %H:%M:%S')}] [{op}] {msg}"
+    LOGS.setdefault(op, []).append(line)
+    try:
+        with open('/tmp/compose-path-editor-debug.log','a',encoding='utf-8') as f: f.write(line+'\n')
+    except Exception: pass
+    print(line, flush=True)
 
-def preferred_compose_path(old_source, new_path):
-  prefix = '/home/umbrel/umbrel'
-  if new_path.startswith('${UMBREL_ROOT}'):
-      return new_path
-  if old_source.startswith('${UMBREL_ROOT}') and new_path.startswith(prefix):
-      return '${UMBREL_ROOT}' + new_path[len(prefix):]
-  return new_path
 
-def html():
-  paths = json.dumps(ALLOWED_PATHS)
-  return """<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Compose Path Editor</title><style>body{font-family:system-ui,-apple-system,Segoe UI,sans-serif;margin:0;background:#111827;color:#e5e7eb}main{max-width:980px;margin:0 auto;padding:32px 18px}.card{background:#1f2937;border:1px solid #374151;border-radius:18px;padding:22px;margin:18px 0;box-shadow:0 10px 30px #0004}h1{margin:0 0 8px;font-size:32px}h2{font-size:18px;margin:0 0 14px}.muted{color:#9ca3af}.small{font-size:13px}select,input,button{width:100%;font:inherit;border-radius:12px;border:1px solid #4b5563;background:#111827;color:#f9fafb;padding:12px;box-sizing:border-box}.checks{display:grid;gap:8px}.check{display:flex;align-items:center;gap:10px;padding:11px 12px;border:1px solid #4b5563;border-radius:12px;background:#111827;cursor:pointer}.check input{width:auto;margin:0}.check span{overflow-wrap:anywhere}.operation{display:grid;gap:8px;margin-bottom:14px}.operation label{display:flex;gap:10px;align-items:flex-start;padding:12px;border:1px solid #4b5563;border-radius:12px;background:#111827;cursor:pointer}.operation input{width:auto;margin-top:3px}.operation strong{display:block}.operation small{display:block;color:#9ca3af;margin-top:3px}button{background:#2563eb;border:0;font-weight:700;cursor:pointer;margin-top:10px}button:disabled{opacity:.45}pre{white-space:pre-wrap;background:#0b1220;border-radius:12px;padding:14px;overflow:auto}.ok{color:#86efac}.err{color:#fca5a5}code{color:#bfdbfe}.logbox{max-height:260px;overflow:auto;font-size:12px;border:1px solid #374151}</style></head><body><main><h1>Compose Path Editor</h1><p class="muted">Select an installed Umbrel app, choose an existing volume line, then decide whether you want to replace that line, add new line(s), or do both. A backup is created before every change, and backups can be restored from this page.</p><div class="card"><h2>1. Select docker-compose.yml</h2><select id="apps"><option>Loading...</option></select></div><div class="card"><h2>2. Select volume line from docker-compose.yml</h2><select id="lines"><option>Select an app first</option></select><pre id="preview" class="muted">No volume line selected.</pre></div><div class="card"><h2>3. Choose action and path(s)</h2><div class="operation"><label><input type="radio" name="op" value="replace" checked><span><strong>Replace only</strong><small>Replace the source path of the selected volume line. Select exactly one path below.</small></span></label><label><input type="radio" name="op" value="add"><span><strong>Add only</strong><small>Do not change the selected line. Add one or more new volume lines directly after it.</small></span></label><label><input type="radio" name="op" value="both"><span><strong>Replace and add</strong><small>Replace the selected line with the first selected path, and add the remaining selected paths after it.</small></span></label></div><div class="checks" id="paths"></div><p class="muted small">New paths use <code>${UMBREL_ROOT}</code>. Added lines use the folder name as container target, for example <code>${UMBREL_ROOT}/home/Downloads/Films:/Films</code>.</p><button id="apply" disabled>Apply selected action</button><p id="status" class="muted"></p><h3>Live debug log</h3><pre id="liveLog" class="logbox muted">No operation running.</pre></div><div class="card"><h2>4. Restore a backup</h2><p class="muted small">Select a backup created by this app and restore it to docker-compose.yml. A safety backup of the current docker-compose.yml is created before restoring.</p><select id="backups"><option>Select an app first</option></select><button id="restore" disabled>Restore selected backup</button><p id="restoreStatus" class="muted"></p></div></main><script>const allowed = """ + paths + r""";const apps=document.getElementById('apps'),paths=document.getElementById('paths'),lines=document.getElementById('lines'),preview=document.getElementById('preview'),applyBtn=document.getElementById('apply'),status=document.getElementById('status'),backups=document.getElementById('backups'),restoreBtn=document.getElementById('restore'),restoreStatus=document.getElementById('restoreStatus'),liveLog=document.getElementById('liveLog');let current=[];let logTimer=null;function newOpId(){return Date.now()+'-'+Math.random().toString(16).slice(2);}function startLogPoll(opId){if(logTimer)clearInterval(logTimer);liveLog.textContent='Starting operation '+opId+'...';async function poll(){try{const r=await fetch('/api/logs?op_id='+encodeURIComponent(opId));const d=await r.json();if(d.logs)liveLog.textContent=d.logs;}catch(e){}};poll();logTimer=setInterval(poll,1500);}function stopLogPoll(){if(logTimer){clearInterval(logTimer);logTimer=null;}}function esc(s){return String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}function op(){return document.querySelector('input[name=op]:checked').value;}function selectedPaths(){return Array.from(paths.querySelectorAll('input[type=checkbox]:checked')).map(o=>o.value);}function renderPaths(){paths.innerHTML=allowed.map((p,i)=>`<label class="check"><input type="checkbox" value="${esc(p)}" ${i==0?'checked':''}><span>${esc(p)}</span></label>`).join('');paths.querySelectorAll('input').forEach(x=>x.onchange=renderPreview);}async function loadBackups(){restoreStatus.textContent='';restoreBtn.disabled=true;const id=apps.value;if(!id){backups.innerHTML='<option value="">Select an app first</option>';return;}const r=await fetch('/api/backups?app_id='+encodeURIComponent(id));const data=await r.json();if(!r.ok){backups.innerHTML='<option value="">Could not load backups</option>';restoreStatus.innerHTML='<span class="err">Error:</span> '+esc(data.error||'Unknown');return;}backups.innerHTML=data.backups.length?data.backups.map(b=>`<option value="${esc(b.name)}">${esc(b.name)} - ${esc(b.size)} bytes</option>`).join(''):'<option value="">No backups found for this app</option>';restoreBtn.disabled=!data.backups.length;}async function loadApps(){const r=await fetch('/api/apps');const data=await r.json();apps.innerHTML=data.apps.length?data.apps.map(a=>`<option value="${esc(a.id)}">${esc(a.id)} - ${esc(a.path)}</option>`).join(''):'<option value="">No apps found</option>';await loadLines();await loadBackups();}async function loadLines(){status.textContent='';applyBtn.disabled=true;preview.textContent='Loading...';const id=apps.value;if(!id){preview.textContent='No app selected.';return;}const r=await fetch('/api/file?app_id='+encodeURIComponent(id));const data=await r.json();current=data.lines||[];lines.innerHTML=current.length?current.map(l=>`<option value="${l.no}">${l.no+1}: ${esc(l.text).slice(0,180)}</option>`).join(''):'<option>No replaceable or extendable volume lines found</option>';renderPreview();}async function refreshLineListPreserveResult(selectedNo){const id=apps.value;if(!id)return;const r=await fetch('/api/file?app_id='+encodeURIComponent(id));const data=await r.json();current=data.lines||[];lines.innerHTML=current.length?current.map(l=>`<option value="${l.no}">${l.no+1}: ${esc(l.text).slice(0,180)}</option>`).join(''):'<option>No replaceable or extendable volume lines found</option>';if(current.some(l=>l.no===selectedNo)){lines.value=String(selectedNo);}applyBtn.disabled=false;}function renderPreview(){const no=Number(lines.value);const item=current.find(x=>x.no===no);const chosen=selectedPaths();const mode=op();if(!item){preview.textContent='No volume line selected.';applyBtn.disabled=true;return;}let message='Selected line:\n'+item.text+'\n\nAction: '+({'replace':'Replace only','add':'Add only','both':'Replace and add'}[mode])+'\n\nSelected path(s):\n'+(chosen.length?chosen.join('\n'):'No path selected');let valid=false;if(mode==='replace'){valid=chosen.length===1;message+='\n\nResult: the selected line will be replaced. Nothing will be added.';}else if(mode==='add'){valid=chosen.length>=1;message+='\n\nResult: the selected line will stay unchanged. New line(s) will be added after it.';}else{valid=chosen.length>=1;message+='\n\nResult: the selected line will be replaced with the first selected path. Any extra selected paths will be added after it.';}preview.textContent=message;applyBtn.disabled=!valid;}document.querySelectorAll('input[name=op]').forEach(x=>x.onchange=renderPreview);apps.onchange=async()=>{await loadLines();await loadBackups();};lines.onchange=renderPreview;applyBtn.onclick=async()=>{const chosen=selectedPaths();const mode=op();status.textContent='Step 1/4: stopping the selected target app with /opt/umbreld/umbreld. This can take up to 45 seconds...';applyBtn.disabled=true;const opId=newOpId();startLogPoll(opId);let payload={app_id:apps.value,line_no:Number(lines.value),operation:mode,paths:chosen,op_id:opId};const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),90000);let r,data;try{r=await fetch('/api/modify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload),signal:controller.signal});data=await r.json();}catch(e){status.innerHTML='<span class="err">Error:</span> The request timed out or was interrupted while stopping/restarting the target app. The file was not confirmed changed. Check the app logs for the exact Umbrel command output.';applyBtn.disabled=false;return;}finally{clearTimeout(timer);stopLogPoll();}if(r.ok){let details=[];if(data.old&&data.new)details.push('Old line:\n'+data.old+'\n\nNew line:\n'+data.new);if(data.added&&data.added.length)details.push('Inserted line(s):\n'+data.added.join('\n'));status.innerHTML='<span class="ok">Target app restarted. Changes verified and saved.</span> I stopped the selected app, wrote the change, inspected docker-compose.yml, confirmed the selected change is present, and restarted the app. Backup: '+esc(data.backup);preview.textContent=(details.join('\n\n')||'Applied.')+'\n\nVerification: '+(data.verified_message||'The docker-compose.yml file was read back and the requested change was found.');await refreshLineListPreserveResult(Number(lines.value));if(data.debug_log)liveLog.textContent=data.debug_log;await loadBackups();}else{status.innerHTML='<span class="err">Error:</span> '+esc(data.error||'Unknown');if(data.debug_log)liveLog.textContent=data.debug_log;renderPreview();}};restoreBtn.onclick=async()=>{const backup=backups.value;if(!backup)return;restoreStatus.textContent='Step 1/4: stopping the selected target app with /opt/umbreld/umbreld. This can take up to 45 seconds...';restoreBtn.disabled=true;const opId=newOpId();startLogPoll(opId);const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),90000);let r,data;try{r=await fetch('/api/restore',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({app_id:apps.value,backup_name:backup,op_id:opId}),signal:controller.signal});data=await r.json();}catch(e){restoreStatus.innerHTML='<span class="err">Error:</span> The request timed out or was interrupted while stopping/restarting the target app. The file was not confirmed changed. Check the app logs for the exact Umbrel command output.';restoreBtn.disabled=false;return;}finally{clearTimeout(timer);stopLogPoll();}if(r.ok){restoreStatus.innerHTML='<span class="ok">Target app restarted. Backup restored and verified.</span> I stopped the selected app, restored and verified the backup, and restarted the app. Restored '+esc(data.restored)+' to docker-compose.yml. Safety backup before restore: '+esc(data.safety_backup);preview.textContent='Restored backup:\n'+data.restored+'\n\nVerification: '+(data.verified_message||'docker-compose.yml now matches the selected backup.');if(data.debug_log)liveLog.textContent=data.debug_log;await loadLines();await loadBackups();}else{restoreStatus.innerHTML='<span class="err">Error:</span> '+esc(data.error||'Unknown');if(data.debug_log)liveLog.textContent=data.debug_log;restoreBtn.disabled=false;}};renderPaths();loadApps().catch(e=>{status.innerHTML='<span class="err">'+esc(String(e))+'</span>';});</script></body></html>"""
+def host_display(p):
+    s=str(p)
+    return s.replace(str(ROOT), '${UMBREL_ROOT}')
 
-def run_umbreld_app_command(app_id, action, op_id=None):
-  """Run the host-side Umbrel app control command with a hard timeout.
-
-  The app runs in a container, so this uses chroot into the mounted host root
-  and then runs exactly the Umbrel command that works on the host:
-      /opt/umbreld/umbreld client apps.<action>.mutate --appId <app-id>
-  """
-  if action not in ('stop', 'restart'):
-      raise ValueError('Invalid app control action')
-  if not re.fullmatch(r'[a-zA-Z0-9][a-zA-Z0-9_.-]*', app_id or ''):
-      raise ValueError('Invalid app id')
-  if app_id == SELF_APP_ID:
-      raise ValueError('Refusing to stop or restart this editor app')
-  if not Path('/hostfs/opt/umbreld/umbreld').exists():
-      raise RuntimeError('Host /opt/umbreld/umbreld was not found at /hostfs/opt/umbreld/umbreld')
-
-  log_event(op_id, f'Preparing app control action: {action} for {app_id}')
-  subcommand = 'apps.%s.mutate' % action
-  base_command = '/opt/umbreld/umbreld client ' + subcommand + ' --appId ' + app_id
-  host_path = '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/umbreld/bin:/opt/umbreld'
-  # Add host-side timeout too. If umbreld/tsx hangs, this returns instead of leaving the UI waiting forever.
-  host_shell_command = (
-      'cd /home/umbrel 2>/dev/null || cd /; '
-      'export PATH="' + host_path + '"; '
-      'export HOME=/home/umbrel USER=umbrel LOGNAME=umbrel TMPDIR=/tmp; '
-      'if command -v timeout >/dev/null 2>&1; then timeout 45s ' + base_command + '; else ' + base_command + '; fi'
-  )
-  candidates = [
-      ['/usr/sbin/chroot', '/hostfs', '/bin/sh', '-lc', host_shell_command],
-      ['chroot', '/hostfs', '/bin/sh', '-lc', host_shell_command],
-  ]
-  env = os.environ.copy()
-  env['PATH'] = '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:' + env.get('PATH', '')
-  errors = []
-  for cmd in candidates:
-      log_event(op_id, 'Trying command: ' + ' '.join(cmd))
-      try:
-          completed = subprocess.run(cmd, cwd='/', env=env, text=True, capture_output=True, timeout=55, stdin=subprocess.DEVNULL)
-      except FileNotFoundError:
-          log_event(op_id, 'Command executable not found: ' + cmd[0])
-          errors.append('not found: ' + cmd[0])
-          continue
-      except subprocess.TimeoutExpired as e:
-          out = ((e.stdout or '') if isinstance(e.stdout, str) else '').strip()
-          err = ((e.stderr or '') if isinstance(e.stderr, str) else '').strip()
-          log_event(op_id, 'Timeout after 55s. stdout=' + out + ' stderr=' + err)
-          errors.append('timeout after 55s: ' + ' '.join(cmd) + ' :: stdout=' + out + ' stderr=' + err)
-          continue
-      except Exception as e:
-          errors.append('failed to run ' + ' '.join(cmd) + ': ' + str(e))
-          continue
-      stdout = (completed.stdout or '').strip()
-      stderr = (completed.stderr or '').strip()
-      log_event(op_id, 'Command returned exit code ' + str(completed.returncode) + '. stdout=' + stdout + ' stderr=' + stderr)
-      if completed.returncode == 0:
-          log_event(op_id, 'App control action succeeded: ' + action)
-          return {'action': action, 'command': base_command, 'stdout': stdout, 'stderr': stderr}
-      output = (stderr + '\n' + stdout).strip()
-      if completed.returncode == 124:
-          errors.append('host command timed out after 45s: ' + base_command + ' :: ' + output)
-      else:
-          errors.append('command failed with exit code %s: %s :: %s' % (completed.returncode, ' '.join(cmd), output))
-  raise RuntimeError('Could not run /opt/umbreld/umbreld client apps.%s.mutate for %s. Tried: %s' % (action, app_id, ' | '.join(errors)))
-
-def run_with_target_app_restart(app_id, change_func, op_id=None):
-  log_event(op_id, 'START operation for target app: ' + str(app_id))
-  log_event(op_id, 'Step 1/4: stopping target app')
-  stop_result = run_umbreld_app_command(app_id, 'stop', op_id=op_id)
-  log_event(op_id, 'Step 2/4: writing docker-compose.yml change or restoring backup')
-  change_result = None
-  change_error = None
-  try:
-      change_result = change_func()
-      log_event(op_id, 'Step 2/4 succeeded. Backup: ' + str(change_result.get('backup') or change_result.get('safety_backup') or 'n/a'))
-  except Exception as e:
-      change_error = e
-      log_event(op_id, 'Step 2/4 FAILED: ' + str(e))
-  log_event(op_id, 'Step 3/4: restarting target app')
-  start_result = None
-  start_error = None
-  try:
-      start_result = run_umbreld_app_command(app_id, 'restart', op_id=op_id)
-      log_event(op_id, 'Step 3/4 succeeded')
-  except Exception as e:
-      start_error = e
-      log_event(op_id, 'Step 3/4 FAILED: ' + str(e))
-
-  if change_error is not None:
-      msg = 'Target app was stopped, but the compose change failed: %s' % change_error
-      if start_error is not None:
-          msg += ' Also failed to restart the target app: %s' % start_error
-      else:
-          msg += ' The target app was restarted.'
-      raise RuntimeError(msg + '\n\nDebug log:\n' + get_logs(op_id))
-  if start_error is not None:
-      raise RuntimeError('Compose change was written and verified, but restarting the target app failed: %s. Backup: %s\n\nDebug log:\n%s' % (start_error, change_result.get('backup', 'unknown'), get_logs(op_id)))
-
-  log_event(op_id, 'Step 4/4: completed successfully')
-  change_result['app_control'] = {
-      'stopped': True,
-      'restarted': True,
-      'stop_command': stop_result.get('command'),
-      'restart_command': start_result.get('command'),
-      'stop_stdout': stop_result.get('stdout'),
-      'restart_stdout': start_result.get('stdout'),
-  }
-  change_result['debug_log'] = get_logs(op_id)
-  change_result['verified_message'] = (change_result.get('verified_message') or 'Verified.') + ' The target app was stopped before writing and restarted after verification.'
-  return change_result
 
 def safe_compose(app_id):
-  if not re.fullmatch(r'[a-zA-Z0-9][a-zA-Z0-9_.-]*', app_id or ''):
-      raise ValueError('Invalid app id')
-  path = (APP_DATA / app_id / 'docker-compose.yml').resolve()
-  if APP_DATA not in path.parents or path.name != 'docker-compose.yml':
-      raise ValueError('Path is outside app-data')
-  if not path.exists():
-      raise FileNotFoundError('docker-compose.yml not found')
-  return path
+    if not re.fullmatch(r'[a-zA-Z0-9][a-zA-Z0-9_.-]*', app_id or ''): raise ValueError('Invalid app id')
+    p=(APP_DATA/app_id/'docker-compose.yml').resolve()
+    if APP_DATA not in p.parents or p.name != 'docker-compose.yml': raise ValueError('Path outside app-data')
+    if not p.exists(): raise FileNotFoundError('docker-compose.yml not found')
+    return p
+
 
 def list_apps():
-  if not APP_DATA.exists(): return []
-  out=[]
-  for p in sorted(APP_DATA.glob('*/docker-compose.yml')):
-      app_id=p.parent.name
-      if app_id == SELF_APP_ID: continue
-      out.append({'id': app_id, 'path': str(p).replace(str(ROOT), '${UMBREL_ROOT}')})
-  return out
-
-def compose_lines(app_id):
-  p=safe_compose(app_id)
-  lines=p.read_text(encoding='utf-8', errors='replace').splitlines()
-  return [{'no': i, 'text': line} for i,line in enumerate(lines) if SOURCE_RE.search(line)]
-
-def verify_file_contains(path, expected_lines, label):
-  content = path.read_text(encoding='utf-8', errors='replace')
-  missing = [line.rstrip('\n') for line in expected_lines if line.rstrip('\n') not in content]
-  if missing:
-      raise RuntimeError(f'Change was written, but verification failed: missing {label}. Restore from the backup before trying again.')
-  return True
-
-def apply(app_id, line_no, new_path):
-  if new_path not in ALLOWED_PATHS: raise ValueError('New path is not in the whitelist')
-  p=safe_compose(app_id)
-  lines=p.read_text(encoding='utf-8', errors='replace').splitlines(keepends=True)
-  if not isinstance(line_no, int) or line_no < 0 or line_no >= len(lines): raise ValueError('Invalid line number')
-  old=lines[line_no]
-  match=SOURCE_RE.search(old)
-  if not match: raise ValueError('Selected line does not contain a replaceable volume source')
-  replacement = preferred_compose_path(match.group('source'), new_path)
-  new = old[:match.start('source')] + replacement + old[match.end('source'):]
-  if new == old: raise ValueError('Nothing changed')
-  backup=p.with_name('docker-compose.yml.bak-' + time.strftime('%Y%m%d-%H%M%S'))
-  shutil.copy2(p, backup)
-  lines[line_no]=new
-  tmp=p.with_suffix('.yml.tmp')
-  tmp.write_text(''.join(lines), encoding='utf-8')
-  tmp.replace(p)
-  verify_file_contains(p, [new], 'replacement')
-  return str(backup).replace(str(ROOT), '${UMBREL_ROOT}'), old.rstrip('\n'), new.rstrip('\n')
+    out=[]
+    if APP_DATA.exists():
+        for p in sorted(APP_DATA.glob('*/docker-compose.yml')):
+            if p.parent.name == SELF_APP_ID: continue
+            out.append({'id':p.parent.name,'path':host_display(p)})
+    return out
 
 
-def container_target_for(path):
-  name = path.rstrip('/').split('/')[-1] or 'downloads'
-  safe = re.sub(r'[^A-Za-z0-9_.-]+', '-', name).strip('-') or 'downloads'
-  return '/' + safe
+def volume_lines(app_id):
+    p=safe_compose(app_id)
+    lines=p.read_text(encoding='utf-8',errors='replace').splitlines()
+    out=[]
+    for i,line in enumerate(lines):
+        m=SRC_RE.search(line)
+        if m:
+            out.append({'no':i,'text':line,'source':m.group('src'),'rest':m.group('rest')})
+    return out
 
-def source_for_style(reference_source, new_path):
-  prefix = '/home/umbrel/umbrel'
-  if new_path.startswith('${UMBREL_ROOT}'):
-      return new_path
-  if reference_source.startswith('${UMBREL_ROOT}') and new_path.startswith(prefix):
-      return '${UMBREL_ROOT}' + new_path[len(prefix):]
-  return new_path
 
-def indentation_for(line):
-  return line[:len(line)-len(line.lstrip())]
+def backup_file(p, suffix='bak'):
+    b=p.with_name('docker-compose.yml.%s-%s' % (suffix, time.strftime('%Y%m%d-%H%M%S')))
+    shutil.copy2(p,b)
+    return b
 
-def add_paths(app_id, line_no, new_paths):
-  if not isinstance(new_paths, list) or not new_paths:
-      raise ValueError('Select at least one path to add')
-  clean=[]
-  for path in new_paths:
-      if path not in ALLOWED_PATHS:
-          raise ValueError('One or more selected paths are not in the whitelist')
-      if path not in clean:
-          clean.append(path)
-  p=safe_compose(app_id)
-  lines=p.read_text(encoding='utf-8', errors='replace').splitlines(keepends=True)
-  if not isinstance(line_no, int) or line_no < 0 or line_no >= len(lines):
-      raise ValueError('Invalid line number')
-  reference=lines[line_no]
-  match=SOURCE_RE.search(reference)
-  if not match:
-      raise ValueError('Selected line is not a usable volume line')
-  indent=indentation_for(reference)
-  newline='\n' if reference.endswith('\n') else '\n'
-  existing=''.join(lines)
-  added=[]
-  for path in clean:
-      source=source_for_style(match.group('source'), path)
-      target=container_target_for(path)
-      candidate=f'{indent}- {source}:{target}{newline}'
-      if f'{source}:{target}' in existing or candidate in added:
-          continue
-      added.append(candidate)
-  if not added:
-      raise ValueError('No new lines to add; they may already exist')
-  backup=p.with_name('docker-compose.yml.bak-' + time.strftime('%Y%m%d-%H%M%S'))
-  shutil.copy2(p, backup)
-  lines[line_no+1:line_no+1]=added
-  tmp=p.with_suffix('.yml.tmp')
-  tmp.write_text(''.join(lines), encoding='utf-8')
-  tmp.replace(p)
-  verify_file_contains(p, added, 'added line(s)')
-  return str(backup).replace(str(ROOT), '${UMBREL_ROOT}'), [x.rstrip('\n') for x in added]
 
-def modify_paths(app_id, line_no, operation, paths):
-  if operation not in ('replace', 'add', 'both'):
-      raise ValueError('Invalid operation')
-  if not isinstance(paths, list) or not paths:
-      raise ValueError('Select at least one path')
-  clean=[]
-  for path in paths:
-      if path not in ALLOWED_PATHS:
-          raise ValueError('One or more selected paths are not in the whitelist')
-      if path not in clean:
-          clean.append(path)
-  if operation == 'replace' and len(clean) != 1:
-      raise ValueError('Replace only needs exactly one selected path')
+def container_target_for(src):
+    name=src.rstrip('/').split('/')[-1].replace(' ','_') or 'downloads'
+    return ':' + '/' + name
 
-  p=safe_compose(app_id)
-  lines=p.read_text(encoding='utf-8', errors='replace').splitlines(keepends=True)
-  if not isinstance(line_no, int) or line_no < 0 or line_no >= len(lines):
-      raise ValueError('Invalid line number')
-  reference=lines[line_no]
-  match=SOURCE_RE.search(reference)
-  if not match:
-      raise ValueError('Selected line is not a usable volume line')
 
-  old=None
-  new=None
-  added=[]
-  existing=''.join(lines)
-  insert_at=line_no+1
-
-  if operation in ('replace', 'both'):
-      replacement = preferred_compose_path(match.group('source'), clean[0])
-      new = reference[:match.start('source')] + replacement + reference[match.end('source'):]
-      if new == reference and operation == 'replace':
-          raise ValueError('Nothing changed')
-      old = reference.rstrip('\n')
-      lines[line_no] = new
-      reference = new
-      match = SOURCE_RE.search(reference)
-      insert_at = line_no+1
-      add_candidates = clean[1:] if operation == 'both' else []
-  else:
-      add_candidates = clean
-
-  if operation in ('add', 'both'):
-      indent=indentation_for(reference)
-      newline='\n'
-      for path in add_candidates:
-          source=source_for_style(match.group('source'), path)
-          target=container_target_for(path)
-          candidate=f'{indent}- {source}:{target}{newline}'
-          if f'{source}:{target}' in existing or candidate in added:
-              continue
-          added.append(candidate)
-      if operation == 'add' and not added:
-          raise ValueError('No new lines to add; they may already exist')
-      if added:
-          lines[insert_at:insert_at]=added
-
-  if old is None and not added:
-      raise ValueError('Nothing changed')
-
-  backup=p.with_name('docker-compose.yml.bak-' + time.strftime('%Y%m%d-%H%M%S'))
-  shutil.copy2(p, backup)
-  tmp=p.with_suffix('.yml.tmp')
-  tmp.write_text(''.join(lines), encoding='utf-8')
-  tmp.replace(p)
-  expected=[]
-  if new:
-      expected.append(new)
-  expected.extend(added)
-  verify_file_contains(p, expected, 'requested change(s)')
-  return {
-      'backup': str(backup).replace(str(ROOT), '${UMBREL_ROOT}'),
-      'old': old,
-      'new': new.rstrip('\n') if new else None,
-      'added': [x.rstrip('\n') for x in added],
-      'verified': True,
-      'verified_message': 'The docker-compose.yml file was read back after saving, and the requested change(s) were found.',
-  }
+def modify_file(app_id, line_no, paths, action, op):
+    p=safe_compose(app_id)
+    if action not in ('replace','add','both'): raise ValueError('Invalid action')
+    if not paths or any(x not in ALLOWED_PATHS for x in paths): raise ValueError('One or more selected paths are not allowed')
+    lines=p.read_text(encoding='utf-8',errors='replace').splitlines(keepends=True)
+    if line_no < 0 or line_no >= len(lines): raise ValueError('Invalid line number')
+    old=lines[line_no]
+    m=SRC_RE.search(old.rstrip('\n'))
+    if not m: raise ValueError('Selected line is not a recognized volume source line')
+    indent=m.group('prefix')
+    rest=m.group('rest')
+    new_lines=[]
+    if action == 'replace':
+        if len(paths)!=1: raise ValueError('Replace only requires exactly one selected path')
+        lines[line_no] = indent + paths[0] + rest + ('\n' if old.endswith('\n') else '')
+    elif action == 'add':
+        new_lines=[indent + src + container_target_for(src) + '\n' for src in paths]
+        lines[line_no+1:line_no+1]=new_lines
+    else:
+        lines[line_no] = indent + paths[0] + rest + ('\n' if old.endswith('\n') else '')
+        new_lines=[indent + src + container_target_for(src) + '\n' for src in paths[1:]]
+        lines[line_no+1:line_no+1]=new_lines
+    b=backup_file(p)
+    tmp=p.with_suffix('.yml.tmp')
+    tmp.write_text(''.join(lines), encoding='utf-8')
+    tmp.replace(p)
+    text=p.read_text(encoding='utf-8',errors='replace')
+    expected=[]
+    if action in ('replace','both'): expected.append(paths[0]+rest)
+    if action=='add': expected += [src + container_target_for(src) for src in paths]
+    if action=='both': expected += [src + container_target_for(src) for src in paths[1:]]
+    missing=[x for x in expected if x not in text]
+    if missing: raise RuntimeError('Verification failed. Missing after write: '+', '.join(missing))
+    addlog(op, 'File write verified. Backup created: '+host_display(b))
+    return host_display(b)
 
 
 def list_backups(app_id):
-  p=safe_compose(app_id)
-  backups=[]
-  for b in sorted(p.parent.glob('docker-compose.yml.bak-*'), key=lambda x: x.name, reverse=True):
-      if not b.is_file():
-          continue
-      backups.append({'name': b.name, 'size': b.stat().st_size})
-  return backups
+    p=safe_compose(app_id)
+    arr=[]
+    for b in sorted(p.parent.glob('docker-compose.yml.bak-*'), reverse=True):
+        arr.append({'name':b.name,'path':host_display(b)})
+    return arr
 
-def restore_backup(app_id, backup_name):
-  if not re.fullmatch(r'docker-compose[.]yml[.]bak-[0-9]{8}-[0-9]{6}', backup_name or ''):
-      raise ValueError('Invalid backup name')
-  p=safe_compose(app_id)
-  backup=(p.parent / backup_name).resolve()
-  if p.parent not in backup.parents or not backup.exists() or not backup.is_file():
-      raise FileNotFoundError('Selected backup not found')
-  backup_content=backup.read_bytes()
-  safety=p.with_name('docker-compose.yml.bak-before-restore-' + time.strftime('%Y%m%d-%H%M%S'))
-  shutil.copy2(p, safety)
-  tmp=p.with_suffix('.yml.restore-tmp')
-  tmp.write_bytes(backup_content)
-  tmp.replace(p)
-  if p.read_bytes() != backup_content:
-      raise RuntimeError('Restore was written, but verification failed: docker-compose.yml does not match the selected backup')
-  return {
-      'restored': backup.name,
-      'safety_backup': str(safety).replace(str(ROOT), '${UMBREL_ROOT}'),
-      'verified': True,
-      'verified_message': 'docker-compose.yml was read back after restoring and matches the selected backup exactly.',
-  }
 
-class Handler(BaseHTTPRequestHandler):
-  def send_json(self, obj, code=200):
-      data=json.dumps(obj).encode(); self.send_response(code); self.send_header('Content-Type','application/json'); self.send_header('Content-Length',str(len(data))); self.end_headers(); self.wfile.write(data)
-  def do_GET(self):
-      u=urlparse(self.path)
-      try:
-          if u.path == '/':
-              data=html().encode(); self.send_response(200); self.send_header('Content-Type','text/html; charset=utf-8'); self.send_header('Content-Length',str(len(data))); self.end_headers(); self.wfile.write(data)
-          elif u.path == '/api/apps': self.send_json({'apps': list_apps()})
-          elif u.path == '/api/file': self.send_json({'lines': compose_lines(parse_qs(u.query).get('app_id',[''])[0])})
-          elif u.path == '/api/backups': self.send_json({'backups': list_backups(parse_qs(u.query).get('app_id',[''])[0])})
-          elif u.path == '/api/logs': self.send_json({'logs': get_logs(parse_qs(u.query).get('op_id',[''])[0])})
-          else: self.send_json({'error':'Not found'},404)
-      except Exception as e: self.send_json({'error':str(e)},400)
-  def do_POST(self):
-      try:
-          path=urlparse(self.path).path
-          length=int(self.headers.get('Content-Length','0'))
-          body=json.loads(self.rfile.read(length) or b'{}')
-          if path == '/api/apply':
-              backup, old, new = apply(body.get('app_id'), body.get('line_no'), body.get('new_path'))
-              self.send_json({'backup': backup, 'old': old, 'new': new})
-          elif path == '/api/add':
-              backup, added = add_paths(body.get('app_id'), body.get('line_no'), body.get('new_paths'))
-              self.send_json({'backup': backup, 'added': added})
-          elif path == '/api/modify':
-              app_id = body.get('app_id')
-              result = run_with_target_app_restart(app_id, lambda: modify_paths(app_id, body.get('line_no'), body.get('operation'), body.get('paths')), op_id=body.get('op_id'))
-              self.send_json(result)
-          elif path == '/api/restore':
-              app_id = body.get('app_id')
-              result = run_with_target_app_restart(app_id, lambda: restore_backup(app_id, body.get('backup_name')), op_id=body.get('op_id'))
-              self.send_json(result)
-          else:
-              self.send_json({'error':'Not found'},404)
-      except Exception as e:
-          self.send_json({'error':str(e), 'debug_log': get_logs(body.get('op_id') if 'body' in locals() and isinstance(body, dict) else None)},400)
-  def log_message(self, fmt, *args): print('%s - %s' % (self.address_string(), fmt%args), flush=True)
+def restore_backup(app_id, backup_name, op):
+    p=safe_compose(app_id)
+    if '/' in backup_name or not backup_name.startswith('docker-compose.yml.bak-'): raise ValueError('Invalid backup name')
+    b=(p.parent/backup_name).resolve()
+    if p.parent not in b.parents or not b.exists(): raise FileNotFoundError('Backup not found')
+    safety=backup_file(p,'before-restore')
+    shutil.copy2(b,p)
+    if p.read_bytes()!=b.read_bytes(): raise RuntimeError('Restore verification failed')
+    addlog(op, 'Restore verified. Safety backup created: '+host_display(safety))
+    return host_display(safety)
 
-ThreadingHTTPServer(('0.0.0.0', 8099), Handler).serve_forever()
+
+def run_cmd(args, op, timeout=60):
+    addlog(op, 'Trying command: ' + ' '.join(args))
+    try:
+        cp=subprocess.run(args, capture_output=True, text=True, timeout=timeout)
+        addlog(op, f'Exit code {cp.returncode}. stdout={cp.stdout.strip()} stderr={cp.stderr.strip()}')
+        return cp.returncode, cp.stdout.strip(), cp.stderr.strip()
+    except subprocess.TimeoutExpired as e:
+        addlog(op, f'TIMEOUT after {timeout}s. stdout={(e.stdout or "").strip()} stderr={(e.stderr or "").strip()}')
+        return 124, e.stdout or '', e.stderr or 'timeout'
+
+
+def control_app(app_id, verb, op):
+    if verb not in ('stop','restart'): raise ValueError('Invalid app control verb')
+    mutation=f'apps.{verb}.mutate'
+    addlog(op, f'Preparing app control action: {verb} for {app_id}')
+    script=(
+      'cd /home/umbrel 2>/dev/null || cd /; '
+      'export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/umbreld/bin:/opt/umbreld"; '
+      'export HOME=/home/umbrel USER=umbrel LOGNAME=umbrel TMPDIR=/tmp; '
+      f'/opt/umbreld/umbreld client {mutation} --appId {app_id}'
+    )
+    # preferred: host namespace + host user. This mirrors: umbrel@host$ /opt/umbreld/umbreld client ...
+    attempts=[
+      ['/usr/sbin/chroot','/hostfs','/bin/su','-','umbrel','-c',script],
+      ['chroot','/hostfs','/bin/su','-','umbrel','-c',script],
+      ['/usr/sbin/chroot','/hostfs','/bin/sh','-lc',script],
+      ['chroot','/hostfs','/bin/sh','-lc',script],
+    ]
+    errors=[]
+    for a in attempts:
+        code,out,err=run_cmd(a,op,timeout=60)
+        if code==0 and (out.strip()=='true' or out.strip().endswith('true') or not err):
+            addlog(op, f'App control {verb} succeeded for {app_id}')
+            return
+        errors.append(f"{' '.join(a)} => code {code}; stdout={out}; stderr={err}")
+    raise RuntimeError('Could not run umbreld client '+mutation+' for '+app_id+'. Attempts:\n'+'\n'.join(errors))
+
+
+def html():
+    return r'''<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Compose Path Editor</title><style>body{font-family:system-ui;margin:0;background:#111827;color:#e5e7eb}main{max-width:1100px;margin:auto;padding:24px}.card{background:#1f2937;border:1px solid #374151;border-radius:18px;padding:22px;margin:18px 0}select,button{width:100%;font:inherit;border-radius:12px;border:1px solid #4b5563;background:#111827;color:#fff;padding:12px}button{background:#2563eb;border:0;font-weight:700;margin-top:14px}.box{display:block;padding:12px;border:1px solid #4b5563;border-radius:12px;background:#111827;margin:8px 0}.muted{color:#a8b0bf}pre{white-space:pre-wrap;background:#0b1220;padding:14px;border-radius:12px;overflow:auto}.ok{color:#86efac}.err{color:#fca5a5}</style></head><body><main><h1>Compose Path Editor</h1><p class="muted">Select an installed Umbrel app, choose a volume line, then replace, add, or restore backups. The target app is stopped first and restarted after verified changes.</p><div class="card"><h2>1. Select docker-compose.yml</h2><select id="apps"></select></div><div class="card"><h2>2. Select volume line from docker-compose.yml</h2><select id="lines"></select><pre id="preview">Loading...</pre></div><div class="card"><h2>3. Choose action and path(s)</h2><label class="box"><input type="radio" name="action" value="replace" checked> <b>Replace only</b><br><span class="muted">Replace the selected source. Select exactly one path.</span></label><label class="box"><input type="radio" name="action" value="add"> <b>Add only</b><br><span class="muted">Keep the selected line and add one or more new volume lines after it.</span></label><label class="box"><input type="radio" name="action" value="both"> <b>Replace and add</b><br><span class="muted">Replace with first selected path and add remaining selected paths.</span></label><div id="paths"></div><button id="apply">Apply selected action</button><p id="status" class="muted"></p></div><div class="card"><h2>4. Restore a backup</h2><select id="backups"></select><button id="restore">Restore selected backup</button><p id="restoreStatus" class="muted"></p></div><div class="card"><h2>Live debug log</h2><pre id="log">No operation yet.</pre></div></main><script>
+const allowed=['${UMBREL_ROOT}/home/Downloads/qbittorrent/complete','${UMBREL_ROOT}/home/Downloads/qbittorrent/incomplete','${UMBREL_ROOT}/home/Downloads/sabnzbd/complete','${UMBREL_ROOT}/home/Downloads/Films','${UMBREL_ROOT}/home/Downloads/Films2','${UMBREL_ROOT}/home/Downloads/TVSerie','${UMBREL_ROOT}/home/Downloads/TVSeriesOLD'];
+const $=id=>document.getElementById(id); let current=[]; function esc(s){return String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))}
+function renderPaths(){ $('paths').innerHTML=allowed.map((p,i)=>`<label class="box"><input type="checkbox" value="${esc(p)}" ${i==0?'checked':''}> ${esc(p)}</label>`).join(''); document.querySelectorAll('input').forEach(x=>x.onchange=preview); }
+async function loadApps(){let d=await (await fetch('/api/apps')).json(); $('apps').innerHTML=d.apps.map(a=>`<option value="${esc(a.id)}">${esc(a.id)} - ${esc(a.path)}</option>`).join(''); await loadLines(); await loadBackups();}
+async function loadLines(){let id=$('apps').value; let d=await (await fetch('/api/file?app_id='+encodeURIComponent(id))).json(); current=d.lines||[]; $('lines').innerHTML=current.length?current.map(l=>`<option value="${l.no}">${l.no+1}: ${esc(l.text)}</option>`).join(''):'<option>No replaceable volume lines found</option>'; preview();}
+async function loadBackups(){let id=$('apps').value; let d=await (await fetch('/api/backups?app_id='+encodeURIComponent(id))).json(); $('backups').innerHTML=(d.backups||[]).length?d.backups.map(b=>`<option value="${esc(b.name)}">${esc(b.name)}</option>`).join(''):'<option value="">No backups found</option>';}
+function selectedPaths(){return [...document.querySelectorAll('#paths input:checked')].map(x=>x.value)} function action(){return document.querySelector('input[name="action"]:checked').value}
+function preview(){let item=current.find(x=>x.no==Number($('lines').value)); let ps=selectedPaths(); $('preview').textContent=item?`Selected line:\n${item.text}\n\nAction: ${action()}\nSelected path(s):\n${ps.join('\n')}`:'No line selected'}
+async function poll(op){ if(!op) return; let d=await (await fetch('/api/logs?op='+encodeURIComponent(op))).json(); $('log').textContent=(d.logs||[]).join('\n')||'No logs yet.'; $('log').scrollTop=$('log').scrollHeight; }
+async function post(url, body, statusEl){let op=Date.now()+'-'+Math.random().toString(16).slice(2); body.op=op; let timer=setInterval(()=>poll(op),1000); statusEl.textContent='Stopping target app, applying changes, verifying, then restarting target app...'; try{let ctrl=new AbortController(); let to=setTimeout(()=>ctrl.abort(),120000); let r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),signal:ctrl.signal}); clearTimeout(to); let d=await r.json(); await poll(op); if(r.ok){statusEl.innerHTML='<span class="ok">Changes verified and saved. Target app restarted.</span>'; $('preview').textContent=d.message+'\n\nBackup: '+(d.backup||d.safety_backup||''); await loadLines(); await loadBackups();} else {statusEl.innerHTML='<span class="err">Error:</span> '+esc(d.error||'Unknown');}}catch(e){statusEl.innerHTML='<span class="err">Error:</span> request timed out or was interrupted. See live log.';} finally{clearInterval(timer); await poll(op);}}
+$('apps').onchange=async()=>{await loadLines(); await loadBackups();}; $('lines').onchange=preview; $('apply').onclick=()=>post('/api/modify',{app_id:$('apps').value,line_no:Number($('lines').value),paths:selectedPaths(),action:action()},$('status')); $('restore').onclick=()=>post('/api/restore',{app_id:$('apps').value,backup_name:$('backups').value},$('restoreStatus')); renderPaths(); loadApps().catch(e=>$('status').textContent=e);
+</script></body></html>'''
+
+class H(BaseHTTPRequestHandler):
+    def j(self,obj,code=200):
+        data=json.dumps(obj).encode(); self.send_response(code); self.send_header('Content-Type','application/json'); self.send_header('Content-Length',str(len(data))); self.end_headers(); self.wfile.write(data)
+    def do_GET(self):
+        u=urlparse(self.path)
+        try:
+            if u.path=='/':
+                data=html().encode(); self.send_response(200); self.send_header('Content-Type','text/html; charset=utf-8'); self.send_header('Content-Length',str(len(data))); self.end_headers(); self.wfile.write(data)
+            elif u.path=='/api/apps': self.j({'apps':list_apps()})
+            elif u.path=='/api/file': self.j({'lines':volume_lines(parse_qs(u.query).get('app_id',[''])[0])})
+            elif u.path=='/api/backups': self.j({'backups':list_backups(parse_qs(u.query).get('app_id',[''])[0])})
+            elif u.path=='/api/logs': self.j({'logs':LOGS.get(parse_qs(u.query).get('op',[''])[0],[])})
+            else: self.j({'error':'Not found'},404)
+        except Exception as e: self.j({'error':str(e)},400)
+    def do_POST(self):
+        try:
+            body=json.loads(self.rfile.read(int(self.headers.get('Content-Length','0'))) or b'{}'); op=body.get('op') or str(uuid.uuid4()); LOGS[op]=[]
+            if urlparse(self.path).path=='/api/modify':
+                app=body.get('app_id'); addlog(op,'Starting modify operation for '+app); control_app(app,'stop',op); backup=modify_file(app,int(body.get('line_no')),body.get('paths') or [],body.get('action'),op); control_app(app,'restart',op); self.j({'message':'Changes verified and saved. Target app stopped before the change and restarted after verification.','backup':backup,'logs':LOGS[op]})
+            elif urlparse(self.path).path=='/api/restore':
+                app=body.get('app_id'); addlog(op,'Starting restore operation for '+app); control_app(app,'stop',op); safety=restore_backup(app,body.get('backup_name'),op); control_app(app,'restart',op); self.j({'message':'Backup restored and verified. Target app restarted.','safety_backup':safety,'logs':LOGS[op]})
+            else: self.j({'error':'Not found'},404)
+        except Exception as e:
+            addlog(op, 'ERROR: '+str(e)); self.j({'error':str(e),'logs':LOGS.get(op,[])},400)
+    def log_message(self, fmt, *args): print(fmt%args, flush=True)
+
+ThreadingHTTPServer(('0.0.0.0',PORT), H).serve_forever()
