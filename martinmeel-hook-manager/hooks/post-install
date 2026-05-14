@@ -1,0 +1,81 @@
+#!/bin/sh
+set -eu
+
+APP_DATA_DIR="${APP_DATA_DIR:-/home/umbrel/umbrel/app-data/martinmeel-hook-manager}"
+UMBREL_ROOT="${UMBREL_ROOT:-/home/umbrel/umbrel}"
+CUSTOM_HOOKS_DIR="$UMBREL_ROOT/custom-hooks"
+MANAGED_PRE_START="$CUSTOM_HOOKS_DIR/pre-start.martinmeel-hook-manager"
+WRAPPER_PRE_START="$CUSTOM_HOOKS_DIR/pre-start"
+BACKUP_PRE_START="$CUSTOM_HOOKS_DIR/pre-start.user-backup"
+SOURCE_PRE_START="$APP_DATA_DIR/host-hooks/pre-start"
+SOURCE_GLUETUN="$APP_DATA_DIR/host-hooks/gluetun-daily-restart.sh"
+TARGET_GLUETUN="$CUSTOM_HOOKS_DIR/gluetun-daily-restart.sh"
+CREDENTIALS_FILE="$UMBREL_ROOT/app-data/.smbcredentials"
+APPLY_SERVICE="/etc/systemd/system/umbrel-smb-credentials-apply.service"
+APPLY_PATH="/etc/systemd/system/umbrel-smb-credentials-apply.path"
+
+mkdir -p "$CUSTOM_HOOKS_DIR"
+mkdir -p "$UMBREL_ROOT/app-data"
+
+if [ ! -f "$CREDENTIALS_FILE" ]; then
+  cat >"$CREDENTIALS_FILE" <<'EOF'
+username=CHANGE_ME
+password=CHANGE_ME
+# domain=WORKGROUP
+EOF
+fi
+chmod 600 "$CREDENTIALS_FILE"
+
+if [ -f "$WRAPPER_PRE_START" ] && ! grep -q 'martinmeel-hook-manager wrapper' "$WRAPPER_PRE_START"; then
+  mv "$WRAPPER_PRE_START" "$BACKUP_PRE_START"
+fi
+
+cp "$SOURCE_PRE_START" "$MANAGED_PRE_START"
+cp "$SOURCE_GLUETUN" "$TARGET_GLUETUN"
+chmod +x "$MANAGED_PRE_START" "$TARGET_GLUETUN"
+
+cat >"$WRAPPER_PRE_START" <<'EOF'
+#!/bin/bash
+set -eu
+
+CUSTOM_HOOKS_DIR="/home/umbrel/umbrel/custom-hooks"
+BACKUP_PRE_START="$CUSTOM_HOOKS_DIR/pre-start.user-backup"
+MANAGED_PRE_START="$CUSTOM_HOOKS_DIR/pre-start.martinmeel-hook-manager"
+
+# martinmeel-hook-manager wrapper
+if [ -x "$BACKUP_PRE_START" ]; then
+  "$BACKUP_PRE_START"
+fi
+
+if [ -x "$MANAGED_PRE_START" ]; then
+  "$MANAGED_PRE_START"
+fi
+EOF
+
+chmod +x "$WRAPPER_PRE_START"
+
+cat >"$APPLY_SERVICE" <<EOF
+[Unit]
+Description=Apply MartinMeel SMB credentials by running managed pre-start
+
+[Service]
+Type=oneshot
+ExecStart=$MANAGED_PRE_START
+WorkingDirectory=/home/umbrel/umbrel
+User=root
+EOF
+
+cat >"$APPLY_PATH" <<EOF
+[Unit]
+Description=Watch SMB credentials file and apply mounts after changes
+
+[Path]
+PathModified=$CREDENTIALS_FILE
+Unit=$(basename "$APPLY_SERVICE")
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+systemctl daemon-reload
+systemctl enable --now "$(basename "$APPLY_PATH")"
