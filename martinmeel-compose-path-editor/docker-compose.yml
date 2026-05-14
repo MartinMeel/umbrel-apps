@@ -396,5 +396,6 @@ services:
               except Exception as e: self.send_json({'error':str(e)},400)
           def log_message(self, fmt, *args): print('%s - %s' % (self.address_string(), fmt%args), flush=True)
         
-        ThreadingHTTPServer(('0.0.0.0', 8099), Handler).serve_forever()        PY
+        ThreadingHTTPServer(('0.0.0.0', 8099), Handler).serve_forever()
+        PY
         python /tmp/server.py
