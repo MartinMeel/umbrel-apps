@@ -9,12 +9,12 @@ SELF_APP_ID = os.environ.get('APP_ID', 'martinmeel-compose-path-editor')
 PORT = int(os.environ.get('PORT','8099'))
 
 ALLOWED_PATHS = [
-  '${UMBREL_ROOT}/home/Downloads/qbittorrent/complete',
-  '${UMBREL_ROOT}/home/Downloads/qbittorrent/incomplete',
-  '${UMBREL_ROOT}/home/Downloads/Films',
-  '${UMBREL_ROOT}/home/Downloads/Films2',
-  '${UMBREL_ROOT}/home/Downloads/TVSerie',
-  '${UMBREL_ROOT}/home/Downloads/TVSeriesOLD',
+  '${UMBREL_ROOT}/home/Downloads/complete:/complete',
+  '${UMBREL_ROOT}/home/Downloads/incomplete:/incomplete',
+  '${UMBREL_ROOT}/home/Downloads/Films:/movies',
+  '${UMBREL_ROOT}/home/Downloads/Films2:/movies2',
+  '${UMBREL_ROOT}/home/Downloads/TVSerie:/tv',
+  '${UMBREL_ROOT}/home/Downloads/TVSeriesOLD:/tvold',
 ]
 
 SRC_RE = re.compile(r'(?P<prefix>^\s*-\s*)(?P<src>(?:\$\{UMBREL_ROOT\}|/home/umbrel/umbrel)/home/Downloads/[^:\s"\']+|\$\{APP_DATA_DIR\}/[^:\s"\']+)(?P<rest>:.+)$')
