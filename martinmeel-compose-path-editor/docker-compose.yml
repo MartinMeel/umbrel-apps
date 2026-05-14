@@ -1,5 +1,3 @@
-version: "3.7"
-
 services:
   app_proxy:
     environment:
@@ -7,13 +5,104 @@ services:
       APP_PORT: 8099
 
   server:
-    build: ./app
+    image: python:3.12-alpine
     restart: on-failure
     environment:
       HOST_UMBREL_ROOT: /host/umbrel
       APP_ID: martinmeel-compose-path-editor
     volumes:
-      # Geeft de app toegang tot geïnstalleerde app compose-bestanden.
-      # De backend valideert dat alleen docker-compose.yml bestanden binnen deze root
-      # kunnen worden gelezen of gewijzigd.
       - ${UMBREL_ROOT}:/host/umbrel
+    command:
+      - sh
+      - -c
+      - |-
+        cat > /tmp/server.py <<'PY'
+        import json, os, re, shutil, time
+        from pathlib import Path
+        from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+        from urllib.parse import urlparse, parse_qs
+
+        ROOT = Path(os.environ.get('HOST_UMBREL_ROOT', '/host/umbrel')).resolve()
+        APP_DATA = (ROOT / 'app-data').resolve()
+        SELF_APP_ID = os.environ.get('APP_ID', 'martinmeel-compose-path-editor')
+        ALLOWED_PATHS = [
+          '/home/umbrel/umbrel/home/Downloads/qbittorrent/complete',
+          '/home/umbrel/umbrel/home/Downloads/qbittorrent/incomplete',
+          '/home/umbrel/umbrel/home/Downloads/sabnzbd/complete',
+          '/home/umbrel/umbrel/home/Downloads/Films',
+          '/home/umbrel/umbrel/home/Downloads/Films2',
+          '/home/umbrel/umbrel/home/Downloads/TVSerie',
+          '/home/umbrel/umbrel/home/Downloads/TVSeriesOLD',
+        ]
+        PATH_RE = re.compile(r"/home/umbrel/umbrel/home/Downloads[^:\\s\"\']*")
+
+        def html():
+          paths = json.dumps(ALLOWED_PATHS)
+          return '''<!doctype html><html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Compose Path Editor</title><style>body{font-family:system-ui,-apple-system,Segoe UI,sans-serif;margin:0;background:#111827;color:#e5e7eb}main{max-width:980px;margin:0 auto;padding:32px 18px}.card{background:#1f2937;border:1px solid #374151;border-radius:18px;padding:22px;margin:18px 0;box-shadow:0 10px 30px #0004}h1{margin:0 0 8px;font-size:32px}h2{font-size:18px;margin:0 0 14px}.muted{color:#9ca3af}select,button{width:100%;font:inherit;border-radius:12px;border:1px solid #4b5563;background:#111827;color:#f9fafb;padding:12px}button{background:#2563eb;border:0;font-weight:700;cursor:pointer}button:disabled{opacity:.45}.paths{display:grid;gap:8px}.path{display:block;padding:11px 12px;border:1px solid #4b5563;border-radius:12px;background:#111827;cursor:pointer}.path input{margin-right:10px}pre{white-space:pre-wrap;background:#0b1220;border-radius:12px;padding:14px;overflow:auto}.ok{color:#86efac}.err{color:#fca5a5}</style></head><body><main><h1>Compose Path Editor</h1><p class="muted">Selecteer een geïnstalleerde Umbrel-app, kies een toegestaan downloadpad en vervang één bestaande compose-regel. Er wordt automatisch een backup gemaakt.</p><div class="card"><h2>1. Selecteer docker-compose.yml</h2><select id="apps"><option>Laden...</option></select></div><div class="card"><h2>2. Selecteer nieuw pad</h2><div class="paths" id="paths"></div></div><div class="card"><h2>3. Selecteer regel uit docker-compose.yml</h2><select id="lines"><option>Kies eerst een app</option></select><pre id="preview" class="muted">Geen regel geselecteerd.</pre></div><div class="card"><button id="save" disabled>Maak backup en pas docker-compose.yml aan</button><p id="status" class="muted"></p></div></main><script>const allowed = ''' + paths + r''';const apps=document.getElementById('apps'),paths=document.getElementById('paths'),lines=document.getElementById('lines'),preview=document.getElementById('preview'),save=document.getElementById('save'),status=document.getElementById('status');let selectedPath=allowed[0],current=[];function esc(s){return String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}function renderPaths(){paths.innerHTML=allowed.map((p,i)=>`<label class="path"><input type="radio" name="p" value="${esc(p)}" ${i==0?'checked':''}>${esc(p)}</label>`).join('');paths.querySelectorAll('input').forEach(x=>x.onchange=()=>{selectedPath=x.value;renderPreview();});}async function loadApps(){const r=await fetch('/api/apps');const data=await r.json();apps.innerHTML=data.apps.length?data.apps.map(a=>`<option value="${esc(a.id)}">${esc(a.id)} - ${esc(a.path)}</option>`).join(''):'<option value="">Geen apps gevonden</option>';await loadLines();}async function loadLines(){status.textContent='';save.disabled=true;preview.textContent='Laden...';const id=apps.value;if(!id){preview.textContent='Geen app geselecteerd.';return;}const r=await fetch('/api/file?app_id='+encodeURIComponent(id));const data=await r.json();current=data.lines||[];lines.innerHTML=current.length?current.map(l=>`<option value="${l.no}">${l.no+1}: ${esc(l.text).slice(0,180)}</option>`).join(''):'<option>Geen vervangbare downloadpad-regels gevonden</option>';renderPreview();}function renderPreview(){const no=Number(lines.value);const item=current.find(x=>x.no===no);if(!item){preview.textContent='Geen regel geselecteerd.';save.disabled=true;return;}const re=/\/home\/umbrel\/umbrel\/home\/Downloads[^:\s"']*/;preview.textContent='Oude regel:\n'+item.text+'\n\nNieuwe regel:\n'+item.text.replace(re, selectedPath);save.disabled=false;}apps.onchange=loadLines;lines.onchange=renderPreview;save.onclick=async()=>{status.textContent='Opslaan...';save.disabled=true;const r=await fetch('/api/apply',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({app_id:apps.value,line_no:Number(lines.value),new_path:selectedPath})});const data=await r.json();if(r.ok){status.innerHTML='<span class="ok">Opgeslagen.</span> Backup: '+esc(data.backup);await loadLines();}else{status.innerHTML='<span class="err">Fout:</span> '+esc(data.error||'Onbekend');save.disabled=false;}};renderPaths();loadApps().catch(e=>{status.innerHTML='<span class="err">'+esc(String(e))+'</span>';});</script></body></html>'''
+
+        def safe_compose(app_id):
+          if not re.fullmatch(r'[a-zA-Z0-9][a-zA-Z0-9_.-]*', app_id or ''):
+              raise ValueError('Ongeldige app-id')
+          path = (APP_DATA / app_id / 'docker-compose.yml').resolve()
+          if APP_DATA not in path.parents or path.name != 'docker-compose.yml':
+              raise ValueError('Pad valt buiten app-data')
+          if not path.exists():
+              raise FileNotFoundError('docker-compose.yml niet gevonden')
+          return path
+
+        def list_apps():
+          if not APP_DATA.exists(): return []
+          out=[]
+          for p in sorted(APP_DATA.glob('*/docker-compose.yml')):
+              app_id=p.parent.name
+              if app_id == SELF_APP_ID: continue
+              out.append({'id': app_id, 'path': str(p).replace(str(ROOT), '/home/umbrel/umbrel')})
+          return out
+
+        def compose_lines(app_id):
+          p=safe_compose(app_id)
+          lines=p.read_text(encoding='utf-8', errors='replace').splitlines()
+          return [{'no': i, 'text': line} for i,line in enumerate(lines) if PATH_RE.search(line)]
+
+        def apply(app_id, line_no, new_path):
+          if new_path not in ALLOWED_PATHS: raise ValueError('Nieuw pad staat niet in de whitelist')
+          p=safe_compose(app_id)
+          lines=p.read_text(encoding='utf-8', errors='replace').splitlines(keepends=True)
+          if not isinstance(line_no, int) or line_no < 0 or line_no >= len(lines): raise ValueError('Ongeldig regelnummer')
+          old=lines[line_no]
+          if not PATH_RE.search(old): raise ValueError('Geselecteerde regel bevat geen vervangbaar Downloads-pad')
+          new=PATH_RE.sub(new_path, old, count=1)
+          if new == old: raise ValueError('Er is niets gewijzigd')
+          backup=p.with_name('docker-compose.yml.bak-' + time.strftime('%Y%m%d-%H%M%S'))
+          shutil.copy2(p, backup)
+          lines[line_no]=new
+          tmp=p.with_suffix('.yml.tmp')
+          tmp.write_text(''.join(lines), encoding='utf-8')
+          tmp.replace(p)
+          return str(backup).replace(str(ROOT), '/home/umbrel/umbrel'), old.rstrip('\n'), new.rstrip('\n')
+
+        class Handler(BaseHTTPRequestHandler):
+          def send_json(self, obj, code=200):
+              data=json.dumps(obj).encode(); self.send_response(code); self.send_header('Content-Type','application/json'); self.send_header('Content-Length',str(len(data))); self.end_headers(); self.wfile.write(data)
+          def do_GET(self):
+              u=urlparse(self.path)
+              try:
+                  if u.path == '/':
+                      data=html().encode(); self.send_response(200); self.send_header('Content-Type','text/html; charset=utf-8'); self.send_header('Content-Length',str(len(data))); self.end_headers(); self.wfile.write(data)
+                  elif u.path == '/api/apps': self.send_json({'apps': list_apps()})
+                  elif u.path == '/api/file': self.send_json({'lines': compose_lines(parse_qs(u.query).get('app_id',[''])[0])})
+                  else: self.send_json({'error':'Niet gevonden'},404)
+              except Exception as e: self.send_json({'error':str(e)},400)
+          def do_POST(self):
+              try:
+                  if urlparse(self.path).path != '/api/apply': return self.send_json({'error':'Niet gevonden'},404)
+                  length=int(self.headers.get('Content-Length','0'))
+                  body=json.loads(self.rfile.read(length) or b'{}')
+                  backup, old, new = apply(body.get('app_id'), body.get('line_no'), body.get('new_path'))
+                  self.send_json({'backup': backup, 'old': old, 'new': new})
+              except Exception as e: self.send_json({'error':str(e)},400)
+          def log_message(self, fmt, *args): print('%s - %s' % (self.address_string(), fmt%args), flush=True)
+
+        ThreadingHTTPServer(('0.0.0.0', 8099), Handler).serve_forever()
+        PY
+        python /tmp/server.py
