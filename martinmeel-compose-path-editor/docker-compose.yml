@@ -44,11 +44,11 @@ services:
 
         def html():
           paths = json.dumps(ALLOWED_PATHS)
-          return """<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Compose Path Editor</title><style>body{font-family:system-ui,-apple-system,Segoe UI,sans-serif;margin:0;background:#111827;color:#e5e7eb}main{max-width:980px;margin:0 auto;padding:32px 18px}.card{background:#1f2937;border:1px solid #374151;border-radius:18px;padding:22px;margin:18px 0;box-shadow:0 10px 30px #0004}h1{margin:0 0 8px;font-size:32px}h2{font-size:18px;margin:0 0 14px}.muted{color:#9ca3af}select,button{width:100%;font:inherit;border-radius:12px;border:1px solid #4b5563;background:#111827;color:#f9fafb;padding:12px}button{background:#2563eb;border:0;font-weight:700;cursor:pointer}button:disabled{opacity:.45}.paths{display:grid;gap:8px}.path{display:block;padding:11px 12px;border:1px solid #4b5563;border-radius:12px;background:#111827;cursor:pointer}.path input{margin-right:10px}pre{white-space:pre-wrap;background:#0b1220;border-radius:12px;padding:14px;overflow:auto}.ok{color:#86efac}.err{color:#fca5a5}code{color:#bfdbfe}</style></head><body><main><h1>Compose Path Editor</h1><p class="muted">Select an installed Umbrel app, choose one volume source line from its docker-compose.yml, then select the new download path to replace it with. Lines such as <code>$${UMBREL_ROOT}/home/Downloads/TVSeries:/tv</code>, <code>$${UMBREL_ROOT}/home/Downloads/complete:/downloads</code>, and <code>$${APP_DATA_DIR}/data/config:/config</code> are shown. The container side after the colon is preserved.</p><div class="card"><h2>1. Select docker-compose.yml</h2><select id="apps"><option>Loading...</option></select></div><div class="card"><h2>2. Select volume line from docker-compose.yml</h2><select id="lines"><option>Choose an app first</option></select><pre id="preview" class="muted">No line selected.</pre></div><div class="card"><h2>3. Select new path</h2><select id="newPath"><option>Loading...</option></select></div><div class="card"><button id="save" disabled>Create backup and update docker-compose.yml</button><p id="status" class="muted"></p></div></main><script>const allowed = """ + paths + r""";const apps=document.getElementById('apps'),newPath=document.getElementById('newPath'),lines=document.getElementById('lines'),preview=document.getElementById('preview'),save=document.getElementById('save'),status=document.getElementById('status');let selectedPath=allowed[0],current=[];function esc(s){return String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}function renderPaths(){newPath.innerHTML=allowed.map((p,i)=>`<option value="$${esc(p)}" $${i==0?'selected':''}>$${esc(p)}</option>`).join('');selectedPath=newPath.value||allowed[0];newPath.onchange=()=>{selectedPath=newPath.value;renderPreview();};}async function loadApps(){const r=await fetch('/api/apps');const data=await r.json();apps.innerHTML=data.apps.length?data.apps.map(a=>`<option value="$${esc(a.id)}">$${esc(a.id)} - $${esc(a.path)}</option>`).join(''):'<option value="">No apps found</option>';await loadLines();}async function loadLines(){status.textContent='';save.disabled=true;preview.textContent='Loading...';const id=apps.value;if(!id){preview.textContent='No app selected.';return;}const r=await fetch('/api/file?app_id='+encodeURIComponent(id));const data=await r.json();current=data.lines||[];lines.innerHTML=current.length?current.map(l=>`<option value="$${l.no}">$${l.no+1}: $${esc(l.text).slice(0,180)}</option>`).join(''):'<option>No replaceable volume lines found</option>';renderPreview();}function renderPreview(){const no=Number(lines.value);const item=current.find(x=>x.no===no);if(!item){preview.textContent='No line selected.';save.disabled=true;return;}preview.textContent='Old line:\n'+item.text+'\n\nNew source:\n'+selectedPath+'\n\nThe container side after the colon will be preserved.';save.disabled=false;}apps.onchange=loadLines;lines.onchange=renderPreview;save.onclick=async()=>{status.textContent='Saving...';save.disabled=true;const r=await fetch('/api/apply',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({app_id:apps.value,line_no:Number(lines.value),new_path:selectedPath})});const data=await r.json();if(r.ok){status.innerHTML='<span class="ok">Saved.</span> Backup: '+esc(data.backup);preview.textContent='Old line:\n'+data.old+'\n\nNew line:\n'+data.new;await loadLines();}else{status.innerHTML='<span class="err">Error:</span> '+esc(data.error||'Unknown');save.disabled=false;}};renderPaths();loadApps().catch(e=>{status.innerHTML='<span class="err">'+esc(String(e))+'</span>';});</script></body></html>"""
+          return """<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Compose Path Editor</title><style>body{font-family:system-ui,-apple-system,Segoe UI,sans-serif;margin:0;background:#111827;color:#e5e7eb}main{max-width:980px;margin:0 auto;padding:32px 18px}.card{background:#1f2937;border:1px solid #374151;border-radius:18px;padding:22px;margin:18px 0;box-shadow:0 10px 30px #0004}h1{margin:0 0 8px;font-size:32px}h2{font-size:18px;margin:0 0 14px}.muted{color:#9ca3af}.small{font-size:13px}select,input,button{width:100%;font:inherit;border-radius:12px;border:1px solid #4b5563;background:#111827;color:#f9fafb;padding:12px;box-sizing:border-box}select[multiple]{min-height:170px}button{background:#2563eb;border:0;font-weight:700;cursor:pointer;margin-top:10px}button.secondary{background:#374151}button:disabled{opacity:.45}.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:720px){.row{grid-template-columns:1fr}}pre{white-space:pre-wrap;background:#0b1220;border-radius:12px;padding:14px;overflow:auto}.ok{color:#86efac}.err{color:#fca5a5}code{color:#bfdbfe}</style></head><body><main><h1>Compose Path Editor</h1><p class="muted">Select an installed Umbrel app, choose an existing volume line, then replace its source path or add one or more new volume lines after it. A backup is created before every change.</p><div class="card"><h2>1. Select docker-compose.yml</h2><select id="apps"><option>Loading...</option></select></div><div class="card"><h2>2. Select volume line from docker-compose.yml</h2><select id="lines"><option>Select an app first</option></select><pre id="preview" class="muted">No volume line selected.</pre></div><div class="card"><h2>3. Select new path(s)</h2><select id="paths" multiple></select><p class="muted small">Select one path to replace the selected volume source. Select one or more paths to add new volume lines. Added lines use the same source style as the selected line, for example <code>$${UMBREL_ROOT}/home/Downloads/Films:/Films</code>.</p><div class="row"><button id="replace" disabled>Replace selected volume source</button><button id="add" class="secondary" disabled>Add selected path(s) as new volume line(s)</button></div><p id="status" class="muted"></p></div></main><script>const allowed = """ + paths + r""";const apps=document.getElementById('apps'),paths=document.getElementById('paths'),lines=document.getElementById('lines'),preview=document.getElementById('preview'),replaceBtn=document.getElementById('replace'),addBtn=document.getElementById('add'),status=document.getElementById('status');let current=[];function esc(s){return String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}function selectedPaths(){return Array.from(paths.selectedOptions).map(o=>o.value);}function renderPaths(){paths.innerHTML=allowed.map((p,i)=>`<option value="$${esc(p)}" $${i==0?'selected':''}>$${esc(p)}</option>`).join('');}async function loadApps(){const r=await fetch('/api/apps');const data=await r.json();apps.innerHTML=data.apps.length?data.apps.map(a=>`<option value="$${esc(a.id)}">$${esc(a.id)} - $${esc(a.path)}</option>`).join(''):'<option value="">No apps found</option>';await loadLines();}async function loadLines(){status.textContent='';replaceBtn.disabled=true;addBtn.disabled=true;preview.textContent='Loading...';const id=apps.value;if(!id){preview.textContent='No app selected.';return;}const r=await fetch('/api/file?app_id='+encodeURIComponent(id));const data=await r.json();current=data.lines||[];lines.innerHTML=current.length?current.map(l=>`<option value="$${l.no}">$${l.no+1}: $${esc(l.text).slice(0,180)}</option>`).join(''):'<option>No replaceable or extendable volume lines found</option>';renderPreview();}function renderPreview(){const no=Number(lines.value);const item=current.find(x=>x.no===no);const chosen=selectedPaths();if(!item){preview.textContent='No volume line selected.';replaceBtn.disabled=true;addBtn.disabled=true;return;}preview.textContent='Selected line:\n'+item.text+'\n\nSelected new path(s):\n'+(chosen.length?chosen.join('\n'):'No path selected')+'\n\nReplace changes the source side of the selected line. Add inserts new volume line(s) directly after the selected line.';replaceBtn.disabled=chosen.length!==1;addBtn.disabled=chosen.length<1;}apps.onchange=loadLines;lines.onchange=renderPreview;paths.onchange=renderPreview;replaceBtn.onclick=async()=>{status.textContent='Saving replacement...';replaceBtn.disabled=true;addBtn.disabled=true;const r=await fetch('/api/apply',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({app_id:apps.value,line_no:Number(lines.value),new_path:selectedPaths()[0]})});const data=await r.json();if(r.ok){status.innerHTML='<span class="ok">Saved.</span> Backup: '+esc(data.backup);preview.textContent='Old line:\n'+data.old+'\n\nNew line:\n'+data.new;await loadLines();}else{status.innerHTML='<span class="err">Error:</span> '+esc(data.error||'Unknown');renderPreview();}};addBtn.onclick=async()=>{status.textContent='Adding volume line(s)...';replaceBtn.disabled=true;addBtn.disabled=true;const r=await fetch('/api/add',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({app_id:apps.value,line_no:Number(lines.value),new_paths:selectedPaths()})});const data=await r.json();if(r.ok){status.innerHTML='<span class="ok">Added '+data.added.length+' line(s).</span> Backup: '+esc(data.backup);preview.textContent='Inserted line(s):\n'+data.added.join('\n');await loadLines();}else{status.innerHTML='<span class="err">Error:</span> '+esc(data.error||'Unknown');renderPreview();}};renderPaths();loadApps().catch(e=>{status.innerHTML='<span class="err">'+esc(String(e))+'</span>';});</script></body></html>"""
 
         def safe_compose(app_id):
           if not re.fullmatch(r'[a-zA-Z0-9][a-zA-Z0-9_.-]*', app_id or ''):
-              raise ValueError('Invalid app ID')
+              raise ValueError('Invalid app id')
           path = (APP_DATA / app_id / 'docker-compose.yml').resolve()
           if APP_DATA not in path.parents or path.name != 'docker-compose.yml':
               raise ValueError('Path is outside app-data')
@@ -89,6 +89,59 @@ services:
           tmp.replace(p)
           return str(backup).replace(str(ROOT), '/home/umbrel/umbrel'), old.rstrip('\n'), new.rstrip('\n')
 
+
+        def container_target_for(path):
+          name = path.rstrip('/').split('/')[-1] or 'downloads'
+          safe = re.sub(r'[^A-Za-z0-9_.-]+', '-', name).strip('-') or 'downloads'
+          return '/' + safe
+
+        def source_for_style(reference_source, absolute_new_path):
+          prefix = '/home/umbrel/umbrel'
+          if reference_source.startswith('$${UMBREL_ROOT}') and absolute_new_path.startswith(prefix):
+              return '$${UMBREL_ROOT}' + absolute_new_path[len(prefix):]
+          return absolute_new_path
+
+        def indentation_for(line):
+          return line[:len(line)-len(line.lstrip())]
+
+        def add_paths(app_id, line_no, new_paths):
+          if not isinstance(new_paths, list) or not new_paths:
+              raise ValueError('Select at least one path to add')
+          clean=[]
+          for path in new_paths:
+              if path not in ALLOWED_PATHS:
+                  raise ValueError('One or more selected paths are not in the whitelist')
+              if path not in clean:
+                  clean.append(path)
+          p=safe_compose(app_id)
+          lines=p.read_text(encoding='utf-8', errors='replace').splitlines(keepends=True)
+          if not isinstance(line_no, int) or line_no < 0 or line_no >= len(lines):
+              raise ValueError('Invalid line number')
+          reference=lines[line_no]
+          match=SOURCE_RE.search(reference)
+          if not match:
+              raise ValueError('Selected line is not a usable volume line')
+          indent=indentation_for(reference)
+          newline='\n' if reference.endswith('\n') else '\n'
+          existing=''.join(lines)
+          added=[]
+          for path in clean:
+              source=source_for_style(match.group('source'), path)
+              target=container_target_for(path)
+              candidate=f'{indent}- {source}:{target}{newline}'
+              if f'{source}:{target}' in existing or candidate in added:
+                  continue
+              added.append(candidate)
+          if not added:
+              raise ValueError('No new lines to add; they may already exist')
+          backup=p.with_name('docker-compose.yml.bak-' + time.strftime('%Y%m%d-%H%M%S'))
+          shutil.copy2(p, backup)
+          lines[line_no+1:line_no+1]=added
+          tmp=p.with_suffix('.yml.tmp')
+          tmp.write_text(''.join(lines), encoding='utf-8')
+          tmp.replace(p)
+          return str(backup).replace(str(ROOT), '/home/umbrel/umbrel'), [x.rstrip('\n') for x in added]
+
         class Handler(BaseHTTPRequestHandler):
           def send_json(self, obj, code=200):
               data=json.dumps(obj).encode(); self.send_response(code); self.send_header('Content-Type','application/json'); self.send_header('Content-Length',str(len(data))); self.end_headers(); self.wfile.write(data)
@@ -103,11 +156,17 @@ services:
               except Exception as e: self.send_json({'error':str(e)},400)
           def do_POST(self):
               try:
-                  if urlparse(self.path).path != '/api/apply': return self.send_json({'error':'Not found'},404)
+                  path=urlparse(self.path).path
                   length=int(self.headers.get('Content-Length','0'))
                   body=json.loads(self.rfile.read(length) or b'{}')
-                  backup, old, new = apply(body.get('app_id'), body.get('line_no'), body.get('new_path'))
-                  self.send_json({'backup': backup, 'old': old, 'new': new})
+                  if path == '/api/apply':
+                      backup, old, new = apply(body.get('app_id'), body.get('line_no'), body.get('new_path'))
+                      self.send_json({'backup': backup, 'old': old, 'new': new})
+                  elif path == '/api/add':
+                      backup, added = add_paths(body.get('app_id'), body.get('line_no'), body.get('new_paths'))
+                      self.send_json({'backup': backup, 'added': added})
+                  else:
+                      self.send_json({'error':'Not found'},404)
               except Exception as e: self.send_json({'error':str(e)},400)
           def log_message(self, fmt, *args): print('%s - %s' % (self.address_string(), fmt%args), flush=True)
 
