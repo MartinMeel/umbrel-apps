@@ -1,11 +1,9 @@
 services:
   app_proxy:
-    environment:
-      # Use Gluetun's network stack
-      APP_HOST: martinmeel-gluetun_server_1
-      # Use another port than 8080. SABnzbd is using this!
-      APP_PORT: 8090
-      # Use this if another app outside your umbrel device wants to connect via an API call
+    environment: # The Umbrel App Proxy automatically protects an app by requiring the user to enter their Umbrel password (either when they login into the main Web UI or by visiting an app directly e.g.)
+      APP_HOST: martinmeel-gluetun_server_1 # <web-container-dns-name>  This is the name of the Gluetun container, which is the one that will be running the app proxy. Do not change this if you want all trafic over VPN.
+      APP_PORT: 8090 # Use another port than 8080. SABnzbd is using this!
+      # Use this if another app outside your umbrel device wants to connect via an API call.
       PROXY_AUTH_WHITELIST: "*"
       # There could be cases where you wish to disable authentication. That can be done by adding this env. var. 
       PROXY_AUTH_ADD: 'false'
@@ -13,15 +11,13 @@ services:
       # PROXY_AUTH_WHITELIST: "*"
       # PROXY_AUTH_BLACKLIST: "/admin/*"
 
-
   server:
     image: lscr.io/linuxserver/qbittorrent:latest
     # Use Gluetun's network stack - all traffic goes through VPN
     network_mode: "container:martinmeel-gluetun_server_1"
     volumes:
       - ${APP_DATA_DIR}/data/config:/config
-      - ${UMBREL_ROOT}/home/Downloads/complete:/downloads
-      - ${UMBREL_ROOT}/home/Downloads/incomplete:/incomplete
+      - ${UMBREL_ROOT}/home/Downloads:/downloads
     environment:
       - PUID=1000
       - PGID=1000
