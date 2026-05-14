@@ -1,11 +1,11 @@
 services:
-  app_proxy:
+  app_proxy: # The Umbrel App Proxy automatically protects an app by requiring the user to enter their Umbrel password (either when they login into the main Web UI or by visiting an app directly e.g.)
     environment:
-      APP_HOST: martinmeel-gluetun_server_1
-      APP_PORT: 2000
-      # Use this if another app outside your umbrel device wants to connect via an API call
+      APP_HOST: martinmeel-gluetun_server_1 # <web-container-dns-name> This is the name of the Gluetun container, which is the one that will be running the app proxy. Do not change this if you want all trafic over VPN.
+      APP_PORT: 2000 # <web/app-container-port-number>  The internal portnumber of jellystatt is 3000 by default. Because gluetun handles the ports and port 3000 is used more, we need a free port.
+      # Use this if another app outside your umbrel device wants to connect via an API call.
       PROXY_AUTH_WHITELIST: /api/*
-      # Set false if another app from outside your umbrell wants to connect without login!
+      # There could be cases where you wish to disable authentication. That can be done by adding this env. var. 
       PROXY_AUTH_ADD: 'false'
 
   jellystat-db:
@@ -40,5 +40,3 @@ networks:
 volumes:
   postgres-data: null
   jellystat-backup-data: null
-
-
