@@ -1,6 +1,6 @@
 manifestVersion: 1
 id: martinmeel-umbrelinit
-category: networking
+category: testing
 name: Umbrel Init
 version: "1.0.0"
 tagline: Auto-mount NAS shares and install mc on every boot
