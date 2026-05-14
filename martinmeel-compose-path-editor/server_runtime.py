@@ -13,7 +13,7 @@ ALLOWED_PATHS = [
   '${UMBREL_ROOT}/home/Downloads/incomplete:/incomplete',
   '${UMBREL_ROOT}/home/Downloads/Films:/movies',
   '${UMBREL_ROOT}/home/Downloads/Films2:/movies2',
-  '${UMBREL_ROOT}/home/Downloads/TVSerie:/tv',
+  '${UMBREL_ROOT}/home/Downloads/TVSeries:/tv',
   '${UMBREL_ROOT}/home/Downloads/TVSeriesOLD:/tvold',
 ]
 
@@ -69,32 +69,26 @@ def backup_file(p, suffix='bak'):
     return b
 
 
-def container_target_for(src):
-    name=src.rstrip('/').split('/')[-1].replace(' ','_') or 'downloads'
-    return ':' + '/' + name
-
-
 def modify_file(app_id, line_no, paths, action, op):
     p=safe_compose(app_id)
     if action not in ('replace','add','both'): raise ValueError('Invalid action')
-    if not paths or any(x not in ALLOWED_PATHS for x in paths): raise ValueError('One or more selected paths are not allowed')
+    if not paths or any(x not in ALLOWED_PATHS for x in paths): raise ValueError('One or more selected volume mappings are not allowed')
     lines=p.read_text(encoding='utf-8',errors='replace').splitlines(keepends=True)
     if line_no < 0 or line_no >= len(lines): raise ValueError('Invalid line number')
     old=lines[line_no]
     m=SRC_RE.search(old.rstrip('\n'))
     if not m: raise ValueError('Selected line is not a recognized volume source line')
     indent=m.group('prefix')
-    rest=m.group('rest')
     new_lines=[]
     if action == 'replace':
-        if len(paths)!=1: raise ValueError('Replace only requires exactly one selected path')
-        lines[line_no] = indent + paths[0] + rest + ('\n' if old.endswith('\n') else '')
+        if len(paths)!=1: raise ValueError('Replace only requires exactly one selected volume mapping')
+        lines[line_no] = indent + paths[0] + ('\n' if old.endswith('\n') else '')
     elif action == 'add':
-        new_lines=[indent + src + container_target_for(src) + '\n' for src in paths]
+        new_lines=[indent + mapping + '\n' for mapping in paths]
         lines[line_no+1:line_no+1]=new_lines
     else:
-        lines[line_no] = indent + paths[0] + rest + ('\n' if old.endswith('\n') else '')
-        new_lines=[indent + src + container_target_for(src) + '\n' for src in paths[1:]]
+        lines[line_no] = indent + paths[0] + ('\n' if old.endswith('\n') else '')
+        new_lines=[indent + mapping + '\n' for mapping in paths[1:]]
         lines[line_no+1:line_no+1]=new_lines
     b=backup_file(p)
     tmp=p.with_suffix('.yml.tmp')
@@ -102,9 +96,9 @@ def modify_file(app_id, line_no, paths, action, op):
     tmp.replace(p)
     text=p.read_text(encoding='utf-8',errors='replace')
     expected=[]
-    if action in ('replace','both'): expected.append(paths[0]+rest)
-    if action=='add': expected += [src + container_target_for(src) for src in paths]
-    if action=='both': expected += [src + container_target_for(src) for src in paths[1:]]
+    if action in ('replace','both'): expected.append(paths[0])
+    if action=='add': expected += paths
+    if action=='both': expected += paths[1:]
     missing=[x for x in expected if x not in text]
     if missing: raise RuntimeError('Verification failed. Missing after write: '+', '.join(missing))
     addlog(op, 'File write verified. Backup created: '+host_display(b))
@@ -170,15 +164,15 @@ def control_app(app_id, verb, op):
 
 
 def html():
-    return r'''<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Compose Path Editor</title><style>body{font-family:system-ui;margin:0;background:#111827;color:#e5e7eb}main{max-width:1100px;margin:auto;padding:24px}.card{background:#1f2937;border:1px solid #374151;border-radius:18px;padding:22px;margin:18px 0}select,button{width:100%;font:inherit;border-radius:12px;border:1px solid #4b5563;background:#111827;color:#fff;padding:12px}button{background:#2563eb;border:0;font-weight:700;margin-top:14px}.box{display:block;padding:12px;border:1px solid #4b5563;border-radius:12px;background:#111827;margin:8px 0}.muted{color:#a8b0bf}pre{white-space:pre-wrap;background:#0b1220;padding:14px;border-radius:12px;overflow:auto}.ok{color:#86efac}.err{color:#fca5a5}</style></head><body><main><h1>Compose Path Editor</h1><p class="muted">Select an installed Umbrel app, choose a volume line, then replace, add, or restore backups. The target app is stopped first and restarted after verified changes.</p><div class="card"><h2>1. Select docker-compose.yml</h2><select id="apps"></select></div><div class="card"><h2>2. Select volume line from docker-compose.yml</h2><select id="lines"></select><pre id="preview">Loading...</pre></div><div class="card"><h2>3. Choose action and path(s)</h2><label class="box"><input type="radio" name="action" value="replace" checked> <b>Replace only</b><br><span class="muted">Replace the selected source. Select exactly one path.</span></label><label class="box"><input type="radio" name="action" value="add"> <b>Add only</b><br><span class="muted">Keep the selected line and add one or more new volume lines after it.</span></label><label class="box"><input type="radio" name="action" value="both"> <b>Replace and add</b><br><span class="muted">Replace with first selected path and add remaining selected paths.</span></label><div id="paths"></div><button id="apply">Apply selected action</button><p id="status" class="muted"></p></div><div class="card"><h2>4. Restore a backup</h2><select id="backups"></select><button id="restore">Restore selected backup</button><p id="restoreStatus" class="muted"></p></div><div class="card"><h2>Live debug log</h2><pre id="log">No operation yet.</pre></div></main><script>
-const allowed=['${UMBREL_ROOT}/home/Downloads/qbittorrent/complete','${UMBREL_ROOT}/home/Downloads/qbittorrent/incomplete','${UMBREL_ROOT}/home/Downloads/sabnzbd/complete','${UMBREL_ROOT}/home/Downloads/Films','${UMBREL_ROOT}/home/Downloads/Films2','${UMBREL_ROOT}/home/Downloads/TVSerie','${UMBREL_ROOT}/home/Downloads/TVSeriesOLD'];
+    return r'''<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Compose Path Editor</title><style>body{font-family:system-ui;margin:0;background:#111827;color:#e5e7eb}main{max-width:1100px;margin:auto;padding:24px}.card{background:#1f2937;border:1px solid #374151;border-radius:18px;padding:22px;margin:18px 0}select,button{width:100%;font:inherit;border-radius:12px;border:1px solid #4b5563;background:#111827;color:#fff;padding:12px}button{background:#2563eb;border:0;font-weight:700;margin-top:14px}.box{display:block;padding:12px;border:1px solid #4b5563;border-radius:12px;background:#111827;margin:8px 0}.muted{color:#a8b0bf}pre{white-space:pre-wrap;background:#0b1220;padding:14px;border-radius:12px;overflow:auto}.ok{color:#86efac}.err{color:#fca5a5}</style></head><body><main><h1>Compose Path Editor</h1><p class="muted">Select an installed Umbrel app, choose a volume line, then replace, add, or restore backups. The target app is stopped first and restarted after verified changes.</p><div class="card"><h2>1. Select docker-compose.yml</h2><select id="apps"></select></div><div class="card"><h2>2. Select volume line from docker-compose.yml</h2><select id="lines"></select><pre id="preview">Loading...</pre></div><div class="card"><h2>3. Choose action and volume mapping(s)</h2><label class="box"><input type="radio" name="action" value="replace" checked> <b>Replace only</b><br><span class="muted">Replace the selected source. Select exactly one volume mapping.</span></label><label class="box"><input type="radio" name="action" value="add"> <b>Add only</b><br><span class="muted">Keep the selected line and add one or more new volume lines after it.</span></label><label class="box"><input type="radio" name="action" value="both"> <b>Replace and add</b><br><span class="muted">Replace with first selected path and add remaining selected paths.</span></label><div id="paths"></div><button id="apply">Apply selected action</button><p id="status" class="muted"></p></div><div class="card"><h2>4. Restore a backup</h2><select id="backups"></select><button id="restore">Restore selected backup</button><p id="restoreStatus" class="muted"></p></div><div class="card"><h2>Live debug log</h2><pre id="log">No operation yet.</pre></div></main><script>
+const allowed=['${UMBREL_ROOT}/home/Downloads/complete:/complete','${UMBREL_ROOT}/home/Downloads/incomplete:/incomplete','${UMBREL_ROOT}/home/Downloads/Films:/movies','${UMBREL_ROOT}/home/Downloads/Films2:/movies2','${UMBREL_ROOT}/home/Downloads/TVSeries:/tv','${UMBREL_ROOT}/home/Downloads/TVSeriesOLD:/tvold'];
 const $=id=>document.getElementById(id); let current=[]; function esc(s){return String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))}
 function renderPaths(){ $('paths').innerHTML=allowed.map((p,i)=>`<label class="box"><input type="checkbox" value="${esc(p)}" ${i==0?'checked':''}> ${esc(p)}</label>`).join(''); document.querySelectorAll('input').forEach(x=>x.onchange=preview); }
 async function loadApps(){let d=await (await fetch('/api/apps')).json(); $('apps').innerHTML=d.apps.map(a=>`<option value="${esc(a.id)}">${esc(a.id)} - ${esc(a.path)}</option>`).join(''); await loadLines(); await loadBackups();}
 async function loadLines(){let id=$('apps').value; let d=await (await fetch('/api/file?app_id='+encodeURIComponent(id))).json(); current=d.lines||[]; $('lines').innerHTML=current.length?current.map(l=>`<option value="${l.no}">${l.no+1}: ${esc(l.text)}</option>`).join(''):'<option>No replaceable volume lines found</option>'; preview();}
 async function loadBackups(){let id=$('apps').value; let d=await (await fetch('/api/backups?app_id='+encodeURIComponent(id))).json(); $('backups').innerHTML=(d.backups||[]).length?d.backups.map(b=>`<option value="${esc(b.name)}">${esc(b.name)}</option>`).join(''):'<option value="">No backups found</option>';}
 function selectedPaths(){return [...document.querySelectorAll('#paths input:checked')].map(x=>x.value)} function action(){return document.querySelector('input[name="action"]:checked').value}
-function preview(){let item=current.find(x=>x.no==Number($('lines').value)); let ps=selectedPaths(); $('preview').textContent=item?`Selected line:\n${item.text}\n\nAction: ${action()}\nSelected path(s):\n${ps.join('\n')}`:'No line selected'}
+function preview(){let item=current.find(x=>x.no==Number($('lines').value)); let ps=selectedPaths(); $('preview').textContent=item?`Selected line:\n${item.text}\n\nAction: ${action()}\nSelected volume mapping(s):\n${ps.join('\n')}`:'No line selected'}
 async function poll(op){ if(!op) return; let d=await (await fetch('/api/logs?op='+encodeURIComponent(op))).json(); $('log').textContent=(d.logs||[]).join('\n')||'No logs yet.'; $('log').scrollTop=$('log').scrollHeight; }
 async function post(url, body, statusEl){let op=Date.now()+'-'+Math.random().toString(16).slice(2); body.op=op; let timer=setInterval(()=>poll(op),1000); statusEl.textContent='Stopping target app, applying changes, verifying, then restarting target app...'; try{let ctrl=new AbortController(); let to=setTimeout(()=>ctrl.abort(),120000); let r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),signal:ctrl.signal}); clearTimeout(to); let d=await r.json(); await poll(op); if(r.ok){statusEl.innerHTML='<span class="ok">Changes verified and saved. Target app restarted.</span>'; $('preview').textContent=d.message+'\n\nBackup: '+(d.backup||d.safety_backup||''); await loadLines(); await loadBackups();} else {statusEl.innerHTML='<span class="err">Error:</span> '+esc(d.error||'Unknown');}}catch(e){statusEl.innerHTML='<span class="err">Error:</span> request timed out or was interrupted. See live log.';} finally{clearInterval(timer); await poll(op);}}
 $('apps').onchange=async()=>{await loadLines(); await loadBackups();}; $('lines').onchange=preview; $('apply').onclick=()=>post('/api/modify',{app_id:$('apps').value,line_no:Number($('lines').value),paths:selectedPaths(),action:action()},$('status')); $('restore').onclick=()=>post('/api/restore',{app_id:$('apps').value,backup_name:$('backups').value},$('restoreStatus')); renderPaths(); loadApps().catch(e=>$('status').textContent=e);
