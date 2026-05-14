@@ -22,7 +22,7 @@ services:
     volumes:
       - ${APP_DATA_DIR}/data/config:/config
       # Below are your media files that where downloaded via a torrent or usenet downloader. Adjust as needed.
-      - ${UMBREL_ROOT}/home/downloads:/downloads
+      - ${UMBREL_ROOT}/home/Downloads:/downloads
       
     # ports:
       # You do not need to expose the port that your app's web server is listening on if you're using the app_proxy service.
