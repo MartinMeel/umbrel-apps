@@ -21,9 +21,6 @@ description: >-
 
   Existing torrents need to be manually moved to the new location.
   
-x
-
-
 developer: qBittorrent
 website: https://www.qbittorrent.org
 dependencies: [] #If you enable this, qBittorent will only install if Gluetun is installed. Also if you want to uninstall, Gluetun has to be uninstalled first!!!
@@ -45,7 +42,7 @@ releaseNotes: >-
     - Fixed watched folders, tracker reannouncing, file renaming, and session issues
   
   
-  Full release notes for Radarr are available at https://github.com/Radarr/Radarr/releases
+   Full release notes for Radarr are available at https://github.com/Radarr/Radarr/releases
 path: ""
 defaultUsername: "admin"
 defaultPassword: "adminadmin"
