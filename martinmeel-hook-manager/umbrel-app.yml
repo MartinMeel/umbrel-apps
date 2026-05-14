@@ -2,7 +2,7 @@ manifestVersion: 1
 id: martinmeel-hook-manager
 name: Umbrel custom-hooks manager
 tagline: Install host hooks and edit SMB credentials before mounting
-icon: icon.svg
+icon: https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-hook-manager/icon.svg
 category: Files
 version: 0.1.0
 port: 3000
