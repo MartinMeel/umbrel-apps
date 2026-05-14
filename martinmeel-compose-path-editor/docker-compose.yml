@@ -11,7 +11,7 @@ services:
       HOST_UMBREL_ROOT: /host/umbrel
       APP_ID: martinmeel-compose-path-editor
     volumes:
-      - $${UMBREL_ROOT}:/host/umbrel
+      - /home/umbrel/umbrel:/host/umbrel
     command:
       - sh
       - -c
