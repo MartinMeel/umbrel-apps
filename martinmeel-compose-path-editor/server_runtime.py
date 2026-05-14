@@ -11,8 +11,6 @@ PORT = int(os.environ.get('PORT','8099'))
 ALLOWED_PATHS = [
   '${UMBREL_ROOT}/home/Downloads/qbittorrent/complete',
   '${UMBREL_ROOT}/home/Downloads/qbittorrent/incomplete',
-  '${UMBREL_ROOT}/home/Downloads/sabnzbd/complete',
-  '${UMBREL_ROOT}/home/Downloads/sabnzbd/incomplete',
   '${UMBREL_ROOT}/home/Downloads/Films',
   '${UMBREL_ROOT}/home/Downloads/Films2',
   '${UMBREL_ROOT}/home/Downloads/TVSerie',
