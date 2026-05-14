@@ -1,8 +1,8 @@
 services:
-  app_proxy: # The Umbrel App Proxy automatically protects an app by requiring the user to enter their Umbrel password (either when they login into the main Web UI or by visiting an app directly e.g.
+  app_proxy: # The Umbrel App Proxy automatically protects an app by requiring the user to enter their Umbrel password (either when they login into the main Web UI or by visiting an app directly e.g.)
     environment:
       APP_HOST: martinmeel-gluetun_server_1 # This is the name of the Gluetun container, which is the one that will be running the app proxy. Do not change this if you want all trafic over VPN.
-      APP_PORT: 6767 # <web/app-container-port-number>The internal portnumber of Bazarr, which is 6767 by default. 
+      APP_PORT: 6767 # <web/app-container-port-number> The internal portnumber of Bazarr, which is 6767 by default. 
       # Use this if another app outside your umbrel device wants to connect via an API call
       PROXY_AUTH_WHITELIST: /api/*
       # There could be cases where you wish to disable authentication. That can be done by adding this env. var. 
@@ -21,14 +21,9 @@ services:
       - TZ=Europe/Amsterdam
     volumes:
       - ${APP_DATA_DIR}/data/config:/config
-      # Below are your media directories, adjust as needed. I mounted them in Umbrel in fstab. Be aware that after an update of Umbrel, you might have to remount/add them accordingly in fstab.
-      # For example: my "Films" directory is in /home/umbrel/umbrel/Downloads/Films on my Umbrel, so I added the following line to my fstab to automaount it on boot:
-      # //ip-address-of-your-server/Films /home/umbrel/umbrel/home/Downloads/Films cifs credentials=/root/.smbcredentials,uid=1000,user 0 0
-      # Do this for all your media directories and adjust the paths accordingly in the volumes section below. Use google or AI to find out how to do this if you don't know how.
-      # ${UMBREL_ROOT} is the root directory of your Umbrel, which is /home/umbrel/umbrel.
-      - ${UMBREL_ROOT}/home/Downloads/Films:/movies
-      - ${UMBREL_ROOT}/home/Downloads/TVSeries:/tv
-      - ${UMBREL_ROOT}/home/Downloads/TVSeriesOLD:/tvold
+      # Below are your media files that where downloaded via a torrent or usenet downloader. Adjust as needed.
+      - ${UMBREL_ROOT}/home/downloads:/downloads
+      
     # ports:
       # You do not need to expose the port that your app's web server is listening on if you're using the app_proxy service.
       # This is handled by the APP_HOST and APP_PORT environment variables in the service above.
