@@ -14,7 +14,7 @@ description: >-
   explicitly choose whether to replace an existing volume source, add one or
   more new volume lines, or do both. A backup file is created before every
   change, and created backups can be restored from the UI with verification.
-developer: MartinMeel
+developer: martinmeel
 website: https://github.com/MartinMeel/umbrel-apps
 repo: https://github.com/MartinMeel/umbrel-apps/tree/master/martinmeel-compose-path-editor
 support: https://github.com/MartinMeel/umbrel-apps/issues
@@ -24,8 +24,8 @@ path: ""
 defaultUsername: ""
 defaultPassword: ""
 dependencies: []
-submitter: MartinMeel
-submission: ""
+submitter: martinmeel
+submission: https://github.com/getumbrel/umbrel-apps
 
 
 
