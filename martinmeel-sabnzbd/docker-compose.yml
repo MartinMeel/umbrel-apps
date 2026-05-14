@@ -14,8 +14,7 @@ services:
     network_mode: "container:martinmeel-gluetun_server_1"
     volumes:
       - ${APP_DATA_DIR}/data/config:/config
-      - ${UMBREL_ROOT}/home/Downloads/complete:/downloads
-      - ${UMBREL_ROOT}/home/Downloads/incomplete:/incomplete-downloads
+      - ${UMBREL_ROOT}/home/Downloads:/downloads
     environment:
       - DOCKER_MODS=linuxserver/mods:universal-package-install
       - INSTALL_PACKAGES=ffmpeg
