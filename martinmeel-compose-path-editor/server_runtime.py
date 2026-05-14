@@ -223,6 +223,9 @@ class Handler(BaseHTTPRequestHandler):
           elif path == '/api/add':
               backup, added = add_paths(body.get('app_id'), body.get('line_no'), body.get('new_paths'))
               self.send_json({'backup': backup, 'added': added})
+          elif path == '/api/modify':
+              result = modify_paths(body.get('app_id'), body.get('line_no'), body.get('operation'), body.get('paths'))
+              self.send_json(result)
           else:
               self.send_json({'error':'Not found'},404)
       except Exception as e: self.send_json({'error':str(e)},400)
