@@ -2,7 +2,7 @@ manifestVersion: 1.1
 id: martinmeel-system-status
 name: MartinMeel System Status
 tagline: Overview for shares, mc, and Gluetun health
-category: networking
+category: testing
 icon: icon.svg
 version: "1.0.0"
 description: >-
