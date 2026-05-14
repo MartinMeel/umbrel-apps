@@ -37,12 +37,12 @@ def run_umbreld_app_command(app_id, action):
   environment. Prefer chrooting into the host root filesystem mounted at
   /hostfs, then run the real host-side umbreld command there.
   """
-  if action not in ('stop', 'start'):
+  if action not in ('stop', 'restart'):
       raise ValueError('Invalid app control action')
   if not re.fullmatch(r'[a-zA-Z0-9][a-zA-Z0-9_.-]*', app_id or ''):
       raise ValueError('Invalid app id')
   if app_id == SELF_APP_ID:
-      raise ValueError('Refusing to stop or start this editor app')
+      raise ValueError('Refusing to stop or restart this editor app')
 
   subcommand = f'apps.{action}.mutate'
   host_path = '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/umbreld/bin:/opt/umbreld'
