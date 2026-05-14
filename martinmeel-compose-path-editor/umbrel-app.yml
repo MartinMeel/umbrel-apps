@@ -16,7 +16,7 @@ description: >-
   change, and created backups can be restored from the UI with verification.
 developer: MartinMeel
 website: https://github.com/MartinMeel/umbrel-apps
-repo: https://github.com/MartinMeel/umbrel-apps
+repo: https://github.com/MartinMeel/umbrel-apps/tree/master/martinmeel-compose-path-editor
 support: https://github.com/MartinMeel/umbrel-apps/issues
 port: 8099
 gallery: []
@@ -24,7 +24,7 @@ path: ""
 defaultUsername: ""
 defaultPassword: ""
 dependencies: []
-submitter: Martin Ai
+submitter: MartinMeel
 submission: ""
 
 
