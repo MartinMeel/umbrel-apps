@@ -1,2 +1,3 @@
 #!/usr/bin/env bash
-# No shared exports required for this app.
+export APP_COMPOSE_PATH_EDITOR_PORT="8099"
+
