@@ -3,6 +3,7 @@ id: martinmeel-compose-path-editor
 category: developer
 name: Compose Path Editor
 version: "0.1.0"
+icon: https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-compose-path-editro/icon.svg
 tagline: Wijzig downloadpaden in Umbrel docker-compose.yml bestanden
 releaseNotes: >-
   Eerste versie. Selecteer een geïnstalleerde app, kies een toegestaan downloadpad,
