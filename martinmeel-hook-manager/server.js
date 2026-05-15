@@ -13,7 +13,9 @@ const APP_LOG_PATH = path.join(APP_SPECIFIC_DATA, "logs", "hook-manager.log");
 const WRAPPER_PRE_START = path.join(CUSTOM_HOOKS_ROOT, "pre-start");
 const MANAGED_PRE_START = path.join(CUSTOM_HOOKS_ROOT, "pre-start.martinmeel-hook-manager");
 const GLUETUN_SCRIPT = path.join(CUSTOM_HOOKS_ROOT, "gluetun-daily-restart.sh");
+const GLUETUN_WATCHER_SCRIPT = path.join(CUSTOM_HOOKS_ROOT, "gluetun-event-watcher.sh");
 const APPLY_PATH = "/host-systemd/umbrel-smb-credentials-apply.path";
+const GLUETUN_WATCHER_SERVICE_PATH = "/host-systemd/umbrel-gluetun-event-watcher.service";
 
 function sendJson(res, statusCode, payload) {
   res.writeHead(statusCode, { "Content-Type": "application/json; charset=utf-8" });
@@ -92,7 +94,9 @@ function collectStatus() {
     wrapperPreStartExists: fileExists(WRAPPER_PRE_START),
     managedPreStartExists: fileExists(MANAGED_PRE_START),
     gluetunScriptExists: fileExists(GLUETUN_SCRIPT),
+    gluetunWatcherScriptExists: fileExists(GLUETUN_WATCHER_SCRIPT),
     credentialsWatcherExists: fileExists(APPLY_PATH),
+    gluetunWatcherServiceExists: fileExists(GLUETUN_WATCHER_SERVICE_PATH),
     credentialsExists: fileExists(CREDENTIALS_PATH),
     credentialsMode: safeMode(CREDENTIALS_PATH),
     credentialsReady: credentialsReady(credentials),

@@ -4,10 +4,12 @@ set -u
 
 CUSTOM_HOOKS_DIR="/home/umbrel/umbrel/custom-hooks"
 GLUETUN_SCRIPT="$CUSTOM_HOOKS_DIR/gluetun-daily-restart.sh"
+GLUETUN_WATCHER_SCRIPT="$CUSTOM_HOOKS_DIR/gluetun-event-watcher.sh"
 SMB_CREDENTIALS_FILE="/home/umbrel/umbrel/app-data/.smbcredentials"
 STATUS_DIR="/home/umbrel/umbrel/app-data/status"
 SERVICE_FILE="/etc/systemd/system/umbrel-gluetun-daily-restart.service"
 TIMER_FILE="/etc/systemd/system/umbrel-gluetun-daily-restart.timer"
+WATCHER_SERVICE_FILE="/etc/systemd/system/umbrel-gluetun-event-watcher.service"
 APP_LOG_FILE="/home/umbrel/umbrel/app-data/martinmeel-hook-manager/logs/hook-manager.log"
 
 SHARES=(
@@ -112,9 +114,26 @@ Persistent=true
 WantedBy=timers.target
 EOF
 
+  cat >"$WATCHER_SERVICE_FILE" <<EOF
+[Unit]
+Description=Watch for manual Gluetun restarts and coordinate dependent Umbrel apps
+After=docker.service network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=5
+ExecStart=$GLUETUN_WATCHER_SCRIPT
+WorkingDirectory=/home/umbrel/umbrel
+User=root
+EOF
+
   systemctl daemon-reload
   systemctl enable --now umbrel-gluetun-daily-restart.timer
+  systemctl enable --now umbrel-gluetun-event-watcher.service
   log "installed and enabled umbrel-gluetun-daily-restart.timer"
+  log "installed and enabled umbrel-gluetun-event-watcher.service"
 }
 
 main() {
@@ -133,10 +152,10 @@ main() {
     mount_share "$remote" "$target"
   done
 
-  if [ -x "$GLUETUN_SCRIPT" ]; then
+  if [ -x "$GLUETUN_SCRIPT" ] && [ -x "$GLUETUN_WATCHER_SCRIPT" ]; then
     install_systemd_units
   else
-    log "$GLUETUN_SCRIPT is missing or not executable"
+    log "$GLUETUN_SCRIPT or $GLUETUN_WATCHER_SCRIPT is missing or not executable"
   fi
 
   log "managed pre-start completed"
