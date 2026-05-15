@@ -6,6 +6,7 @@ GLUETUN_CONTAINER="martinmeel-gluetun_server_1"
 APP_LOG_FILE="/home/umbrel/umbrel/app-data/martinmeel-hook-manager/logs/hook-manager.log"
 STATE_DIR="/run/umbrel-gluetun-event-watcher"
 STOPPED_APPS_FILE="$STATE_DIR/stopped-apps"
+PENDING_FILE="$STATE_DIR/pending-manual-restart"
 LOCK_DIR="/run/umbrel-gluetun-daily-restart.lock"
 
 log() {
@@ -77,12 +78,20 @@ wait_for_gluetun() {
 
 stop_dependents() {
   mkdir -p "$STATE_DIR"
+
+  if [ -f "$PENDING_FILE" ]; then
+    log "manual restart handling is already pending"
+    return 0
+  fi
+
   discover_dependent_apps
 
   if [ ! -s "$STOPPED_APPS_FILE" ]; then
     log "no dependent apps found to stop for manual Gluetun restart"
     return 0
   fi
+
+  : >"$PENDING_FILE"
 
   while IFS= read -r app_id; do
     [ -n "$app_id" ] || continue
@@ -92,18 +101,21 @@ stop_dependents() {
 }
 
 restart_dependents() {
-  if [ ! -s "$STOPPED_APPS_FILE" ]; then
+  if [ ! -f "$PENDING_FILE" ]; then
     return 0
   fi
 
   if wait_for_gluetun; then
-    while IFS= read -r app_id; do
-      [ -n "$app_id" ] || continue
-      log "restarting app $app_id after manual Gluetun restart"
-      umbreld client apps.restart.mutate --appId "$app_id" >/dev/null
-      sleep 3
-    done <"$STOPPED_APPS_FILE"
+    if [ -s "$STOPPED_APPS_FILE" ]; then
+      while IFS= read -r app_id; do
+        [ -n "$app_id" ] || continue
+        log "restarting app $app_id after manual Gluetun restart"
+        umbreld client apps.restart.mutate --appId "$app_id" >/dev/null
+        sleep 3
+      done <"$STOPPED_APPS_FILE"
+    fi
     rm -f "$STOPPED_APPS_FILE"
+    rm -f "$PENDING_FILE"
     log "manual Gluetun restart handling completed"
   else
     log "Gluetun did not become healthy in time after manual restart"
@@ -117,6 +129,8 @@ main() {
   docker events \
     --filter type=container \
     --filter container="$GLUETUN_CONTAINER" \
+    --filter event=restart \
+    --filter event=stop \
     --filter event=die \
     --filter event=start \
     --format '{{.Action}}' | while IFS= read -r action; do
@@ -128,6 +142,9 @@ main() {
       fi
 
       case "$action" in
+        restart|stop)
+          stop_dependents
+          ;;
         die)
           stop_dependents
           ;;
