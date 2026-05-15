@@ -14,6 +14,7 @@ services:
     network_mode: "container:martinmeel-gluetun_server_1"
     volumes:
       - ${APP_DATA_DIR}/data/config:/config
+      # Below is/are your path(s) to your media files. Adjust as needed.
       - ${UMBREL_ROOT}/home/Downloads:/downloads
     environment:
       - PUID=1000
