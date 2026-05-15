@@ -5,8 +5,8 @@ Requires=docker.service
 
 [Service]
 Type=simple
-User=umbrel
-Group=umbrel
+User=root
+Group=root
 Environment=HOME=/home/umbrel
 WorkingDirectory=/home/umbrel/umbrel
 ExecStart=/usr/local/bin/gluetun-umbreld-watch.sh
