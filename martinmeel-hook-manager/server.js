@@ -198,5 +198,5 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(PORT, "0.0.0.0", () => {
-  console.log(`MartinMeel Hook Manager listening on ${PORT}`);
+  console.log(`Umbrel custom-hooks manager listening on ${PORT}`);
 });

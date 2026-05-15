@@ -15,7 +15,7 @@
           Install the managed host hooks, edit <code>.smbcredentials</code>, and only mount the NAS shares after you have replaced every <code>CHANGE_ME</code>.
         </p>
         <p class="muted">
-          This app also reinstalls your known-good <code>gluetun-umbreld-watch</code> service on every reboot so manual Gluetun restarts keep stopping and starting the dependent Umbrel apps.
+          This app also reinstalls your known-good <code>gluetun-umbreld-watch</code> script and service on every reboot, so manual Gluetun restarts keep stopping and starting the dependent Umbrel apps.
         </p>
       </section>
 
@@ -31,7 +31,8 @@
             <li>Install this app from your Umbrel store.</li>
             <li>Open this page and replace all <code>CHANGE_ME</code> values.</li>
             <li>Save the credentials file.</li>
-            <li>Wait a few seconds while the host watcher reruns the managed pre-start and mounts the shares automatically.</li>
+            <li>Wait a few seconds while the credentials watcher reruns the managed pre-start and mounts the shares automatically.</li>
+            <li>From then on, daily Gluetun restarts are handled by the timer and manual Gluetun restarts are handled by <code>gluetun-umbreld-watch.service</code>.</li>
           </ol>
         </article>
       </section>

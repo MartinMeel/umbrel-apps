@@ -37,11 +37,11 @@ async function load() {
   statusList.appendChild(row("custom-hooks directory", status.customHooksDir));
   statusList.appendChild(row("wrapper pre-start", status.wrapperPreStartExists ? "Installed" : "Missing"));
   statusList.appendChild(row("managed pre-start", status.managedPreStartExists ? "Installed" : "Missing"));
-  statusList.appendChild(row("gluetun restart script", status.gluetunScriptExists ? "Installed" : "Missing"));
-  statusList.appendChild(row("gluetun watch script", status.gluetunWatcherScriptExists ? "Installed" : "Missing"));
-  statusList.appendChild(row("gluetun watch service source", status.gluetunWatcherSourceServiceExists ? "Installed" : "Missing"));
+  statusList.appendChild(row("daily restart script", status.gluetunScriptExists ? "Installed" : "Missing"));
+  statusList.appendChild(row("manual watch script source", status.gluetunWatcherScriptExists ? "Installed" : "Missing"));
+  statusList.appendChild(row("manual watch service source", status.gluetunWatcherSourceServiceExists ? "Installed" : "Missing"));
   statusList.appendChild(row("credentials watcher", status.credentialsWatcherExists ? "Installed" : "Missing"));
-  statusList.appendChild(row("gluetun watch service", status.gluetunWatcherServiceExists ? "Installed" : "Missing"));
+  statusList.appendChild(row("manual watch service", status.gluetunWatcherServiceExists ? "Installed" : "Missing"));
   statusList.appendChild(row("credentials file", status.credentialsExists ? "Present" : "Missing"));
   statusList.appendChild(row("credentials mode", status.credentialsMode || "n/a"));
   statusList.appendChild(row("credentials ready", status.credentialsReady ? "Yes" : "No"));
