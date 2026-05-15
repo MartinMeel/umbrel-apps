@@ -23,14 +23,16 @@ It is designed for fresh UmbrelOS installs where `/home/umbrel/umbrel/custom-hoo
 
 ## Gluetun handling
 
-Two restart flows are supported:
+Two restart flows are supported.
 
 ### Daily scheduled restart
+
 Handled by:
 - `/home/umbrel/umbrel/custom-hooks/gluetun-daily-restart.sh`
 - `umbrel-gluetun-daily-restart.timer`
 
 ### Manual Gluetun restart
+
 Handled by:
 - `/usr/local/bin/gluetun-umbreld-watch.sh`
 - `gluetun-umbreld-watch.service`
@@ -58,5 +60,25 @@ This service watches Docker events for `martinmeel-gluetun_server_1`, stops depe
 ## Verification
 
 Check mounts:
+
 ```bash
 mount | grep 192.168.2.168
+```
+
+Check daily timer:
+
+```bash
+systemctl status umbrel-gluetun-daily-restart.timer --no-pager
+```
+
+Check manual watch service:
+
+```bash
+systemctl status gluetun-umbreld-watch.service --no-pager
+```
+
+Check app log:
+
+```bash
+tail -n 100 /home/umbrel/umbrel/app-data/martinmeel-hook-manager/logs/hook-manager.log
+```
