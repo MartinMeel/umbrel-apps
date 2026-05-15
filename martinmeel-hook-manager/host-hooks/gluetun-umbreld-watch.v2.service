@@ -1,0 +1,17 @@
+[Unit]
+Description=Stop/start Umbrel apps when Gluetun container stops/starts (health-aware)
+After=docker.service umbreld.service
+Requires=docker.service
+
+[Service]
+Type=simple
+User=umbrel
+Group=umbrel
+Environment=HOME=/home/umbrel
+WorkingDirectory=/home/umbrel/umbrel
+ExecStart=/usr/local/bin/gluetun-umbreld-watch.sh
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target

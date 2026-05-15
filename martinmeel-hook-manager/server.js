@@ -13,9 +13,10 @@ const APP_LOG_PATH = path.join(APP_SPECIFIC_DATA, "logs", "hook-manager.log");
 const WRAPPER_PRE_START = path.join(CUSTOM_HOOKS_ROOT, "pre-start");
 const MANAGED_PRE_START = path.join(CUSTOM_HOOKS_ROOT, "pre-start.martinmeel-hook-manager");
 const GLUETUN_SCRIPT = path.join(CUSTOM_HOOKS_ROOT, "gluetun-daily-restart.sh");
-const GLUETUN_WATCHER_SCRIPT = path.join(CUSTOM_HOOKS_ROOT, "gluetun-event-watcher.sh");
+const GLUETUN_WATCH_SCRIPT = path.join(CUSTOM_HOOKS_ROOT, "gluetun-umbreld-watch.v2.sh");
+const GLUETUN_WATCH_SERVICE_SOURCE = path.join(CUSTOM_HOOKS_ROOT, "gluetun-umbreld-watch.v2.service");
 const APPLY_PATH = "/host-systemd/umbrel-smb-credentials-apply.path";
-const GLUETUN_WATCHER_SERVICE_PATH = "/host-systemd/umbrel-gluetun-event-watcher.service";
+const GLUETUN_WATCHER_SERVICE_PATH = "/host-systemd/gluetun-umbreld-watch.service";
 
 function sendJson(res, statusCode, payload) {
   res.writeHead(statusCode, { "Content-Type": "application/json; charset=utf-8" });
@@ -88,13 +89,14 @@ function safeMode(filePath) {
 function collectStatus() {
   const credentials = readCredentials();
   return {
-    customHooksDir: CUSTOM_HOOKS_ROOT,
-    credentialsPath: CREDENTIALS_PATH,
+    customHooksDir: CUSTOM_HOOKS_ROOT.replace("/host-custom-hooks", "/home/umbrel/umbrel/custom-hooks"),
+    credentialsPath: CREDENTIALS_PATH.replace("/host-app-data", "/home/umbrel/umbrel/app-data"),
     logPath: APP_LOG_PATH.replace("/host-app-data", "/home/umbrel/umbrel/app-data"),
     wrapperPreStartExists: fileExists(WRAPPER_PRE_START),
     managedPreStartExists: fileExists(MANAGED_PRE_START),
     gluetunScriptExists: fileExists(GLUETUN_SCRIPT),
-    gluetunWatcherScriptExists: fileExists(GLUETUN_WATCHER_SCRIPT),
+    gluetunWatcherScriptExists: fileExists(GLUETUN_WATCH_SCRIPT),
+    gluetunWatcherSourceServiceExists: fileExists(GLUETUN_WATCH_SERVICE_SOURCE),
     credentialsWatcherExists: fileExists(APPLY_PATH),
     gluetunWatcherServiceExists: fileExists(GLUETUN_WATCHER_SERVICE_PATH),
     credentialsExists: fileExists(CREDENTIALS_PATH),

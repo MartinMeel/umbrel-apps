@@ -4,12 +4,14 @@ set -u
 
 CUSTOM_HOOKS_DIR="/home/umbrel/umbrel/custom-hooks"
 GLUETUN_SCRIPT="$CUSTOM_HOOKS_DIR/gluetun-daily-restart.sh"
-GLUETUN_WATCHER_SCRIPT="$CUSTOM_HOOKS_DIR/gluetun-event-watcher.sh"
+GLUETUN_WATCH_SOURCE_SCRIPT="$CUSTOM_HOOKS_DIR/gluetun-umbreld-watch.v2.sh"
+GLUETUN_WATCH_SOURCE_SERVICE="$CUSTOM_HOOKS_DIR/gluetun-umbreld-watch.v2.service"
+GLUETUN_WATCH_TARGET_SCRIPT="/usr/local/bin/gluetun-umbreld-watch.sh"
+GLUETUN_WATCH_TARGET_SERVICE="/etc/systemd/system/gluetun-umbreld-watch.service"
 SMB_CREDENTIALS_FILE="/home/umbrel/umbrel/app-data/.smbcredentials"
 STATUS_DIR="/home/umbrel/umbrel/app-data/status"
 SERVICE_FILE="/etc/systemd/system/umbrel-gluetun-daily-restart.service"
 TIMER_FILE="/etc/systemd/system/umbrel-gluetun-daily-restart.timer"
-WATCHER_SERVICE_FILE="/etc/systemd/system/umbrel-gluetun-event-watcher.service"
 APP_LOG_FILE="/home/umbrel/umbrel/app-data/martinmeel-hook-manager/logs/hook-manager.log"
 
 SHARES=(
@@ -86,7 +88,7 @@ mount_share() {
   fi
 }
 
-install_systemd_units() {
+install_daily_restart_units() {
   mkdir -p "$STATUS_DIR"
 
   cat >"$SERVICE_FILE" <<EOF
@@ -114,26 +116,29 @@ Persistent=true
 WantedBy=timers.target
 EOF
 
-  cat >"$WATCHER_SERVICE_FILE" <<EOF
-[Unit]
-Description=Watch for manual Gluetun restarts and coordinate dependent Umbrel apps
-After=docker.service network-online.target
-Wants=network-online.target
-
-[Service]
-Type=simple
-Restart=always
-RestartSec=5
-ExecStart=$GLUETUN_WATCHER_SCRIPT
-WorkingDirectory=/home/umbrel/umbrel
-User=root
-EOF
-
   systemctl daemon-reload
   systemctl enable --now umbrel-gluetun-daily-restart.timer
-  systemctl enable --now umbrel-gluetun-event-watcher.service
   log "installed and enabled umbrel-gluetun-daily-restart.timer"
-  log "installed and enabled umbrel-gluetun-event-watcher.service"
+}
+
+install_gluetun_watch_service() {
+  if [ ! -f "$GLUETUN_WATCH_SOURCE_SCRIPT" ]; then
+    log "missing $GLUETUN_WATCH_SOURCE_SCRIPT"
+    return 0
+  fi
+
+  if [ ! -f "$GLUETUN_WATCH_SOURCE_SERVICE" ]; then
+    log "missing $GLUETUN_WATCH_SOURCE_SERVICE"
+    return 0
+  fi
+
+  install -m 755 "$GLUETUN_WATCH_SOURCE_SCRIPT" "$GLUETUN_WATCH_TARGET_SCRIPT"
+  install -m 644 "$GLUETUN_WATCH_SOURCE_SERVICE" "$GLUETUN_WATCH_TARGET_SERVICE"
+
+  systemctl daemon-reload
+  systemctl enable gluetun-umbreld-watch.service
+  systemctl restart gluetun-umbreld-watch.service
+  log "installed and started gluetun-umbreld-watch.service"
 }
 
 main() {
@@ -152,11 +157,13 @@ main() {
     mount_share "$remote" "$target"
   done
 
-  if [ -x "$GLUETUN_SCRIPT" ] && [ -x "$GLUETUN_WATCHER_SCRIPT" ]; then
-    install_systemd_units
+  if [ -x "$GLUETUN_SCRIPT" ]; then
+    install_daily_restart_units
   else
-    log "$GLUETUN_SCRIPT or $GLUETUN_WATCHER_SCRIPT is missing or not executable"
+    log "$GLUETUN_SCRIPT is missing or not executable"
   fi
+
+  install_gluetun_watch_service
 
   log "managed pre-start completed"
 }

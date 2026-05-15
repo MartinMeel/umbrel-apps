@@ -15,7 +15,7 @@
           Install the managed host hooks, edit <code>.smbcredentials</code>, and only mount the NAS shares after you have replaced every <code>CHANGE_ME</code>.
         </p>
         <p class="muted">
-          This app also watches for manual restarts of the Gluetun container and will stop dependent apps first, then bring them back after Gluetun is healthy again.
+          This app also reinstalls your known-good <code>gluetun-umbreld-watch</code> service on every reboot so manual Gluetun restarts keep stopping and starting the dependent Umbrel apps.
         </p>
       </section>
 
