@@ -1,0 +1,35 @@
+services:
+  app_proxy:
+    environment:
+      APP_HOST: martinmeel-gluetun_server_1
+      APP_PORT: 80
+      # Use this if another app outside your umbrel device wants to connect via an API call
+      PROXY_AUTH_WHITELIST: /api/*
+      # Set false if another app from outside your umbrell wants to connect without login!
+      PROXY_AUTH_ADD: 'false'
+
+  web:
+    image: erikdevries/spotweb:latest
+    # Use Gluetun's network stack - all traffic goes through VPN
+    network_mode: "container:martinmeel-gluetun_server_1"
+    depends_on:
+      - mysql
+    environment:
+      TZ: Europe/Amsterdam
+      CRON_INTERVAL: "*/5 * * * *"
+    volumes:
+      - ${APP_DATA_DIR}/data/cache:/app/cache
+    restart: unless-stopped
+    stop_grace_period: 1m
+    
+  mysql:
+    image: mysql:8.4
+    environment:
+      MYSQL_ROOT_PASSWORD: "123"
+      MYSQL_USER: spotweb
+      MYSQL_PASSWORD: spotweb
+      MYSQL_DATABASE: spotweb
+    volumes:
+      - ${APP_DATA_DIR}/data/mysql:/var/lib/mysql
+    restart: unless-stopped
+    stop_grace_period: 1m
