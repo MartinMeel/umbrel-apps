@@ -16,7 +16,13 @@ services:
       - mysql
     environment:
       TZ: Europe/Amsterdam
-      CRON_INTERVAL: "*/5 * * * *"
+      DB_ENGINE: pdo_mysql
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_NAME: spotweb
+      DB_USER: spotweb
+      DB_PASS: spotweb
+      CRON_INTERVAL: "*/15 * * * *"
     volumes:
       - ${APP_DATA_DIR}/data/cache:/app/cache
     restart: unless-stopped
