@@ -17,7 +17,7 @@ services:
     environment:
       TZ: Europe/Amsterdam
       DB_ENGINE: pdo_mysql
-      DB_HOST: mysql
+      DB_HOST: 127.0.0.1 #instead of mysql
       DB_PORT: 3306
       DB_NAME: spotweb
       DB_USER: spotweb
