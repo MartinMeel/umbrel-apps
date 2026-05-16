@@ -1,4 +1,4 @@
-# This app is based on the dockerfile from Erik de Vries. 
+# This app is based on the dockerfile and info from Erik de Vries. 
 See https://github.com/edv/docker-spotweb/ for more information.
 
 
