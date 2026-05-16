@@ -24,15 +24,18 @@ After installing the app on your umbrel do the following:
 - Configure Settings and Change preferences
 - To retrieve your spots run this command via your umbrel (ssh into your umbrel)
 
+  ```
   sudo docker exec -it martinmeel-spotwebedv_spotweb_1 php /app/retrieve.php --force
   Now patiently wait ;-) (Depending on how fast your system is and how many spots you want to retrieve it can take up day's to have everything retrieved!!
-
+  ```
+  
 ### Extra checks
 To check if your network traffic routes through the gluetun container run:
 
+```
 sudo docker exec martinmeel-spotwebedv_spotweb_1 wget -qO- https://ifconfig.me
 sudo docker exec martinmeel-gluetun_server_1 wget -qO- http://127.0.0.1:80 | head
-
+```
 
 
 ## Have a look at the rest of the documentation for more fine tuned configuration.
