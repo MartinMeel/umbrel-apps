@@ -12,9 +12,9 @@ services:
 
 It seems that docker can't resolve the martinmeel-gluetun_server_1 container name at the **APP_HOST:** . So i had to use the ip address. For now it works. Maybe i find another sollution.
 To find this ip address run this command on your umbrel:
-
+```
 sudo docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' martinmeel-gluetun_server_1
-
+```
 
 ### Getting started
 After installing the app on your umbrel do the following:
