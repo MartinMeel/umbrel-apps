@@ -2,7 +2,7 @@ manifestVersion: 1
 id: martinmeel-arrdashboard
 category: multimedia
 name: 2.6 Arr Dashboard
-version: "2.18.6"
+version: "2.19.0"
 tagline: A unified dashboard for managing multiple Sonarr, Radarr, Prowlarr, Lidarr, Readarr, Plex, Tautulli, Jellyfin, Emby, and Seerr instances.
 icon: https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-arrdashboard/icon.svg
 port: 3443
@@ -11,8 +11,7 @@ description: >-
 
 developer: Kha-kis
 website: https://github.com/Kha-kis/arr-dashboard
-dependencies: [] #If you enable this, this app will only install if Gluetun is installed. Also if you want to uninstall, Gluetun has to be uninstalled first!!! So be carefull with this option! Also use the [] if you want to have no dependencies. If you want to have multiple dependencies, add them like this: [dependency1, dependency2, dependency3]
-  #- martinmeel-gluetun
+dependencies: []
 repo: https://github.com/Kha-kis/arr-dashboard
 support: https://github.com/Kha-kis/arr-dashboard/issues
 gallery:
