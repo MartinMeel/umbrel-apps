@@ -2,18 +2,18 @@ manifestVersion: 1.1
 id: martinmeel-compose-path-editor
 category: developer
 name: Compose Path Editor
-version: "0.2.0"
+version: "0.3.7"
 tagline: Edit Umbrel docker-compose.yml volume paths
 icon: https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-compose-path-editor/icon.svg
 releaseNotes: >-
-  Update: add a restore backup option. Backups are listed per selected app, and
-  restores are verified by reading docker-compose.yml back after writing.
+  Fix volume-line detection for ${UMBREL_ROOT}/home/Downloads:/downloads and
+  external volume mappings. Keep the external complete mapping in the selectable list.
 description: >-
-  Compose Path Editor is a local Umbrel utility that lets you select an
-  installed app docker-compose.yml file, choose allowed download paths,
-  explicitly choose whether to replace an existing volume source, add one or
-  more new volume lines, or do both. A backup file is created before every
-  change, and created backups can be restored from the UI with verification.
+  Compose Path Editor is a local Umbrel utility that lets you select an installed
+  app docker-compose.yml file, choose allowed volume mappings, explicitly choose
+  whether to replace an existing volume source, add one or more new volume lines,
+  or do both. The target app is stopped before changes and restarted after verified
+  changes. Backups are created before every change and can be restored from the UI.
 developer: martinmeel
 website: https://github.com/MartinMeel/umbrel-apps
 repo: https://github.com/MartinMeel/umbrel-apps/tree/master/martinmeel-compose-path-editor
