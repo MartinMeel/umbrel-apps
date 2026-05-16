@@ -13,7 +13,6 @@ services:
 It seems that docker can't resolve the martinmeel-gluetun_server_1 container name at the **APP_HOST:** . So i had to use the ip address. For now it works. Maybe i find another sollution.
 To find this ip address run this command on your umbrel:
 
-Bash
 sudo docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' martinmeel-gluetun_server_1
 
 
@@ -24,14 +23,13 @@ After installing the app on your umbrel do the following:
 - Login to the app via: http://umbrel.local:8085/
 - Configure Settings and Change preferences
 - To retrieve your spots run this command via your umbrel (ssh into your umbrel)
-  Bash
+
   sudo docker exec -it martinmeel-spotwebedv_spotweb_1 php /app/retrieve.php --force
   Now patiently wait ;-) (Depending on how fast your system is and how many spots you want to retrieve it can take up day's to have everything retrieved!!
 
 ### Extra checks
 To check if your network traffic routes through the gluetun container run:
 
-Bash
 sudo docker exec martinmeel-spotwebedv_spotweb_1 wget -qO- https://ifconfig.me
 sudo docker exec martinmeel-gluetun_server_1 wget -qO- http://127.0.0.1:80 | head
 
