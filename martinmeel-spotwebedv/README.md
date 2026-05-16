@@ -26,8 +26,9 @@ After installing the app on your umbrel do the following:
 
   ```
   sudo docker exec -it martinmeel-spotwebedv_spotweb_1 php /app/retrieve.php --force
-  Now patiently wait ;-) (Depending on how fast your system is and how many spots you want to retrieve it can take up day's to have everything retrieved!!
   ```
+  Now patiently wait ;-) (Depending on how fast your system is and how many spots you want to retrieve it can take up day's to have everything retrieved!!
+  
   
 ### Extra checks
 To check if your network traffic routes through the gluetun container run:
