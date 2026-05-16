@@ -1,6 +1,6 @@
 services:
   server:
-    image: qmcgaw/gluetun:latest
+    image: qmcgaw/gluetun:3.41.1@sha256:bd84f4f090ca61170c8329a72d4f451255b01f6489486a621bfcb89749fb80ab
     cap_add:
       - NET_ADMIN
     devices:
