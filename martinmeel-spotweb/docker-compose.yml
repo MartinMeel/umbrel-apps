@@ -2,7 +2,7 @@ services:
   spotweb: #or server?
     image: jgeusebroek/spotweb
     network_mode: container:martinmeel-gluetun_server_1
-    restart: unless-stopped
+    restart: on-failure
     environment:
      - PUID=1000
      - GUID=1000
@@ -23,7 +23,7 @@ services:
 
   spotweb_db:
     image: linuxserver/mariadb
-    restart: unless-stopped
+    restart: on-failure
     environment:
      - PUID=1000
      - PGID=1000
