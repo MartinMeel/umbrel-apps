@@ -25,6 +25,6 @@ services:
       #
       # If you need to expose additional ports, you can do so like this, replacing <port> with the port number:
       # - <host-port>:<container-port>
-    restart: unless-stopped
+    restart: on-failure
     stop_grace_period: 1m
     
