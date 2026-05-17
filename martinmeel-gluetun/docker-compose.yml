@@ -79,5 +79,5 @@ services:
       - BLOCK_MALICIOUS=off
       - BLOCK_SURVEILLANCE=off
       - BLOCK_ADS=off
-    restart: unless-stopped
+    restart: on-failure
     stop_grace_period: 1m
