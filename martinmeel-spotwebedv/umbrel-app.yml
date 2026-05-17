@@ -4,7 +4,7 @@ category: download
 name: SpotwebEDV
 version: "1.0.0."
 tagline: Web-based Usenet spot indexer
-icon: https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-spotweb/spotweb.png
+icon: https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-spotwebedv/spotweb.png
 description: >-
   Spotweb is a web-based Spotnet/Usenet spot indexer. This Umbrel app runs
   Spotweb with a MySQL database and refreshes spots every 5 minutes.
