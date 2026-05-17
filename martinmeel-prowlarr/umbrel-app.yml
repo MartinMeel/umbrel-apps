@@ -4,7 +4,7 @@ name: 4.1 Prowlarr
 tagline: Indexer manager for Sonarr and Radarr
 icon: https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-prowlarr/icon.svg
 category: multimedia
-version: "1.0.0"
+version: "2.3.5.5327"
 port: 9696
 description: >-
   Prowlarr is an indexer manager/proxy built on the popular *arr .net/reactjs base stack to integrate
@@ -18,8 +18,7 @@ description: >-
   ⚠️ This version routes all traffic through Gluetun VPN for privacy and security.
 developer: Prowlarr Team
 website: https://prowlarr.com
-dependencies: [] #If you enable this, Prowlarr will only install if Gluetun is installed. Also if you want to uninstall, Gluetun has to be uninstalled first!!!
-  # - martinmeel-gluetun
+dependencies: []
 repo: https://github.com/Prowlarr/Prowlarr
 support: https://forums.prowlarr.com
 gallery:
@@ -27,10 +26,7 @@ gallery:
   - https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-prowlarr/2.jpg
   - https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-prowlarr/3.jpg
 releaseNotes: >-
-  This update includes several new features and improvements:
-    - Improved qBittorrent login API success check
-    - Network configuration improvements with private IPv6 networks and RFC 1918 ranges
-    - Multiple bug fixes and translation updates
+  See https://github.com/Prowlarr/Prowlarr/releases/tag/v2.3.5.5327
   
   
   Full release notes are found at https://github.com/Prowlarr/Prowlarr/releases.
