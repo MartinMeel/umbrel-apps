@@ -2,32 +2,8 @@
 set -euo pipefail
 
 GLUETUN_NAME="martinmeel-gluetun_server_1"
-
-STOP_APPS=(
-  "martinmeel-sonarr"
-  "martinmeel-radarr"
-  "martinmeel-prowlarr"
-  "martinmeel-qbittorrent"
-  "martinmeel-sabnzbd"
-  "martinmeel-profilarr"
-  "martinmeel-huntarr"
-  "martinmeel-tautulli"
-  "martinmeel-seerr"
-  "martinmeel-spotweb"
-)
-
-START_APPS=(
-  "martinmeel-prowlarr"
-  "martinmeel-qbittorrent"
-  "martinmeel-sabnzbd"
-  "martinmeel-sonarr"
-  "martinmeel-radarr"
-  "martinmeel-profilarr"
-  "martinmeel-huntarr"
-  "martinmeel-tautulli"
-  "martinmeel-seerr"
-  "martinmeel-spotweb"
-)
+APP_DATA_DIR="/home/umbrel/umbrel/app-data"
+LOG_FILE="/home/umbrel/umbrel/app-data/martinmeel-hook-manager/logs/hook-manager.log"
 
 START_COOLDOWN_SECONDS=30
 STOP_LOCK_SECONDS=180
@@ -39,25 +15,49 @@ FALLBACK_START_DELAY_SECONDS=5
 STATE_DIR="/tmp/gluetun-umbreld-watch"
 START_LAST_FILE="${STATE_DIR}/last_start_epoch"
 STOP_LOCK_FILE="${STATE_DIR}/stop_lock_until_epoch"
+STOPPED_APPS_FILE="${STATE_DIR}/stopped_apps"
+
 mkdir -p "$STATE_DIR"
 
-APP_LOG_FILE="/home/umbrel/umbrel/app-data/martinmeel-hook-manager/logs/hook-manager.log"
-
 log() {
-  mkdir -p "$(dirname "$APP_LOG_FILE")"
-  printf '%s gluetun-umbreld-watch: %s\n' "$(date -Iseconds)" "$*" | tee -a "$APP_LOG_FILE"
+  mkdir -p "$(dirname "$LOG_FILE")"
+  printf '%s gluetun-umbreld-watch: %s\n' "$(date -Iseconds)" "$*" | tee -a "$LOG_FILE"
 }
 
 now_epoch() { date +%s; }
+
+discover_apps() {
+  grep -Rl "network_mode:.*container:${GLUETUN_NAME}" \
+    "${APP_DATA_DIR}"/*/docker-compose.yml 2>/dev/null \
+    | sed "s#${APP_DATA_DIR}/##; s#/docker-compose.yml##" \
+    | sort -u
+}
+
+discover_apps_start_order() {
+  local apps
+  mapfile -t apps < <(discover_apps)
+
+  for app in "${apps[@]}"; do
+    [[ "$app" == *prowlarr* ]] && echo "$app"
+  done
+  for app in "${apps[@]}"; do
+    [[ "$app" == *qbittorrent* || "$app" == *sabnzbd* ]] && echo "$app"
+  done
+  for app in "${apps[@]}"; do
+    [[ "$app" != *prowlarr* && "$app" != *qbittorrent* && "$app" != *sabnzbd* ]] && echo "$app"
+  done
+}
 
 start_cooldown_ok() {
   local now last
   now="$(now_epoch)"
   last="0"
   [[ -f "$START_LAST_FILE" ]] && last="$(cat "$START_LAST_FILE" 2>/dev/null || echo 0)"
+
   if (( now - last < START_COOLDOWN_SECONDS )); then
     return 1
   fi
+
   echo "$now" > "$START_LAST_FILE"
   return 0
 }
@@ -71,30 +71,7 @@ stop_lock_active() {
 }
 
 set_stop_lock() {
-  local now until
-  now="$(now_epoch)"
-  until=$(( now + STOP_LOCK_SECONDS ))
-  echo "$until" > "$STOP_LOCK_FILE"
-}
-
-stop_apps() {
-  log "Stopping apps (order): ${STOP_APPS[*]}"
-  for app in "${STOP_APPS[@]}"; do
-    log "STOP -> ${app}"
-    umbreld client apps.stop.mutate --appId "$app" >/dev/null 2>&1 || true
-    sleep "$PER_APP_DELAY_SECONDS"
-  done
-  log "Stop sequence completed."
-}
-
-start_apps() {
-  log "Starting apps (order): ${START_APPS[*]}"
-  for app in "${START_APPS[@]}"; do
-    log "START -> ${app}"
-    umbreld client apps.start.mutate --appId "$app" >/dev/null 2>&1 || true
-    sleep "$PER_APP_DELAY_SECONDS"
-  done
-  log "Start sequence completed."
+  echo "$(( $(now_epoch) + STOP_LOCK_SECONDS ))" > "$STOP_LOCK_FILE"
 }
 
 gluetun_health_status() {
@@ -103,25 +80,23 @@ gluetun_health_status() {
     echo "missing"
     return 0
   fi
-  if [[ -z "$out" ]]; then
-    echo "none"
-  else
-    echo "$out"
-  fi
+
+  [[ -z "$out" ]] && echo "none" || echo "$out"
 }
 
 wait_for_gluetun_healthy() {
   local start now status
   start="$(now_epoch)"
-
   status="$(gluetun_health_status)"
+
   if [[ "$status" == "none" ]]; then
-    log "Gluetun has no Docker healthcheck; sleeping ${FALLBACK_START_DELAY_SECONDS}s (fallback)."
+    log "Gluetun has no Docker healthcheck; sleeping ${FALLBACK_START_DELAY_SECONDS}s."
     sleep "$FALLBACK_START_DELAY_SECONDS"
     return 0
   fi
 
-  log "Waiting for Gluetun Docker health=healthy (timeout ${HEALTH_TIMEOUT_SECONDS}s)..."
+  log "Waiting for Gluetun health=healthy..."
+
   while true; do
     status="$(gluetun_health_status)"
 
@@ -132,7 +107,7 @@ wait_for_gluetun_healthy() {
 
     now="$(now_epoch)"
     if (( now - start >= HEALTH_TIMEOUT_SECONDS )); then
-      log "Timed out waiting for Gluetun health (last status: ${status}). Proceeding anyway."
+      log "Timed out waiting for Gluetun health. Last status: ${status}. Proceeding anyway."
       return 0
     fi
 
@@ -140,35 +115,104 @@ wait_for_gluetun_healthy() {
   done
 }
 
-log "Service started. Watching Docker events for Gluetun: ${GLUETUN_NAME}"
-log "Start cooldown: ${START_COOLDOWN_SECONDS}s | Stop lock: ${STOP_LOCK_SECONDS}s | Per-app delay: ${PER_APP_DELAY_SECONDS}s"
-log "Health wait: timeout ${HEALTH_TIMEOUT_SECONDS}s, poll ${HEALTH_POLL_SECONDS}s, fallback sleep ${FALLBACK_START_DELAY_SECONDS}s"
+stop_apps() {
+  local apps=()
+  mapfile -t apps < <(discover_apps)
+
+  if (( ${#apps[@]} == 0 )); then
+    log "No apps found using network_mode container:${GLUETUN_NAME}"
+    : > "$STOPPED_APPS_FILE"
+    return 0
+  fi
+
+  printf '%s\n' "${apps[@]}" > "$STOPPED_APPS_FILE"
+
+  log "Stopping discovered Gluetun-dependent apps: ${apps[*]}"
+
+  for app in "${apps[@]}"; do
+    log "STOP -> ${app}"
+    umbreld client apps.stop.mutate --appId "$app" >/dev/null 2>&1 || true
+    sleep "$PER_APP_DELAY_SECONDS"
+  done
+
+  log "Stop sequence completed."
+}
+
+start_apps() {
+  local apps=()
+
+  if [[ -s "$STOPPED_APPS_FILE" ]]; then
+    mapfile -t apps < <(
+      while read -r app; do
+        discover_apps_start_order | grep -Fx "$app" || true
+      done < "$STOPPED_APPS_FILE" | awk '!seen[$0]++'
+    )
+  else
+    mapfile -t apps < <(discover_apps_start_order)
+  fi
+
+  if (( ${#apps[@]} == 0 )); then
+    log "No apps to start."
+    return 0
+  fi
+
+  log "Starting Gluetun-dependent apps: ${apps[*]}"
+
+  for app in "${apps[@]}"; do
+    log "START -> ${app}"
+    umbreld client apps.start.mutate --appId "$app" >/dev/null 2>&1 || true
+    sleep "$PER_APP_DELAY_SECONDS"
+  done
+
+  log "Start sequence completed."
+}
+
+log "Service started. Watching Docker events for ${GLUETUN_NAME}"
+log "Auto-discovery path: ${APP_DATA_DIR}/*/docker-compose.yml"
 
 docker events --format '{{.Action}}' \
   --filter type=container \
   --filter container="${GLUETUN_NAME}" \
+  --filter event=stop \
   --filter event=die \
   --filter event=destroy \
   --filter event=start \
-| while read -r action; do
-    case "$action" in
-      die|destroy)
-        log "Gluetun event: ${action}"
-        if stop_lock_active; then
-          log "Stop ignored (stop-lock active for die/destroy burst)"
-          continue
-        fi
-        set_stop_lock
-        stop_apps
-        ;;
-      start)
-        log "Gluetun event: start"
-        if ! start_cooldown_ok; then
-          log "Start ignored (cooldown ${START_COOLDOWN_SECONDS}s)"
-          continue
-        fi
-        wait_for_gluetun_healthy
-        start_apps
-        ;;
-    esac
-  done
+  --filter event=health_status \
+  | while read -r action; do
+      case "$action" in
+        stop|die|destroy)
+          log "Gluetun event: ${action}"
+
+          if stop_lock_active; then
+            log "Stop ignored because stop-lock is active."
+            continue
+          fi
+
+          set_stop_lock
+          stop_apps
+          ;;
+
+        start)
+          log "Gluetun event: start"
+
+          if ! start_cooldown_ok; then
+            log "Start ignored because cooldown is active."
+            continue
+          fi
+
+          wait_for_gluetun_healthy
+          start_apps
+          ;;
+
+        "health_status: healthy")
+          log "Gluetun event: health_status healthy"
+
+          if ! start_cooldown_ok; then
+            log "Healthy event ignored because cooldown is active."
+            continue
+          fi
+
+          start_apps
+          ;;
+      esac
+    done
