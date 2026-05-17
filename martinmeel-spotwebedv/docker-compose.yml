@@ -25,7 +25,7 @@ services:
       CRON_INTERVAL: "*/15 * * * *"
     volumes:
       - ${APP_DATA_DIR}/data/cache:/app/cache
-    restart: unless-stopped
+    restart: on-failure
     stop_grace_period: 1m
     
   mysql:
@@ -39,5 +39,5 @@ services:
       MYSQL_DATABASE: spotweb
     volumes:
       - ${APP_DATA_DIR}/data/mysql:/var/lib/mysql
-    restart: unless-stopped
+    restart: on-failure
     stop_grace_period: 1m
