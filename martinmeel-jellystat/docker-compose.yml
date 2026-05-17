@@ -21,7 +21,7 @@ services:
   jellystat:
     image: 'cyfershepard/jellystat:latest'
     container_name: jellystat
-    restart: unless-stopped
+    restart: on-failure
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: mypassword
