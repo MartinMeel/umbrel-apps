@@ -2,7 +2,7 @@ manifestVersion: 1
 id: martinmeel-spotwebedv
 category: download
 name: SpotwebEDV
-version: "1.0.0."
+version: "1.0.1."
 tagline: Web-based Usenet spot indexer
 icon: https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-spotwebedv/spotweb.png
 description: >-
@@ -21,11 +21,11 @@ repo: https://github.com/edv/docker-spotweb
 support: https://github.com/edv/docker-spotweb
 port: 8085
 gallery:
-  - https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-sabnzbd/1.jpg
-  - https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-sabnzbd/2.jpg
-  - https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-sabnzbd/3.jpg
+  - https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-spotwebedv/1.jpg
+  - https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-spotwebedv/2.jpg
+  - https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-spotwebedv/3.jpg
 releaseNotes: >-
-  Initial Umbrel app package for Spotweb.
+  APP_HOST changed to gluetuncontainer
   Spotweb configured to route through Gluetun VPN container
 path: ""
 defaultUsername: ""
