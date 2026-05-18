@@ -1,0 +1,30 @@
+manifestVersion: 1.1
+id: martinmeel-filebrowser-quantum
+name: FileBrowser Quantum
+version: "1.3.2 stable"
+tagline: Advanced web-based file manager
+category: files
+description: >-
+  FileBrowser Quantum is a free, open-source, self-hosted web-based file manager
+  with a modern responsive interface, multi-source browsing, advanced search,
+  rich previews, sharing, user management, and API support.
+
+
+  This Umbrel app stores its FileBrowser Quantum database and configuration in
+  the app data directory. It exposes two safe default file sources: an app-local
+  files folder and your Umbrel home folder. It does not mount the host root
+  filesystem.
+releaseNotes: >-
+  Initial Umbrel app package for FileBrowser Quantum.
+developer: "gtsteffaniak"
+website: "https://filebrowserquantum.com/"
+repo: "https://github.com/gtsteffaniak/filebrowser"
+support: "https://github.com/gtsteffaniak/filebrowser/issues"
+port: 8478
+gallery: []
+path: "/"
+defaultUsername: "admin"
+defaultPassword: "admin"
+dependencies: []
+submitter: MartinMeel
+submission: ""

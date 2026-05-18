@@ -1,0 +1,29 @@
+server:
+  port: 80
+  baseURL: "/"
+  logging:
+    - levels: "info|warning|error"
+
+sources:
+  - name: "App Files"
+    path: "/srv/app-files"
+  - name: "Umbrel Home"
+    path: "/srv/umbrel-home"
+
+userDefaults:
+  darkMode: true
+  stickySidebar: true
+  viewMode: "normal"
+  showHidden: false
+  quickDownload: false
+
+permissions:
+  api: true
+  admin: true
+  modify: true
+  share: true
+  realtime: true
+  delete: true
+  create: true
+  download: true
+  disableUpdateNotifications: true
