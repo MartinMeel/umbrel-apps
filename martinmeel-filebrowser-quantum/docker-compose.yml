@@ -21,7 +21,7 @@ services:
     volumes:
       - ${APP_DATA_DIR}/data:/home/filebrowser/data
       - ${APP_DATA_DIR}/files:/srv/app-files
-      #- ${UMBREL_ROOT}/home:/srv/umbrel-home
+      - ${APP_DATA_DIR}/data/config.yaml:/home/filebrowser/data/config.yaml
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:80/health"]
       interval: 30s
