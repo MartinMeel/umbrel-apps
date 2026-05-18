@@ -1,24 +1,15 @@
+# Reference config only. docker-compose.yml currently uses the config bundled
+# inside the gtstef/filebrowser image to avoid Umbrel legacy relative-bind issues.
 server:
-  port: 8080
-  listen: "0.0.0.0"
+  port: 80
   baseURL: "/"
-  cacheDir: /home/filebrowser/data/tmp
-  disableUpdateCheck: true
   logging:
     - levels: "info|warning|error"
   sources:
-    - path: "/srv/app-files"
-      name: "App Files"
-      config:
-        defaultEnabled: true
-    - path: "/srv/umbrel-home"
-      name: "Umbrel Home"
-      config:
-        defaultEnabled: true
+    - name: "Umbrel"
+      path: "/srv"
 
 auth:
-  adminUsername: "admin"
-  adminPassword: "admin"
   methods:
     password:
       enabled: true
@@ -26,14 +17,14 @@ auth:
       signup: false
 
 userDefaults:
+  ui:
+    darkMode: true
   sidebar:
     sticky: true
   listing:
     showHidden: false
     quickDownload: false
     viewMode: "normal"
-  ui:
-    darkMode: true
   account:
     permissions:
       api: true
@@ -44,4 +35,4 @@ userDefaults:
       delete: true
       create: true
       download: true
-      disableUpdateNotifications: true
+    disableUpdateNotifications: true
