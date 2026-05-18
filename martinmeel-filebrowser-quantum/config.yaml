@@ -1,29 +1,47 @@
 server:
-  port: 80
+  port: 8080
+  listen: "0.0.0.0"
   baseURL: "/"
+  cacheDir: /home/filebrowser/data/tmp
+  disableUpdateCheck: true
   logging:
     - levels: "info|warning|error"
+  sources:
+    - path: "/srv/app-files"
+      name: "App Files"
+      config:
+        defaultEnabled: true
+    - path: "/srv/umbrel-home"
+      name: "Umbrel Home"
+      config:
+        defaultEnabled: true
 
-sources:
-  - name: "App Files"
-    path: "/srv/app-files"
-  - name: "Umbrel Home"
-    path: "/srv/umbrel-home"
+auth:
+  adminUsername: "admin"
+  adminPassword: "admin"
+  methods:
+    password:
+      enabled: true
+      minLength: 5
+      signup: false
 
 userDefaults:
-  darkMode: true
-  stickySidebar: true
-  viewMode: "normal"
-  showHidden: false
-  quickDownload: false
-
-permissions:
-  api: true
-  admin: true
-  modify: true
-  share: true
-  realtime: true
-  delete: true
-  create: true
-  download: true
-  disableUpdateNotifications: true
+  sidebar:
+    sticky: true
+  listing:
+    showHidden: false
+    quickDownload: false
+    viewMode: "normal"
+  ui:
+    darkMode: true
+  account:
+    permissions:
+      api: true
+      admin: true
+      modify: true
+      share: true
+      realtime: true
+      delete: true
+      create: true
+      download: true
+      disableUpdateNotifications: true
