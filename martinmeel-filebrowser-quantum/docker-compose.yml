@@ -16,12 +16,12 @@ services:
       TZ: Europe/Amsterdam
       # Use the config bundled inside the image. Do not bind-mount ./config.yaml:
       # Umbrel legacy compose resolves relative paths against its legacy-compat folder.
-      FILEBROWSER_CONFIG: /home/filebrowser/config.yaml
-      FILEBROWSER_DATABASE: /home/filebrowser/data/database.db
+      FILEBROWSER_CONFIG:/home/filebrowser/config.yaml
+      FILEBROWSER_DATABASE:/home/filebrowser/data/database.db
     volumes:
       - ${APP_DATA_DIR}/data:/home/filebrowser/data
       - ${APP_DATA_DIR}/files:/srv/app-files
-      - ${UMBREL_ROOT}/home:/srv/umbrel-home
+      #- ${UMBREL_ROOT}/home:/srv/umbrel-home
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:80/health"]
       interval: 30s
