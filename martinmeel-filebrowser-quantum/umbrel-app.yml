@@ -3,6 +3,7 @@ id: martinmeel-filebrowser-quantum
 name: FileBrowser Quantum
 version: "1.3.2 stable"
 tagline: Advanced web-based file manager
+icon: https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-filebrowser-quantum/icon.svg
 category: files
 description: >-
   FileBrowser Quantum is a free, open-source, self-hosted web-based file manager
