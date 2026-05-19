@@ -18,7 +18,8 @@ auth:
 
 userDefaults:
   disableUpdateNotifications: false
-  darkMode: true
+  darkMode: false
+  hideHiddenFiles: true 
   stickySidebar: true
   viewMode: normal
   permissions:
