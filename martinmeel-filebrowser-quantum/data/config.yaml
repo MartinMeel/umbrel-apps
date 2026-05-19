@@ -25,7 +25,7 @@ userDefaults:
     showHidden: false
     quickDownload: false
     viewMode: "normal"
-  account:
+  # account:
     permissions:
       api: true
       admin: true
