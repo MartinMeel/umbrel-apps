@@ -17,22 +17,14 @@ auth:
       signup: false
 
 userDefaults:
-  ui:
-    darkMode: true
-  sidebar:
-    sticky: true
-  listing:
-    showHidden: false
-    quickDownload: false
-    viewMode: "normal"
-  # account:
-    permissions:
-      api: true
-      admin: true
-      modify: true
-      share: true
-      realtime: true
-      delete: true
-      create: true
-      download: true
-    disableUpdateNotifications: true
+  disableUpdateNotifications: false
+  darkMode: true
+  stickySidebar: true
+  viewMode: normal
+  permissions:
+    admin: false
+    modify: true
+    share: true
+    delete: true
+    create: true
+    download: true
