@@ -4,9 +4,15 @@ server:
   logging:
     - levels: "info|warning|error"
   sources:
-    - name: "Umbrel"
-      path: "/srv"
-
+    - path: "/srv"
+      name: "Umbrel"
+    - path: "/home/users"
+      name: "My Files"
+      config:
+        defaultEnabled: true
+        defaultUserScope: "/subfolder"
+        createUserDir: true
+        useLogicalSize: false
 auth:
   methods:
     password:
@@ -17,7 +23,6 @@ auth:
 userDefaults:
   disableUpdateNotifications: false
   darkMode: false
-  hideHiddenFiles: true 
   stickySidebar: true
   viewMode: normal
   permissions:
