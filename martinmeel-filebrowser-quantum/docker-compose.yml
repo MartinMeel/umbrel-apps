@@ -14,8 +14,6 @@ services:
     stop_grace_period: 1m
     environment:
       TZ: Europe/Amsterdam
-      # Use the config bundled inside the image. Do not bind-mount ./config.yaml:
-      # Umbrel legacy compose resolves relative paths against its legacy-compat folder.
       FILEBROWSER_CONFIG: "/home/filebrowser/data/config.yaml"
       FILEBROWSER_DATABASE: "/home/filebrowser/data/database.db"
     volumes:
