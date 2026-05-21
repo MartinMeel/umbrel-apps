@@ -4,10 +4,10 @@ server:
   logging:
     - levels: "info|warning|error"
   sources:
-    - path: "/srv"
-      name: "Umbrel"
-    - path: "/home/users"
-      name: "My Files"
+    - path: "/srv/shared"
+      name: "Shared Folder"
+    - path: "/srv/users"
+      name: "Personal folder"
       config:
         defaultEnabled: true
         defaultUserScope: "/subfolder"
