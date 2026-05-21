@@ -20,8 +20,8 @@ services:
       FILEBROWSER_DATABASE: "/home/filebrowser/data/database.db"
     volumes:
       - ${APP_DATA_DIR}/data:/home/filebrowser/data
-      - ${APP_DATA_DIR}/files:/srv/app-files
-      - ${APP_DATA_DIR}/users:/home/users
+      - ${APP_DATA_DIR}/shared:/srv/shared
+      - ${APP_DATA_DIR}/users:/srv/users
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:80/health"]
       interval: 30s
