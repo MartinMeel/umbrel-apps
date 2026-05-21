@@ -13,6 +13,7 @@ server:
       name: "Personal folder"
       config:
         defaultEnabled: true
+        createUserDir: true
         defaultUserScope: "/"
         useLogicalSize: false
 auth:
