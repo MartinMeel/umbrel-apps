@@ -10,7 +10,7 @@ server:
       name: "Personal folder"
       config:
         defaultEnabled: true
-        defaultUserScope: "/subfolder"
+        defaultUserScope: "/"
         createUserDir: true
         useLogicalSize: false
 auth:
