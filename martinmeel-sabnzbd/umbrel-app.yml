@@ -2,7 +2,7 @@ manifestVersion: 1
 id: martinmeel-sabnzbd
 category: download
 name: 3.2 SABnzbd
-version: "4.5.5"
+version: "5.0.3"
 tagline: The automated Usenet download tool
 icon: https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-sabnzbd/icon.svg
 description: >-
@@ -21,8 +21,7 @@ description: >-
   ⚠️ This version routes all traffic through Gluetun VPN for privacy and security.
 developer: SABnzbd Team
 website: https://sabnzbd.org
-dependencies: [] #If you enable this, SABnzbd will only install if Gluetun is installed. Also if you want to uninstall, Gluetun has to be uninstalled first!!!
-  #- martinmeel-gluetun
+dependencies: []
 repo: https://github.com/sabnzbd/sabnzbd
 support: https://forums.sabnzbd.org
 port: 8080
@@ -32,8 +31,7 @@ gallery:
   - https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-sabnzbd/3.jpg
 releaseNotes: >-
   This release includes various bug fixes and performance improvements.
-  
-  
+    
   Full release notes are available at https://github.com/sabnzbd/sabnzbd/releases
   additional information: >
   SABnzbd configured to route through Gluetun VPN container
