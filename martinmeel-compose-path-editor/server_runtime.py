@@ -13,6 +13,7 @@ ALLOWED_PATHS = [
     UMB + "/home/Downloads/complete:/complete",
     UMB + "/home/Downloads/incomplete:/incomplete",
     UMB + "/external/External/downloads/complete:/downloads",
+    UMB + "/external/External/downloads/incomplete:/incomplete",
     UMB + "/home/Downloads/Films:/movies",
     UMB + "/home/Downloads/Films2:/movies2",
     UMB + "/home/Downloads/TVSeries:/tv",
