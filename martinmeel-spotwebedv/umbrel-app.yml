@@ -17,8 +17,7 @@ description: >-
   ⚠️ This version routes all traffic through Gluetun VPN for privacy and security.
 developer: ErikdeVries
 website: https://sabnzbd.org
-dependencies: [] #If you enable this, SABnzbd will only install if Gluetun is installed. Also if you want to uninstall, Gluetun has to be uninstalled first!!!
-  #- martinmeel-gluetun
+dependencies: []
 repo: https://github.com/edv/docker-spotweb
 support: https://github.com/edv/docker-spotweb
 port: 8085
