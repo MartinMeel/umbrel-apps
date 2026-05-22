@@ -10,7 +10,9 @@ description: >-
   Spotweb with a MySQL database and refreshes spots every 5 minutes.
 
   🛠️ SET-UP INSTRUCTIONS
-  TBD
+    After the initial settup give the data directory the correct rights.
+    cd /umbrel/app-data/martinmeel-spotwebedv
+    sudo chown -R umbrel:umbrel data
 
   ⚠️ This version routes all traffic through Gluetun VPN for privacy and security.
 developer: ErikdeVries
