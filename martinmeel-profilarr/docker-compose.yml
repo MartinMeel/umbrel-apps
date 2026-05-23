@@ -26,6 +26,6 @@ services:
       - PGID=1000
       - UMASK=022
       - TZ=Europe/Amsterdam
-    depends_on:
-      parser:
-        condition: service_healthy
+    #depends_on:
+    #  parser:
+    #    condition: service_healthy
