@@ -1,6 +1,6 @@
 manifestVersion: 1
 id: martinmeel-profilarr
-name: 4.1 Profilarr
+name: 2.3 Profilarr
 tagline: Configuration management tool for Radarr/Sonarr.
 icon: https://avatars.githubusercontent.com/u/171363348?s=48&v=4
 category: multimedia
