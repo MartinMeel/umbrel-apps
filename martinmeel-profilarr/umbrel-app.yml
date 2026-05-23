@@ -4,7 +4,7 @@ name: 4.1 Profilarr
 tagline: Configuration management tool for Radarr/Sonarr.
 icon: https://avatars.githubusercontent.com/u/171363348?s=48&v=4
 category: multimedia
-version: "1.1.3"
+version: "2.0.4"
 port: 6868
 description: >-
   Configuration management tool for Radarr/Sonarr that automates importing and version control of custom formats and quality profiles.
@@ -23,11 +23,11 @@ support: https://dictionarry.dev/
 gallery:
   - https://github.com/Dictionarry-Hub/profilarr/blob/main/.github/images/preview.png
 releaseNotes: >-
-  - fix(compiler): only compile both / arr specific formats on import by @santiagosayshey in c30dc33
-  - refactor(media-management): use ArrHandler logic from importer module to consolidate media management importing by @santiagosayshey in 7f5f44c
-  - feat(tasks): add ability to change repo sync / backup task interval by @santiagosayshey in 2e2abb9
-  - migration(languages): set default language score to -999999 by @santiagosayshey in 6c40d35
-  - chore(deploy): add environment handling and entrypoint script to set PGID, PUID and UMASK by @santiagosayshey in 7270bbf
+Bug Fixes 🐛
+  Fixed size custom format syncing using the wrong units.
+  Fixed cloned Arr instances being blocked when they reuse the same API key.
+Maintenance 🛠️
+  Updated notify and hotfix automation.
 submitter: martinmeel
 submission: https://github.com/getumbrel/umbrel-apps
 path: ""
