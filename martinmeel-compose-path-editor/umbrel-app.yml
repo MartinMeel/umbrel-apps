@@ -2,7 +2,7 @@ manifestVersion: 1.1
 id: martinmeel-compose-path-editor
 category: developer
 name: Compose Path Editor
-version: "0.3.7"
+version: "0.3.8"
 tagline: Edit Umbrel docker-compose.yml volume paths
 icon: https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-compose-path-editor/icon.svg
 releaseNotes: >-
