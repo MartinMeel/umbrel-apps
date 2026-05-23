@@ -23,11 +23,11 @@ support: https://dictionarry.dev/
 gallery:
   - https://github.com/Dictionarry-Hub/profilarr/blob/main/.github/images/preview.png
 releaseNotes: >-
-Bug Fixes 🐛
-  Fixed size custom format syncing using the wrong units.
-  Fixed cloned Arr instances being blocked when they reuse the same API key.
-Maintenance 🛠️
-  Updated notify and hotfix automation.
+  Bug Fixes 🐛
+    Fixed size custom format syncing using the wrong units.
+    Fixed cloned Arr instances being blocked when they reuse the same API key.
+  Maintenance 🛠️
+    Updated notify and hotfix automation.
 submitter: martinmeel
 submission: https://github.com/getumbrel/umbrel-apps
 path: ""
