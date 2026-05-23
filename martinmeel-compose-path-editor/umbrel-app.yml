@@ -3,6 +3,7 @@ id: martinmeel-compose-path-editor
 category: developer
 name: Compose Path Editor
 version: "0.4.0"
+icon: https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-compose-path-editor/icon.png
 tagline: Edit Umbrel docker-compose.yml volume mappings
 description: >-
   Compose Path Editor is a local Umbrel utility that lets you select an installed
