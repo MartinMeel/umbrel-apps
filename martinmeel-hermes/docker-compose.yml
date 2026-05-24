@@ -1,0 +1,24 @@
+services:
+  app_proxy:
+    environment:
+      APP_HOST: martinmeel-hermes_web_1
+      APP_PORT: 9119
+
+  web:
+    image: nousresearch/hermes-agent:main@sha256:e054a204b719c87ce9385b3492c92aa69ced7a5e5374dab394b04814cedca4ef
+    restart: on-failure
+    stop_grace_period: 1m
+    volumes:
+      - "${APP_DATA_DIR}/data:/opt/data"
+    environment:
+      HERMES_HOME: /opt/data
+      HERMES_DASHBOARD_HOST: 0.0.0.0
+      HERMES_DASHBOARD_PORT: "9119"
+      HOME: /opt/data/home
+    command:
+      - dashboard
+      - --host
+      - 0.0.0.0
+      - --port
+      - "9119"
+      - --no-open
