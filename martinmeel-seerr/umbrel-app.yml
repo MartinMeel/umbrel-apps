@@ -4,7 +4,7 @@ name: 4.3 Seerr
 tagline: Beautiful media discovery for Jellyfin users
 icon: https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-seerr/jellyseerr.png
 category: multimedia
-version: "2.7.3"
+version: "3.2.0"
 port: 5055
 description: >-
   Jellyseerr is a request management and media discovery tool built to work with your existing Jellyfin ecosystem.
@@ -18,8 +18,7 @@ description: >-
   You can find your device's IP address by visiting your router's admin dashboard or by using an IP scanning tool like Angry IP Scanner.
 developer: Seerr Team
 website: https://seerr.dev/
-dependencies: [] #If you enable this, Seerr will only install if Gluetun is installed. Also if you want to uninstall, Gluetun has to be uninstalled first!!!
-  #- martinmeel-gluetun
+dependencies: []
 repo: https://github.com/seerr-team/seerr
 support: https://github.com/seerr-team/seerr/issues
 gallery:
@@ -44,5 +43,5 @@ path: ""
 defaultUsername: ""
 defaultPassword: ""
 submitter: martinmeel
-submission: https://github.com/getumbrel/umbrel-apps
+# submission: https://github.com/getumbrel/umbrel-apps
 torOnly: false

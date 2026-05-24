@@ -9,7 +9,7 @@ services:
       PROXY_AUTH_ADD: 'false'
 
   server:
-    image: ghcr.io/seerr-team/seerr:latest
+    image: ghcr.io/seerr-team/seerr:v3.2.0@sha256:c4cbd5121236ac2f70a843a0b920b68a27976be57917555f1c45b08a1e6b2aad
     init: true
     network_mode: "container:martinmeel-gluetun_server_1"
     environment:
