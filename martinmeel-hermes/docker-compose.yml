@@ -22,3 +22,4 @@ services:
       - --port
       - "9119"
       - --no-open
+      - --insecure
