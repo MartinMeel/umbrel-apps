@@ -7,7 +7,7 @@ services:
       APP_PORT: 6060
 
   web:
-    image: grimmory/grimmory:v3.0.3
+    image: grimmory/grimmory:v3.1.0
     restart: on-failure
     stop_grace_period: 1m
     depends_on:
