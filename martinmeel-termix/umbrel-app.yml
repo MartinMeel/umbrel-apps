@@ -4,7 +4,7 @@ name: Termix
 tagline: Web-based SSH terminal, tunneling, and file management
 icon: https://raw.githubusercontent.com/Termix-SSH/Termix/main/public/favicon.ico
 category: networking
-version: "2.2.1"
+version: "2.3.1"
 port: 8034
 description: >-
   Termix is a modern web-based server management platform that brings the power
@@ -41,5 +41,7 @@ path: ""
 defaultUsername: ""
 defaultPassword: ""
 torOnly: false
+releaseNotes: >-
+  https://github.com/Termix-SSH/Termix/releases/tag/release-2.3.1-tag
 submitter: "martinmeel"
 submission: "https://github.com/MartinMeel/umbrel-apps"
