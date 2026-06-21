@@ -4,7 +4,7 @@ name: 4.1 Prowlarr
 tagline: Indexer manager for Sonarr and Radarr
 icon: https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-prowlarr/icon.svg
 category: multimedia
-version: "2.3.5.5327"
+version: "2.4.0.5397-ls150"
 port: 9696
 description: >-
   Prowlarr is an indexer manager/proxy built on the popular *arr .net/reactjs base stack to integrate
@@ -26,7 +26,7 @@ gallery:
   - https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-prowlarr/2.jpg
   - https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-prowlarr/3.jpg
 releaseNotes: >-
-  See https://github.com/Prowlarr/Prowlarr/releases/tag/v2.3.5.5327
+  See https://github.com/Prowlarr/Prowlarr/releases/tag/2.4.0.5397-ls150
   
   
   Full release notes are found at https://github.com/Prowlarr/Prowlarr/releases.
