@@ -12,7 +12,7 @@ services:
       # PROXY_AUTH_BLACKLIST: "/admin/*"
 
   server: # Officially should be "app:" or "web:"
-    image: lscr.io/linuxserver/prowlarr:version-2.3.5.5327@sha256:6df73ab9e99d0dbaad27c39d8a47c600333eebea80fcb56253a0bb8b630c8115
+    image: lscr.io/linuxserver/prowlarr:2.4.0.5397-ls150
     # Use Gluetun's network stack - all traffic goes through VPN
     network_mode: "container:martinmeel-gluetun_server_1"
     volumes:
