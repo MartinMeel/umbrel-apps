@@ -31,14 +31,14 @@ description: >-
 
 
   🛠️ SET-UP INSTRUCTIONS
-    After installing Gluetun, STOP the container and fill in the private key in the exports file!!!!
     ⚠️ NOTE: ssh into your umbrel or via the settings icon -> Advanced settings -> Terminal (open) to change the exports file.
-    Also create an API key and place it in the .env file
+    After installing Gluetun, STOP the container and fill in the private key in the exports file!!!!
+    Also create a GLEUTUN API key and also place it in the exports file. (This is for the HTTP control server)
     Do this by running this command:
     $ sudo docker run --rm qmcgaw/gluetun genkey
-    After copying the key in the .env file:
-    $ chmod 600 .env
-
+    
+    
+    
   Logs:  
     ⚠️ NOTE: To follow the logs of the Gluetun container:
     ssh into your umbrel or via the settings icon -> Advanced settings -> Terminal (open)
