@@ -8,6 +8,7 @@ services:
     ports:
       # HTTP proxy (needed when using gluetun as a proxy for other apps)
       - 8888:8888
+      - 8000:8000
       # If you need Shadowsocks, you can add the ports here. 
       # - 8388:8388/tcp # Shadowsocks
       # - 8388:8388/udp # Shadowsocks
@@ -45,6 +46,7 @@ services:
       # Enble Control server
       - HTTP_CONTROL_SERVER_ADDRESS=:8000
       - HTTP_CONTROL_SERVER_LOG=on
+      - HTTP_CONTROL_SERVER_AUTH_DEFAULT_ROLE={"auth":"apikey","apikey":"${GLUETUN_API_KEY}"}
       # Enable HTTP proxy
       - HTTPPROXY=on
       - HTTPPROXY_LISTENING_ADDRESS=:8888
