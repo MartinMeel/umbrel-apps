@@ -33,7 +33,9 @@ description: >-
   🛠️ SET-UP INSTRUCTIONS
     After installing Gluetun, STOP the container and fill in the private key in the exports file!!!!
     ⚠️ NOTE: ssh into your umbrel or via the settings icon -> Advanced settings -> Terminal (open) to change the exports file.
-
+    Also create an API key and place it in the .env file
+    Do this by running this command:
+    sudo docker run --rm qmcgaw/gluetun genkey
 
   Logs:  
     ⚠️ NOTE: To follow the logs of the Gluetun container:
