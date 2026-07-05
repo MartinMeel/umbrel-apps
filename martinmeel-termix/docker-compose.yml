@@ -5,7 +5,7 @@ services:
       APP_PORT: 8080
 
   web:
-    image: ghcr.io/lukegus/termix:release-2.4.1@shad1a8dcf3c6953515c03bbaf45112580310e90a38
+    image: ghcr.io/lukegus/termix:release-2.5.0
     restart: on-failure
     stop_grace_period: 1m
     volumes:
