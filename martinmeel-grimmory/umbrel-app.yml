@@ -2,7 +2,7 @@ manifestVersion: 1
 id: martinmeel-grimmory
 category: media
 name: Grimmory
-version: "3.2.0"
+version: "3.2.4"
 tagline: A serious self-hosted digital library
 icon: https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-grimmory/icon.svg
 description: >-
@@ -24,4 +24,4 @@ defaultUsername: ""
 defaultPassword: ""
 submitter: ""
 submission: ""
-releaseNotes: https://github.com/grimmory-tools/grimmory/releases/tag/v3.2.0
+releaseNotes: https://github.com/grimmory-tools/grimmory/releases/tag/v3.2.4
