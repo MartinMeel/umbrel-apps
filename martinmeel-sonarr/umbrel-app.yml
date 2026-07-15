@@ -2,7 +2,7 @@ manifestVersion: 1
 id: martinmeel-sonarr
 category: multimedia
 name: 2.1.Sonarr
-version: "4.0.18.2971-ls315"
+version: "4.0.19.2979-ls319"
 tagline: Smart PVR for TV shows
 icon: https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-sonarr/icon.svg
 description: >-
@@ -14,8 +14,7 @@ description: >-
 
 developer: Sonarr Team
 website: https://sonarr.tv
-dependencies: [] #If you enable this, Sonarr will only install if Gluetun is installed. Also if you want to uninstall, Gluetun has to be uninstalled first!!!
-  #- martinmeel-gluetun
+dependencies: []
 repo: https://github.com/Sonarr/Sonarr
 support: https://forums.sonarr.tv
 port: 8989
