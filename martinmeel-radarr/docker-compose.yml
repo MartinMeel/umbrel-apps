@@ -9,7 +9,7 @@ services:
       PROXY_AUTH_ADD: 'false'
 
   server:
-    image: lscr.io/linuxserver/radarr:latest
+    image: lscr.io/linuxserver/radarr:6.3.0.10514-ls311
     # Use Gluetun's network stack - all traffic goes through VPN
     network_mode: "container:martinmeel-gluetun_server_1"
     volumes:
