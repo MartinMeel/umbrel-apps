@@ -4,7 +4,7 @@ name: Umbrel custom-hooks manager
 tagline: Install host hooks and edit SMB credentials before mounting
 icon: https://raw.githubusercontent.com/MartinMeel/umbrel-app-gallery/main/martinmeel-hook-manager/icon.svg
 category: developer
-version: 0.1.1
+version: 0.1.2
 port: 3000
 description: Install and maintain MartinMeel host hook scripts on UmbrelOS 1.7.x, create the custom-hooks directory when missing, and provide a small editor for .smbcredentials before SMB mounts are attempted.
 developer: MartinMeel
